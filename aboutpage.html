@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="About SmartDrive™ - Learn about our premium car rental service, mission, and commitment to excellence in the Philippines.">
+  <title>About SmartDrive™ - Premium Car Rentals Philippines</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preload" href="data.js" as="script">
+</head>
+<body>
+  <!-- Header/Navigation -->
+  <header class="header">
+    <div class="container">
+      <a href="index.html" class="logo">
+        <div class="logo-icon" style="background-color: #4ade80; padding: 0.5rem; border-radius: 0.5rem; display: flex; align-items: center; justify-content: center;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg>
+        </div>
+        <span>SmartDrive<span style="font-size: 10px; margin-left: 2px; opacity: 0.7;">TM</span></span>
+      </a>
+
+      <nav class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="rent-a-car.html" class="nav-link">Rent a Car</a>
+        <a href="aboutpage.html" class="nav-link active">About</a>
+        <a href="dashboard.html" class="nav-link">Dashboard</a>
+      </nav>
+
+      <div class="nav-actions" id="auth-buttons">
+        <!-- Auth buttons are dynamically loaded here -->
+      </div>
+
+      <button class="mobile-menu-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+      </button>
+    </div>
+
+    <div class="mobile-menu">
+      <div class="mobile-nav-links">
+        <a href="index.html" class="mobile-nav-link">Home</a>
+        <a href="rent-a-car.html" class="mobile-nav-link">Rent a Car</a>
+        <a href="aboutpage.html" class="mobile-nav-link">About</a>
+        <a href="dashboard.html" class="mobile-nav-link">Dashboard</a>
+      </div>
+      <div id="mobile-auth-links" class="flex flex-col gap-3 pt-2 border-t border-border mt-4"></div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-bg">
+      <!-- Carousel will be injected here -->
+    </div>
+    <div class="hero-content animate-fade-in">
+      <h1 class="hero-title">About SmartDrive</h1>
+      <p class="hero-description">Redefining car rental experiences across the Philippines with innovation, reliability, and exceptional customer service.</p>
+    </div>
+  </section>
+
+  <!-- Mission & Vision -->
+  <section class="section">
+    <div class="container">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 3rem; margin-bottom: 4rem;">
+        <!-- Mission -->
+        <div class="feature-card animate-fade-in" style="background-color: rgba(74, 222, 128, 0.05); border: 1px solid rgba(74, 222, 128, 0.2);">
+          <div class="feature-icon" style="background-color: rgba(74, 222, 128, 0.2);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          </div>
+          <h3 class="feature-title">Our Mission</h3>
+          <p class="feature-description">To provide accessible, affordable, and reliable car rental services that empower travelers to explore the Philippines with confidence and comfort. We believe every journey deserves to be memorable.</p>
+        </div>
+
+        <!-- Vision -->
+        <div class="feature-card animate-fade-in" style="background-color: rgba(74, 222, 128, 0.05); border: 1px solid rgba(74, 222, 128, 0.2);">
+          <div class="feature-icon" style="background-color: rgba(74, 222, 128, 0.2);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <h3 class="feature-title">Our Vision</h3>
+          <p class="feature-description">To become the Philippines' most trusted and innovative car rental platform, revolutionizing how people travel by delivering exceptional value, unmatched customer service, and vehicles that inspire adventure.</p>
+        </div>
+
+        <!-- Values -->
+        <div class="feature-card animate-fade-in" style="background-color: rgba(74, 222, 128, 0.05); border: 1px solid rgba(74, 222, 128, 0.2);">
+          <div class="feature-icon" style="background-color: rgba(74, 222, 128, 0.2);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 4.5a10 10 0 0 1-18.8 4.2"/></svg>
+          </div>
+          <h3 class="feature-title">Our Values</h3>
+          <p class="feature-description">Integrity, quality, innovation, and customer-centricity guide every decision we make. We're committed to sustainability, safety, and building lasting relationships with our community.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Company Story -->
+  <section class="section" style="background-color: rgba(28, 28, 30, 0.3);">
+    <div class="container">
+      <div style="max-width: 48rem; margin: 0 auto;">
+        <h2 class="section-title" style="text-align: center; margin-bottom: 2rem;">Our Story</h2>
+        <div style="display: flex; flex-direction: column; gap: 1.5rem; color: rgba(245, 245, 247, 0.8); line-height: 1.8; text-align: justify;">
+          <p>SmartDrive was founded in 2026 by plattech group with a single vision: to revolutionize the car rental industry in the Philippines. As a proudly Philippine-based company, we've quickly established ourselves as a trusted brand serving thousands of customers nationwide with our innovative approach to vehicle rentals.</p>
+          
+          <p>The visionary team at plattech group recognized a gap in the market for a car rental service that combined affordability, reliability, and exceptional customer experiences. We spent months researching customer pain points in traditional rental services and built SmartDrive from the ground up to address these challenges and exceed expectations.</p>
+          
+          <p>Built on Philippine expertise and innovation at smartdrive.co, our rapidly growing fleet spans over 500 vehicles across major cities including Manila, Cebu, Davao, and Cagayan de Oro. From economy cars perfect for city exploration to premium SUVs for family adventures, we have the right vehicle for every journey.</p>
+          
+          <p>What sets us apart is our commitment to putting customers first. As a homegrown Philippine company, our 24/7 support team, transparent pricing, comprehensive insurance coverage, and flexible booking options have made us the preferred choice for locals and travelers alike.</p>
+          
+          <p>As we continue to grow, we remain focused on innovation, sustainability, and creating unforgettable travel experiences for our customers. Every interaction with SmartDrive is an opportunity to exceed expectations.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Us Section -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header" style="margin-bottom: 3rem;">
+        <h2 class="section-title">Contact Us</h2>
+        <p class="section-description">We're here to help. Reach out to us with any questions or concerns.</p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+        <!-- Address -->
+        <div class="feature-card animate-fade-in">
+          <div class="feature-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <h3 class="feature-title">Our Address</h3>
+          <p class="feature-description">Near Technological Institute of the Philippines, Quezon City, Philippines</p>
+        </div>
+
+        <!-- Phone -->
+        <div class="feature-card animate-fade-in">
+          <div class="feature-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          </div>
+          <h3 class="feature-title">Phone Number</h3>
+          <p class="feature-description">(+63) 917 123 4567</p>
+        </div>
+
+        <!-- Email -->
+        <div class="feature-card animate-fade-in">
+          <div class="feature-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+          </div>
+          <h3 class="feature-title">Email Address</h3>
+          <p class="feature-description">contact@smartdrive.com</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Map -->
+  <section id="contact-us" class="section" style="background-color: rgba(28, 28, 30, 0.3);">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Find Us Across The Philippines</h2>
+        <p class="section-description">SmartDrive operates in major cities nationwide. Find your nearest location.</p>
+      </div>
+      
+      <div style="border-radius: 1rem; overflow: hidden; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.05);">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3860.203133355225!2d121.05335361525839!3d14.64468308032394!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397b7db5153031f%3A0x1f72da6209d2011a!2sTechnological%20Institute%20of%20the%20Philippines%20-%20Quezon%20City!5e1!3m2!1sen!2sph!4v1678440000000!5m2!1sen!2sph" width="100%" height="500" style="border: none;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-top: 3rem;">
+        <div style="padding: 1.5rem; background-color: var(--card); border-radius: 1rem; border: 1px solid rgba(255, 255, 255, 0.05); text-align: center;">
+          <h4 style="color: #4ade80; font-weight: 700; margin-bottom: 0.5rem;">Manila</h4>
+          <p style="color: rgba(245, 245, 247, 0.6); font-size: 0.875rem;">NAIA Terminal 3 & CBD Areas</p>
+        </div>
+        <div style="padding: 1.5rem; background-color: var(--card); border-radius: 1rem; border: 1px solid rgba(255, 255, 255, 0.05); text-align: center;">
+          <h4 style="color: #4ade80; font-weight: 700; margin-bottom: 0.5rem;">Cebu</h4>
+          <p style="color: rgba(245, 245, 247, 0.6); font-size: 0.875rem;">Mactan Airport & Downtown</p>
+        </div>
+        <div style="padding: 1.5rem; background-color: var(--card); border-radius: 1rem; border: 1px solid rgba(255, 255, 255, 0.05); text-align: center;">
+          <h4 style="color: #4ade80; font-weight: 700; margin-bottom: 0.5rem;">Davao</h4>
+          <p style="color: rgba(245, 245, 247, 0.6); font-size: 0.875rem;">City Center & Airport</p>
+        </div>
+        <div style="padding: 1.5rem; background-color: var(--card); border-radius: 1rem; border: 1px solid rgba(255, 255, 255, 0.05); text-align: center;">
+          <h4 style="color: #4ade80; font-weight: 700; margin-bottom: 0.5rem;">Cagayan de Oro</h4>
+          <p style="color: rgba(245, 245, 247, 0.6); font-size: 0.875rem;">CDO Downtown & Airport</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Development Team -->
+  <section class="section">
+    <div class="container">
+      <div style="max-width: 48rem; margin: 0 auto;">
+        <h2 class="section-title" style="text-align: center; margin-bottom: 2rem;">Built by Tech Innovators</h2>
+        <div style="background-color: rgba(74, 222, 128, 0.05); border: 1px solid rgba(74, 222, 128, 0.2); border-radius: 1rem; padding: 2.5rem; text-align: center;">
+          <p style="color: rgba(245, 245, 247, 0.8); margin-bottom: 1rem; font-size: 1.1rem; font-weight: 500;">This SmartDrive website and platform was developed by a talented group of students and developers from the</p>
+          <h3 style="color: #4ade80; font-size: 1.875rem; font-weight: 800; margin-bottom: 0.5rem;">Technological Institute of the Philippines</h3>
+          <p style="color: rgba(245, 245, 247, 0.7); margin-bottom: 1.5rem; font-weight: 600;">Quezon City Campus</p>
+          <p style="color: rgba(245, 245, 247, 0.6); line-height: 1.8;">Through their passion for technology and innovation, this dedicated team transformed the SmartDrive vision into a fully functional, user-friendly platform. Their commitment to excellence in web development, mobile responsiveness, and user experience design has made SmartDrive accessible to thousands of Filipinos seeking convenient car rental solutions.</p>
+          <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255, 255, 255, 0.05);">
+            <p style="color: rgba(245, 245, 247, 0.5); font-size: 0.875rem; margin-bottom: 0.75rem;">Technologies Used</p>
+            <p style="color: rgba(245, 245, 247, 0.7); font-size: 0.95rem;">HTML5 • CSS3 • JavaScript • Modern Web Standards</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why Choose SmartDrive -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header" style="margin-bottom: 3rem;">
+        <h2 class="section-title">Why Choose SmartDrive?</h2>
+        <p class="section-description">We've built our reputation on trust, quality, and exceptional service.</p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card animate-fade-in">
+          <div class="feature-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
+          </div>
+          <h3 class="feature-title">Fully Insured</h3>
+          <p class="feature-description">All vehicles come with comprehensive insurance coverage, giving you complete peace of mind while on the road.</p>
+        </div>
+
+        <div class="feature-card animate-fade-in">
+          <div class="feature-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <h3 class="feature-title">24/7 Support</h3>
+          <p class="feature-description">Our dedicated customer service team is available around the clock to assist you with any questions or emergencies.</p>
+        </div>
+
+        <div class="feature-card animate-fade-in">
+          <div class="feature-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <h3 class="feature-title">Premium Fleet</h3>
+          <p class="feature-description">Our vehicles are meticulously maintained and regularly serviced. From economy to premium, we have options for every budget.</p>
+        </div>
+
+        <div class="feature-card animate-fade-in">
+          <div class="feature-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><polyline points="12 6 12 12 18 12"/></svg>
+          </div>
+          <h3 class="feature-title">Easy Booking</h3>
+          <p class="feature-description">Our simplified booking process takes just minutes. Pick your car, select your dates, and hit the road instantly.</p>
+        </div>
+
+        <div class="feature-card animate-fade-in">
+          <div class="feature-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <h3 class="feature-title">Transparent Pricing</h3>
+          <p class="feature-description">No hidden fees. What you see is what you pay. We believe in honest, straightforward pricing for all our services.</p>
+        </div>
+
+        <div class="feature-card animate-fade-in">
+          <div class="feature-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <h3 class="feature-title">Nationwide Coverage</h3>
+          <p class="feature-description">With locations across major Philippine cities, we're always nearby to serve you wherever your journey takes you.</p>
+        </div>
+
+        <div class="feature-card animate-fade-in">
+          <div class="feature-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+          </div>
+          <h3 class="feature-title">Flexible Options</h3>
+          <p class="feature-description">Choose from daily rentals, weekly packages, or long-term leasing. We customize solutions to fit your needs.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="section" style="background-color: rgba(28, 28, 30, 0.3);">
+    <div class="container">
+      <h2 class="section-title" style="text-align: center; margin-bottom: 4rem;">By The Numbers</h2>
+      
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem;">
+        <div style="text-align: center; padding: 2rem; background-color: var(--card); border-radius: 1rem; border: 1px solid rgba(255, 255, 255, 0.05);">
+          <p style="font-size: 2.25rem; font-weight: 800; color: #4ade80; margin-bottom: 0.5rem;">500+</p>
+          <p style="color: rgba(245, 245, 247, 0.7); font-size: 0.95rem;">Vehicles in Fleet</p>
+        </div>
+
+        <div style="text-align: center; padding: 2rem; background-color: var(--card); border-radius: 1rem; border: 1px solid rgba(255, 255, 255, 0.05);">
+          <p style="font-size: 2.25rem; font-weight: 800; color: #4ade80; margin-bottom: 0.5rem;">50K+</p>
+          <p style="color: rgba(245, 245, 247, 0.7); font-size: 0.95rem;">Happy Customers</p>
+        </div>
+
+        <div style="text-align: center; padding: 2rem; background-color: var(--card); border-radius: 1rem; border: 1px solid rgba(255, 255, 255, 0.05);">
+          <p style="font-size: 2.25rem; font-weight: 800; color: #4ade80; margin-bottom: 0.5rem;">6+</p>
+          <p style="color: rgba(245, 245, 247, 0.7); font-size: 0.95rem;">Major Cities</p>
+        </div>
+
+        <div style="text-align: center; padding: 2rem; background-color: var(--card); border-radius: 1rem; border: 1px solid rgba(255, 255, 255, 0.05);">
+          <p style="font-size: 2.25rem; font-weight: 800; color: #4ade80; margin-bottom: 0.5rem;">4.9★</p>
+          <p style="color: rgba(245, 245, 247, 0.7); font-size: 0.95rem;">Customer Rating</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section">
+    <div class="container">
+      <div class="cta-section animate-fade-in">
+        <div class="cta-bg-blur"></div>
+        <div class="cta-bg-blur"></div>
+        <div class="cta-content">
+          <h2 class="cta-title">Ready to Start Your Journey?</h2>
+          <p class="cta-description">Experience the SmartDrive difference. Book your perfect car today and discover why thousands of travelers trust us for their adventures across the Philippines.</p>
+          <div class="cta-actions">
+            <a href="rent-a-car.html" class="btn-cta-primary">Browse Our Fleet</a>
+            <a href="signup.html" class="btn-cta-secondary">Create Account</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3 class="footer-title">About SmartDrive™</h3>
+        <p class="footer-text">Premium car rental service providing luxury vehicles for your journey. Experience the future of mobility with our electric and premium fleet.</p>
+      </div>
+
+      <div class="footer-section">
+        <h3 class="footer-title">Quick Links</h3>
+        <div class="footer-links">
+          <a href="index.html">Home</a>
+          <a href="rent-a-car.html">Rent a Car</a>
+          <a href="aboutpage.html">About Us</a>
+          <a href="dashboard.html">Dashboard</a>
+        </div>
+      </div>
+
+      <div class="footer-section">
+        <h3 class="footer-title">Support</h3>
+        <div class="footer-links">
+          <a href="#" class="contact-link">Contact Us</a>
+          <a href="#" class="legal-link" data-content="terms">Terms & Conditions</a>
+          <a href="#" class="legal-link" data-content="privacy">Privacy Policy</a>
+        </div>
+      </div>
+
+      <div class="footer-section">
+        <h3 class="footer-title">Company</h3>
+        <div class="footer-links">
+          <a href="#">Careers</a>
+          <a href="#">Blog</a>
+          <a href="#">Partners</a>
+          <a href="#">Fleet</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2026 SmartDrive™. All rights reserved. | Revolutionizing Premium Car Rentals</p>
+    </div>
+  </footer>
+
+  <!-- Legal Modal -->
+  <div id="legal-modal" class="modal" style="display: none;">
+    <div class="modal-content" style="max-width: 800px;">
+      <div class="modal-header">
+        <h2 id="legal-modal-title"></h2>
+        <span class="close-btn" id="close-legal-modal">&times;</span>
+      </div>
+      <div class="modal-body" id="legal-modal-body" style="max-height: 70vh; overflow-y: auto;">
+        <!-- Content will be injected by JavaScript -->
+      </div>
+      <div class="modal-footer">
+        <p style="font-size: 0.8rem; color: var(--muted);">Last Updated: March 15, 2026</p>
+      </div>
+    </div>
+  </div>
+
+  <script defer src="shared.js"></script>
+  <script>
+    // Hero Carousel for About Page
+    document.addEventListener('DOMContentLoaded', function() {
+      const heroBg = document.querySelector('.hero-bg');
+      const carouselImages = [
+        "https://25174313.fs1.hubspotusercontent-eu1.net/hub/25174313/hubfs/Nissan-web-banner-3000x1300-v3.jpg?width=1920&height=832&name=Nissan-web-banner-3000x1300-v3.jpg",
+        "https://img.philkotse.com/temp/2024/07/26/1-a4cb-wm-c2df.webp",
+        "https://images.hgmsites.net/med/2025-jeep-wrangler-sport-s-2-door-4x4-angular-front-exterior-view_100967699_m.webp",
+        "https://www.topgear.com/sites/default/files/2024/12/hyundai-tucson-ultimate-17.jpg"
+      ];
+
+      carouselImages.forEach((src, index) => {
+        const slide = document.createElement('div');
+        slide.className = 'carousel-slide';
+        slide.style.backgroundImage = `url('${src}')`;
+        if (index === 0) slide.classList.add('active');
+        heroBg.appendChild(slide);
+      });
+
+      let currentSlide = 0;
+      setInterval(() => {
+        const slides = document.querySelectorAll('.hero-bg .carousel-slide');
+        slides[currentSlide].classList.remove('active');
+        currentSlide = (currentSlide + 1) % slides.length;
+        slides[currentSlide].classList.add('active');
+      }, 5000);
+    });
+
+    // Add event listener for contact link
+    document.querySelectorAll('.contact-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const contactSection = document.querySelector('.section-title');
+            // Find the "Contact Us" section and scroll to it
+            document.querySelectorAll('.section-title').forEach(title => {
+                if (title.textContent.trim() === 'Contact Us') {
+                    title.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    });
+  </script>
+</body>
+</html>

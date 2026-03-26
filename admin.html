@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - SmartDrive™</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="preload" href="data.js" as="script">
+</head>
+<body id="dashboard-page">
+  <header class="header">
+    <div class="container">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg>
+        </div>
+        <span>SmartDrive™ <span style="font-size: 10px; background: var(--primary); color: var(--primary-foreground); padding: 2px 5px; border-radius: 4px; margin-left: 5px;">ADMIN</span></span>
+      </a>
+      <nav class="nav-links">
+        <a href="admin.html" class="nav-link active">Admin Dashboard</a>
+      </nav>
+      <div class="nav-actions" id="auth-buttons"></div>
+          <button class="mobile-menu-btn">☰</button>
+    </div>
+  </header>
+
+  <div class="dashboard-container">
+    <div class="dashboard-layout">
+      <aside class="dashboard-sidebar">
+        <div class="profile-card">
+          <div class="profile-header">
+            <div class="profile-avatar" id="user-avatar-container">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <div class="profile-info">
+              <h3 id="user-name">Admin User</h3>
+              <p class="profile-badge" style="background-color: var(--destructive); color: white;">Admin</p>
+            </div>
+          </div>
+          
+          <nav class="sidebar-nav">
+            <a href="admin.html" class="nav-item active">Overview</a>
+            <a href="managebookings.html" class="nav-item">Manage Bookings</a>
+            <a href="manageusers.html" class="nav-item">Manage Users</a>
+            <a href="managefleetings.html" class="nav-item">Fleet Management</a>
+            <a href="admin-user-transactions.html" class="nav-item">User Transactions</a>
+            <button class="nav-item danger" id="logout-btn">Sign Out</button>
+          </nav>
+        </div>
+      </aside>
+
+      <main class="dashboard-main" style="max-width: none;">
+        <div class="dashboard-header">
+          <h1 class="dashboard-title" id="welcome-message">Admin Overview</h1>
+          <p class="dashboard-subtitle">Here's a snapshot of your platform's activity.</p>
+        </div>
+
+        <div class="dashboard-content" style="gap: 2.5rem;">
+          <!-- Top Stats Grid -->
+          <div class="stats-grid" style="grid-template-columns: repeat(4, 1fr); gap: 2rem;">
+            <div class="stat-card"><p class="stat-label">Total Revenue</p><p class="stat-value" id="stat-revenue">₱0</p></div>
+            <div class="stat-card"><p class="stat-label">Total Bookings</p><p class="stat-value" id="stat-total-bookings">0</p></div>
+            <div class="stat-card"><p class="stat-label">Registered Users</p><p class="stat-value" id="stat-users">0</p></div>
+            <div class="stat-card"><p class="stat-label">Vehicles in Fleet</p><p class="stat-value" id="stat-vehicles">0</p></div>
+          </div>
+
+          <!-- Main Dashboard Grid -->
+          <div class="admin-grid-main">
+            <!-- Left Column -->
+            <div class="admin-grid-col-main">
+              <section class="bookings-section">
+                <div class="section-header-row">
+                  <div><h2 class="section-title-small">Monthly Revenue</h2><p class="section-subtitle">Revenue generated from bookings each month.</p></div>
+                </div>
+                <div class="chart-container" style="height:35vh;"><canvas id="revenueChart"></canvas></div>
+              </section>
+
+              <section class="bookings-section">
+                <div class="section-header-row">
+                  <div><h2 class="section-title-small">Vehicle Performance</h2><p class="section-subtitle">Most frequently booked vehicles.</p></div>
+                </div>
+                <div class="chart-container" style="height:45vh;"><canvas id="vehiclePerformanceChart"></canvas></div>
+              </section>
+            </div>
+
+            <!-- Right Column -->
+            <div class="admin-grid-col-side">
+              <div class="quick-action-card" style="padding: 2rem; margin: 0;">
+                <div class="quick-action-content" style="align-items: flex-start; flex-direction: column; text-align: left;">
+                  <div>
+                    <h3 style="font-size: 1.2rem;">Quick Actions</h3>
+                    <p style="font-size: 0.9rem; max-width: 100%;">Manage your platform efficiently.</p>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: 0.75rem; width: 100%;">
+                    <a href="managefleetings.html" class="btn-book-new" style="width: 100%; text-align: center;">Add New Vehicle</a>
+                    <a href="manageusers.html" class="btn-book-new" style="width: 100%; text-align: center; background: var(--foreground); opacity: 0.8;">Manage Users</a>
+                  </div>
+                </div>
+              </div>
+
+              <section class="bookings-section">
+                <div class="section-header-row">
+                  <div><h2 class="section-title-small">User Demographics</h2><p class="section-subtitle">Distribution by gender.</p></div>
+                </div>
+                <div class="chart-container" style="height:28vh; max-width: 300px; margin: auto;"><canvas id="genderDistributionChart"></canvas></div>
+              </section>
+            </div>
+          </div>
+
+          <!-- Bottom Tables -->
+          <div class="admin-grid-layout" style="grid-template-columns: 3fr 2fr; align-items: flex-start;">
+            <section class="bookings-section">
+              <div class="section-header-row">
+                <div><h2 class="section-title-small">Recent Bookings</h2><p class="section-subtitle">A live feed of all user transactions.</p></div>
+                <a href="managebookings.html" class="view-all-link">Manage All →</a>
+              </div>
+              <div class="bookings-table-wrapper">
+                <table class="bookings-table">
+                  <thead><tr><th>Ref #</th><th>Customer</th><th>Vehicle</th><th>Total</th><th>Status</th></tr></thead>
+                  <tbody id="admin-bookings-body">
+                    <tr><td colspan="5" class="text-center p-8 text-muted-foreground/20">Loading bookings...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </section>
+
+            <section class="bookings-section">
+              <div class="section-header-row">
+                <div><h2 class="section-title-small">Top Spending Users</h2><p class="section-subtitle">Your most valuable customers.</p></div>
+                <a href="manageusers.html" class="view-all-link">Manage All →</a>
+              </div>
+              <div class="bookings-table-wrapper">
+                <table class="bookings-table">
+                  <thead><tr><th>Full Name</th><th>Email</th><th>Total Spent</th><th>Actions</th></tr></thead>
+                  <tbody id="admin-users-body">
+                    <tr><td colspan="4" class="text-center p-8 text-muted-foreground/20">Loading users...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          </div>
+
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Edit User Modal -->
+  <div id="edit-user-modal" class="modal" style="display: none;">
+    <div class="modal-content" style="max-width: 500px;">
+      <div class="modal-header">
+        <h2>Edit User</h2>
+        <span class="close-btn" id="close-edit-modal-btn">&times;</span>
+      </div>
+      <div class="modal-body">
+        <form id="edit-user-form">
+          <input type="hidden" id="edit-user-email-original">
+          <div class="form-group">
+            <label class="form-label">Full Name</label>
+            <input type="text" id="edit-user-name" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input type="email" id="edit-user-email" class="form-input" required>
+          </div>
+          <div style="grid-column: span 2; display: flex; gap: 1rem; margin-top: 1rem;">
+            <button type="submit" class="btn-submit" style="width: 100%;">Save Changes</button>
+            <button type="button" id="delete-user-btn" class="btn-submit" style="width: auto; background-color: var(--destructive); padding: 0 2rem;">Delete</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- User Details Modal -->
+  <div id="user-details-modal" class="modal" style="display: none;">
+    <div class="modal-content" style="max-width: 800px;">
+      <div class="modal-header">
+        <h2>User Details</h2>
+        <span class="close-btn" id="close-modal-btn">&times;</span>
+      </div>
+      <div class="modal-body" id="user-modal-body">
+        <!-- User details will be populated here -->
+      </div>
+    </div>
+  </div>
+
+  <script defer src="data.js"></script>
+  <script defer>
+    function initAdminDashboard() {
+      // Check if user is admin, otherwise redirect
+      const user = JSON.parse(sessionStorage.getItem('user') || 'null');
+      // Simple admin check, in a real app this would be more secure
+      if (!user || user.email !== 'admin@smartrentals.com') { 
+        // window.location.href = 'login.html';
+        // return;
+      }
+
+      loadAdminStats();
+      loadAllBookings();
+      loadAllUsers();
+      renderRevenueChart();
+      renderVehiclePerformanceChart();
+      renderGenderChart();
+      updateAuthButtons();
+    }
+
+    function getAllBookingsFromStorage() {
+        let allBookings = [];
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key.startsWith('userBookings_')) {
+                const bookings = JSON.parse(localStorage.getItem(key) || '[]');
+                allBookings.push(...bookings);
+            }
+        }
+        // Sort by most recent first, assuming dates are stored properly
+        allBookings.sort((a, b) => new Date(b.pickupDate) - new Date(a.pickupDate));
+        return allBookings;
+    }
+
+    function loadAdminStats() {
+      const allBookings = getAllBookingsFromStorage();
+      const allUsers = JSON.parse(localStorage.getItem('users') || '[]');
+
+      const totalRevenue = allBookings.reduce((sum, booking) => sum + (booking.totalPrice || 0), 0);
+
+      document.getElementById('stat-revenue').textContent = `₱${totalRevenue.toLocaleString()}`;
+      document.getElementById('stat-total-bookings').textContent = allBookings.length;
+      document.getElementById('stat-users').textContent = allUsers.length;
+      document.getElementById('stat-vehicles').textContent = typeof CARS !== 'undefined' ? CARS.length : 0;
+    }
+
+    function loadAllBookings() {
+        const tbody = document.getElementById('admin-bookings-body');
+        const allBookings = getAllBookingsFromStorage();
+        tbody.innerHTML = ''; // Clear existing rows
+
+        if (allBookings.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="5" class="text-center p-12 text-muted-foreground/30">No bookings have been made yet.</td></tr>`;
+            return;
+        }
+
+        allBookings.forEach(booking => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td>${booking.referenceNumber || 'N/A'}</td>
+              <td>${booking.customerName || 'N/A'}</td>
+              <td>${booking.vehicleName}</td>
+              <td>₱${(booking.totalPrice || 0).toLocaleString()}</td>
+              <td><span class="text-primary font-semibold">Confirmed</span></td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+
+    function loadAllUsers() {
+        const tbody = document.getElementById('admin-users-body');
+        const allUsers = JSON.parse(localStorage.getItem('users') || '[]');
+        tbody.innerHTML = ''; // Clear existing rows
+
+        const allBookings = getAllBookingsFromStorage();
+
+        // Calculate total spending for each user
+        const userSpending = allUsers.map(user => {
+            const totalSpent = allBookings
+                .filter(b => b.customerEmail === user.email)
+                .reduce((sum, booking) => sum + (booking.totalPrice || 0), 0);
+            return { ...user, totalSpent };
+        }).filter(user => user.email !== 'admin@smartrentals.com'); // Exclude admin
+
+        // Sort users by total spending in descending order
+        const topSpenders = userSpending.sort((a, b) => b.totalSpent - a.totalSpent);
+
+        if (topSpenders.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="4" class="text-center p-12 text-muted-foreground/30">No user spending data available.</td></tr>`;
+            return;
+        }
+
+        topSpenders.slice(0, 5).forEach(user => { // Show only the top 5 spenders
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td>${user.name}</td>
+              <td>${user.email}</td>
+              <td>₱${user.totalSpent.toLocaleString()}</td>
+              <td class="action-cell">
+                <button class="btn-small view-btn" data-email="${user.email}">View</button>
+              </td>
+            `;
+            tbody.appendChild(row);
+        });
+
+        addUserActionListeners();
+    }
+
+    function addUserActionListeners() {
+      document.querySelectorAll('.view-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          openUserDetailsModal(this.dataset.email);
+        });
+      });
+
+      document.querySelectorAll('.edit-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          openEditUserModal(this.dataset.email);
+        });
+      });
+    }
+
+    function openUserDetailsModal(email) {
+      const user = JSON.parse(localStorage.getItem('users') || '[]').find(u => u.email === email);
+      const storageKey = `userBookings_${email}`;
+      const userBookings = JSON.parse(localStorage.getItem(storageKey) || '[]');
+      if (!user) return;
+
+      const modalBody = document.getElementById('user-modal-body');
+      let bookingsHtml = '<h4>Booking History</h4>';
+      if (userBookings.length > 0) {
+        bookingsHtml += `<table class="bookings-table"><thead><tr><th>Ref #</th><th>Vehicle</th><th>Total</th></tr></thead><tbody>`;
+        userBookings.forEach(b => {
+          bookingsHtml += `<tr><td>${b.referenceNumber}</td><td>${b.vehicleName}</td><td>₱${(b.totalPrice || 0).toLocaleString()}</td></tr>`;
+        });
+        bookingsHtml += `</tbody></table>`;
+      } else {
+        bookingsHtml += '<p>No bookings found for this user.</p>';
+      }
+
+      modalBody.innerHTML = `
+        <div class="user-details-grid">
+          <div><strong>Name:</strong> ${user.name}</div>
+          <div><strong>Email:</strong> ${user.email}</div>
+          <div><strong>Birthday:</strong> ${user.birthday || 'N/A'}</div>
+          <div><strong>Address:</strong> ${user.address || 'N/A'}</div>
+        </div>
+        <hr style="border-color: var(--border); margin: 1.5rem 0;">
+        ${bookingsHtml}
+      `;
+      document.getElementById('user-details-modal').style.display = 'flex';
+    }
+
+    function openEditUserModal(email) {
+      const user = JSON.parse(localStorage.getItem('users') || '[]').find(u => u.email === email);
+      if (!user) return;
+
+      document.getElementById('edit-user-email-original').value = user.email;
+      document.getElementById('edit-user-name').value = user.name;
+      document.getElementById('edit-user-email').value = user.email;
+      document.getElementById('edit-user-modal').style.display = 'flex';
+    }
+
+    document.getElementById('close-modal-btn').addEventListener('click', () => {
+      document.getElementById('user-details-modal').style.display = 'none';
+    });
+
+    document.getElementById('close-edit-modal-btn').addEventListener('click', () => {
+      document.getElementById('edit-user-modal').style.display = 'none';
+    });
+
+    document.getElementById('delete-user-btn').addEventListener('click', function() {
+      const originalEmail = document.getElementById('edit-user-email-original').value;
+      if (confirm(`Are you sure you want to delete the user ${originalEmail}? This action cannot be undone.`)) {
+        let users = JSON.parse(localStorage.getItem('users') || '[]');
+        const updatedUsers = users.filter(u => u.email !== originalEmail);
+        localStorage.setItem('users', JSON.stringify(updatedUsers));
+        document.getElementById('edit-user-modal').style.display = 'none';
+        loadAllUsers();
+        alert('User has been deleted.');
+      }
+    });
+
+    document.getElementById('edit-user-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const originalEmail = document.getElementById('edit-user-email-original').value;
+      const newName = document.getElementById('edit-user-name').value;
+      const newEmail = document.getElementById('edit-user-email').value;
+      let users = JSON.parse(localStorage.getItem('users') || '[]');
+      const userIndex = users.findIndex(u => u.email === originalEmail);
+      if (userIndex !== -1) {
+        users[userIndex].name = newName;
+        users[userIndex].email = newEmail;
+        localStorage.setItem('users', JSON.stringify(users));
+      }
+      document.getElementById('edit-user-modal').style.display = 'none';
+      loadAllUsers();
+      });
+
+    function renderRevenueChart() {
+      const allBookings = getAllBookingsFromStorage();
+      const monthlyRevenue = {};
+
+      // Process bookings to aggregate revenue by month
+      allBookings.forEach(booking => {
+        const date = new Date(booking.pickupDate);
+        const monthYear = date.toLocaleString('default', { month: 'short', year: 'numeric' });
+        
+        if (!monthlyRevenue[monthYear]) {
+          monthlyRevenue[monthYear] = 0;
+        }
+        monthlyRevenue[monthYear] += booking.totalPrice || 0;
+      });
+
+      // Sort months chronologically
+      const sortedMonths = Object.keys(monthlyRevenue).sort((a, b) => new Date(a) - new Date(b));
+      const chartLabels = sortedMonths;
+      const chartData = sortedMonths.map(month => monthlyRevenue[month]);
+
+      const ctx = document.getElementById('revenueChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: chartLabels,
+          datasets: [{
+            label: 'Monthly Revenue',
+            data: chartData,
+            backgroundColor: 'rgba(74, 222, 128, 0.2)',
+            borderColor: 'rgba(74, 222, 128, 1)',
+            borderWidth: 2,
+            pointBackgroundColor: 'rgba(74, 222, 128, 1)',
+            pointBorderColor: '#fff',
+            pointHoverRadius: 7,
+            tension: 0.3,
+            fill: true,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                color: 'rgba(255, 255, 255, 0.7)',
+                callback: function(value) { return '₱' + value.toLocaleString(); }
+              },
+              grid: { color: 'rgba(255, 255, 255, 0.1)' }
+            },
+            x: {
+              ticks: { color: 'rgba(255, 255, 255, 0.7)' },
+              grid: { color: 'rgba(255, 255, 255, 0.05)' }
+            }
+          },
+          plugins: { legend: { display: false } }
+        }
+      });
+    }
+
+     function renderVehiclePerformanceChart() {
+      const allBookings = getAllBookingsFromStorage();
+      const vehicleCounts = {};
+
+      // Count bookings for each vehicle
+      allBookings.forEach(booking => {
+        const vehicleName = booking.vehicleName;
+        if (vehicleName) {
+          vehicleCounts[vehicleName] = (vehicleCounts[vehicleName] || 0) + 1;
+        }
+      });
+
+      // Sort vehicles by booking count in descending order
+      const sortedVehicles = Object.entries(vehicleCounts).sort(([, a], [, b]) => b - a).slice(0, 10); // Get top 10
+
+
+      const chartLabels = sortedVehicles.map(([name]) => name);
+      const chartData = sortedVehicles.map(([, count]) => count);
+
+      const ctx = document.getElementById('vehiclePerformanceChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: chartLabels,
+          datasets: [{
+            label: 'Number of Bookings',
+            data: chartData,
+            backgroundColor: 'rgba(59, 130, 246, 0.5)',
+            borderColor: 'rgba(59, 130, 246, 1)',
+            borderWidth: 1,
+          }]
+        },
+        options: {
+          indexAxis: 'y', // This makes the bar chart horizontal
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            x: {
+              beginAtZero: true,
+              ticks: {
+                color: 'rgba(255, 255, 255, 0.7)',
+                stepSize: 1 // Ensure ticks are whole numbers for counts
+              },
+              grid: { color: 'rgba(255, 255, 255, 0.1)' }
+            },
+            y: {
+              ticks: { color: 'rgba(255, 255, 255, 0.7)' },
+              grid: { display: false }
+            }
+          },
+          plugins: {
+            legend: {
+              display: false
+            },
+            title: { display: false }
+          }
+        }
+      });
+    }
+
+    function renderGenderChart() {
+      const allUsers = JSON.parse(localStorage.getItem('users') || '[]');
+      const genderCounts = {
+        'Male': 0,
+        'Female': 0,
+        'Other': 0,
+        'Not Specified': 0
+      };
+
+      allUsers.forEach(user => {
+        switch (user.gender) {
+          case 'male':
+            genderCounts['Male']++;
+            break;
+          case 'female':
+            genderCounts['Female']++;
+            break;
+          case 'other':
+          case 'prefer_not_to_say':
+            genderCounts['Other']++;
+            break;
+          default:
+            if (user.gender) { // Catch any other non-empty values
+              genderCounts['Other']++;
+            } else {
+              genderCounts['Not Specified']++;
+            }
+            break;
+        }
+      });
+
+      const ctx = document.getElementById('genderDistributionChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels: Object.keys(genderCounts),
+          datasets: [{
+            label: 'User Count',
+            data: Object.values(genderCounts),
+            backgroundColor: [
+              'rgba(59, 130, 246, 0.7)',  // Blue for Male
+              'rgba(236, 72, 153, 0.7)', // Pink for Female
+              'rgba(168, 85, 247, 0.7)', // Purple for Other
+              'rgba(107, 114, 128, 0.7)' // Gray for Not Specified
+            ],
+            borderColor: 'rgba(255, 255, 255, 0.1)',
+            borderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'top', labels: { color: 'rgba(255, 255, 255, 0.8)' } },
+            title: { display: false }
+          }
+        }
+      });
+    }
+
+    function updateAuthButtons() {
+      const container = document.getElementById('auth-buttons');
+      container.innerHTML = `<button onclick="logout()" class="btn-login">Logout</button>`;
+    }
+
+    function logout() {
+      sessionStorage.removeItem('user');
+      window.location.href = 'index.html';
+    }
+
+    document.getElementById('logout-btn')?.addEventListener('click', logout);
+    window.addEventListener('load', initAdminDashboard);
+  </script>
+</body>
+</html>

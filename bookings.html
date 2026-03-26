@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SmartDrive™ - View all your car rental bookings and history.">
+    <meta name="theme-color" content="#4ade80">
+    <title>My Bookings - SmartDrive™</title>
+    <link rel="stylesheet" href="style.css"> 
+    <link rel="preload" href="data.js" as="script">
+    <style>
+    /* Custom Scrollbar Styling */
+    :root {
+      scrollbar-color: #444 #1c1c1e; /* thumb and track color for Firefox */
+      scrollbar-width: thin;
+    }
+
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background-color: rgba(28, 28, 30, 0.5);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background-color: #444;
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background-color: #4ade80; /* Primary green on hover */
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    main {
+      flex-grow: 1;
+    }
+  </style>
+</head>
+<body class="dashboard-body">
+    <header class="header">
+        <div class="container header-grid">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg>
+                </div>
+                <span>SmartDrive<span style="font-size: 10px; margin-left: 2px; opacity: 0.7;">TM</span></span>
+            </a>
+
+            <nav class="nav-links">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="rent-a-car.html" class="nav-link">Rent a Car</a>
+                <a href="aboutpage.html" class="nav-link">About</a>
+                <a href="dashboard.html" class="nav-link active">Dashboard</a>
+            </nav>
+            <div class="header-spacer"></div>
+        </div>
+    </header>
+
+    <main class="container py-5">
+        <div class="bookings-header" style="background: linear-gradient(135deg, rgba(74, 222, 128, 0.1) 0%, rgba(74, 222, 128, 0.05) 100%); padding: 2.5rem; border-radius: 1rem; border: 1px solid rgba(74, 222, 128, 0.2); margin-bottom: 2rem;">
+            <div class="header-content">
+                <a href="dashboard.html" class="back-link" style="display: inline-flex; align-items: center; gap: 0.5rem; color: #4ade80; margin-bottom: 1rem; font-weight: 500;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                    Back to Dashboard
+                </a>
+                <h1 class="page-title" style="font-size: 2.5rem; font-weight: 800; color: white; margin-bottom: 0.5rem;">Booking History</h1>
+                <p class="page-subtitle" style="color: rgba(245, 245, 247, 0.7); font-size: 1.125rem;">Manage your past and upcoming journeys</p>
+            </div>
+            <div class="header-stats" style="margin-top: 1.5rem;">
+                <div class="mini-stat" style="padding: 1.5rem; background-color: rgba(28, 28, 30, 0.5); border-radius: 0.75rem; border: 1px solid rgba(255, 255, 255, 0.05);">
+                    <span class="label" style="color: rgba(245, 245, 247, 0.6); font-size: 0.875rem; display: block; margin-bottom: 0.5rem;">Total Trips</span>
+                    <span class="value" id="total-trips-count" style="font-size: 2rem; font-weight: 800; color: #4ade80;">0</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="bookings-container" style="margin-top: 2rem;">
+            <div class="history-card shadow-sm" style="background-color: var(--card); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 1rem; overflow: hidden; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);">
+                <div style="overflow-x: auto;">
+                    <table class="modern-table" style="width: 100%; border-collapse: collapse; min-width: 900px;">
+                        <thead style="background: linear-gradient(135deg, rgba(74, 222, 128, 0.1) 0%, rgba(74, 222, 128, 0.05) 100%); border-bottom: 2px solid rgba(74, 222, 128, 0.2); position: sticky; top: 0;">
+                            <tr>
+                                <th style="padding: 1.25rem; text-align: center; font-weight: 700; color: #4ade80; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; min-width: 120px; vertical-align: middle;">Reference</th>
+                                <th style="padding: 1.25rem; text-align: center; font-weight: 700; color: #4ade80; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; min-width: 150px; vertical-align: middle;">Vehicle</th>
+                                <th style="padding: 1.25rem; text-align: center; font-weight: 700; color: #4ade80; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; min-width: 200px; vertical-align: middle;">Schedule</th>
+                                <th style="padding: 1.25rem; text-align: center; font-weight: 700; color: #4ade80; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; min-width: 120px; vertical-align: middle;">Amount</th>
+                                <th style="padding: 1.25rem; text-align: center; font-weight: 700; color: #4ade80; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; min-width: 100px; vertical-align: middle;">Rating</th>
+                                <th style="padding: 1.25rem; text-align: center; font-weight: 700; color: #4ade80; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; min-width: 140px; vertical-align: middle;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bookings-list-body"></tbody>
+                    </table>
+                    <div id="no-bookings-placeholder" style="display: none; padding: 4rem 2rem; text-align: center;">
+                        <h2 style="font-size: 1.5rem; font-weight: 700; color: white; margin-bottom: 1rem;">No Journeys Yet</h2>
+                        <p style="color: var(--muted-foreground); margin-bottom: 1.5rem;">Your booking history will appear here once you've completed a rental.</p>
+                        <a href="rent-a-car.html" class="btn-primary" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center; padding: 0.75rem 1.5rem;">Start Your First Journey</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Receipt Modal -->
+    <div id="receiptModal" class="modal" style="display: none;">
+      <div class="modal-content" style="max-width: 500px; background-color: var(--card); color: var(--foreground); border-radius: 1rem;">
+          <div class="modal-header" style="background-color: rgba(255,255,255,0.05); padding: 1.5rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                  <h2 style="color: var(--foreground); font-weight: 700; font-size: 1.5rem; margin: 0;">Official Receipt</h2>
+                  <p id="receipt-ref" style="color: var(--muted-foreground); font-size: 0.9rem; margin-top: 0.25rem;"></p>
+              </div>
+              <span class="close-btn" id="close-receipt-modal" style="cursor: pointer; font-size: 2rem; color: var(--muted-foreground); line-height: 1;">&times;</span>
+          </div>
+          <div class="modal-body" id="receipt-body" style="padding: 2rem;">
+              <!-- Receipt content will be populated here -->
+          </div>
+          <div class="modal-footer" style="padding: 1.5rem; background-color: rgba(255,255,255,0.05); border-top: 1px solid var(--border); text-align: right;">
+              <button id="download-receipt-btn" class="btn-save" style="background-color: var(--primary); color: var(--primary-foreground);">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: inline; margin-right: 0.5rem; vertical-align: middle;">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                      <polyline points="7 10 12 15 17 10"></polyline>
+                      <line x1="12" y1="15" x2="12" y2="3"></line>
+                  </svg>
+                  Download Receipt
+              </button>
+          </div>
+      </div>
+    </div>
+
+    <div id="editModal" class="modal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); align-items: center; justify-content: center;">
+        <div class="modal-content" style="background-color: var(--card); border-radius: 1rem; border: 1px solid rgba(255, 255, 255, 0.05); min-width: 400px; max-width: 500px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);">
+            <div class="modal-header" style="padding: 1.5rem; border-bottom: 1px solid rgba(255, 255, 255, 0.05); display: flex; justify-content: space-between; align-items: center;">
+                <h2 style="color: white; font-weight: 700; font-size: 1.5rem; margin: 0;">Update Schedule</h2>
+                <span class="close-btn" style="cursor: pointer; font-size: 2rem; color: rgba(245, 245, 247, 0.5); line-height: 1;">&times;</span>
+            </div>
+            <div class="modal-body" style="padding: 2rem;">
+                <input type="hidden" id="edit-ref">
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label style="display: block; color: rgba(245, 245, 247, 0.8); font-weight: 600; margin-bottom: 0.5rem;">New Pickup Date</label>
+                    <input type="date" id="edit-pickup" style="width: 100%; padding: 0.75rem; background-color: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: white; border-radius: 0.5rem; font-family: inherit;">
+                </div>
+                <div class="form-group" style="margin-bottom: 2rem;">
+                    <label style="display: block; color: rgba(245, 245, 247, 0.8); font-weight: 600; margin-bottom: 0.5rem;">New Return Date</label>
+                    <input type="date" id="edit-return" style="width: 100%; padding: 0.75rem; background-color: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: white; border-radius: 0.5rem; font-family: inherit;">
+                </div>
+                <button onclick="saveEdit()" class="btn-save" style="width: 100%; padding: 0.875rem; background-color: #4ade80; color: white; font-weight: 700; border-radius: 0.5rem; cursor: pointer; transition: opacity 0.2s;">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3 class="footer-title">About SmartDrive™</h3>
+          <p class="footer-text">Premium car rental service providing luxury vehicles for your journey. Experience the future of mobility with our electric and premium fleet.</p>
+        </div>
+
+        <div class="footer-section">
+          <h3 class="footer-title">Quick Links</h3>
+          <div class="footer-links">
+            <a href="index.html">Home</a>
+            <a href="rent-a-car.html">Rent a Car</a>
+            <a href="aboutpage.html">About Us</a>
+            <a href="dashboard.html">Dashboard</a>
+          </div>
+        </div>
+
+        <div class="footer-section">
+          <h3 class="footer-title">Support</h3>
+          <div class="footer-links">
+            <a href="aboutpage.html#contact-us" class="contact-link">Contact Us</a>
+            <a href="#" class="legal-link" data-content="terms">Terms & Conditions</a>
+            <a href="#" class="legal-link" data-content="privacy">Privacy Policy</a>
+          </div>
+        </div>
+
+        <div class="footer-section">
+          <h3 class="footer-title">Company</h3>
+          <div class="footer-links">
+            <a href="#">Careers</a>
+            <a href="#">Blog</a>
+            <a href="#">Partners</a>
+            <a href="#">Fleet</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 SmartDrive™. All rights reserved. | Revolutionizing Premium Car Rentals</p>
+      </div>
+    </footer>
+
+  <!-- Legal Modal -->
+  <div id="legal-modal" class="modal" style="display: none;">
+    <div class="modal-content" style="max-width: 800px;">
+      <div class="modal-header">
+        <h2 id="legal-modal-title"></h2>
+        <span class="close-btn" id="close-legal-modal">&times;</span>
+      </div>
+      <div class="modal-body" id="legal-modal-body" style="max-height: 70vh; overflow-y: auto;">
+        <!-- Content will be injected by JavaScript -->
+      </div>
+      <div class="modal-footer">
+        <p style="font-size: 0.8rem; color: var(--muted);">Last Updated: March 15, 2026</p>
+      </div>
+    </div>
+  </div>
+
+    <script defer src="shared.js"></script>
+    <script>
+        // --- Legal Modal Logic ---
+        const legalModal = document.getElementById('legal-modal');
+        const closeLegalModalBtn = document.getElementById('close-legal-modal');
+        const legalModalTitle = document.getElementById('legal-modal-title');
+        const legalModalBody = document.getElementById('legal-modal-body');
+
+        const legalContent = {
+          terms: {
+            title: 'Terms and Conditions',
+            content: `
+              <h4 style="color: var(--primary); margin-top: 1rem; margin-bottom: 0.5rem;">1. Rental Agreement</h4>
+              <p>This agreement is between SmartDrive™ ('the Company') and the renter. By renting a vehicle, the renter agrees to all terms and conditions. The renter must be at least 21 years old and possess a valid driver's license recognized in the Philippines.</p>
+              <h4 style="color: var(--primary); margin-top: 1rem; margin-bottom: 0.5rem;">2. Vehicle Use</h4>
+              <p>The vehicle shall not be used for any illegal purpose, for racing, or outside the designated geographical limits without prior consent. The renter is responsible for all traffic violations and fines incurred during the rental period.</p>
+              <h4 style="color: var(--primary); margin-top: 1rem; margin-bottom: 0.5rem;">3. Payment and Charges</h4>
+              <p>All rental charges are to be paid in Philippine Peso (PHP). A security deposit is required upon vehicle pick-up. The final rental cost will include the daily rate, insurance, and any additional services availed. Late returns will be charged at 1.5x the daily rate.</p>
+              <h4 style="color: var(--primary); margin-top: 1rem; margin-bottom: 0.5rem;">4. Insurance and Liability</h4>
+              <p>All vehicles are covered by Comprehensive Insurance as mandated by Philippine law. In case of an accident, the renter is liable for a participation fee. The renter is responsible for any damage not covered by the insurance.</p>
+              <h4 style="color: var(--primary); margin-top: 1rem; margin-bottom: 0.5rem;">5. Governing Law</h4>
+              <p>This agreement shall be governed by the laws of the Republic of the Philippines. Any disputes shall be settled in the courts of Quezon City, Philippines.</p>
+            `
+          },
+          privacy: {
+            title: 'Privacy Policy',
+            content: `
+              <p>This Privacy Policy is in compliance with the Republic Act No. 10173, also known as the Data Privacy Act of 2012 of the Philippines.</p>
+              <h4 style="color: var(--primary); margin-top: 1rem; margin-bottom: 0.5rem;">1. Information We Collect</h4>
+              <p>We collect personal information such as your name, email address, contact number, birthday, address, and driver's license details upon registration and booking. We also collect non-personal data like browsing behavior to improve our services.</p>
+              <h4 style="color: var(--primary); margin-top: 1rem; margin-bottom: 0.5rem;">2. Use of Information</h4>
+              <p>Your data is used to process bookings, facilitate payments, communicate with you, and improve our platform. We may use your information for marketing purposes, from which you can opt-out at any time.</p>
+              <h4 style="color: var(--primary); margin-top: 1rem; margin-bottom: 0.5rem;">3. Data Sharing and Security</h4>
+              <p>We do not sell your personal data. We may share your information with trusted third-party partners (e.g., payment gateways) only for the purpose of providing our services. We implement robust security measures to protect your data from unauthorized access.</p>
+              <h4 style="color: var(--primary); margin-top: 1rem; margin-bottom: 0.5rem;">4. Your Rights as a Data Subject</h4>
+              <p>Under the Data Privacy Act of 2012, you have the right to access, correct, and erase your personal data. For any inquiries or to exercise your rights, please contact our Data Protection Officer at <a href="mailto:dpo@smartdrive.com" style="color: var(--primary);">dpo@smartdrive.com</a>.</p>
+              <h4 style="color: var(--primary); margin-top: 1rem; margin-bottom: 0.5rem;">5. Contact Information</h4>
+              <p>For any privacy-related concerns, you may contact us at our office located near the Technological Institute of the Philippines, Quezon City, or via email.</p>
+            `
+          }
+        };
+
+        function openLegalModal(type) {
+          if (legalContent[type]) {
+            legalModalTitle.textContent = legalContent[type].title;
+            legalModalBody.innerHTML = legalContent[type].content;
+            legalModal.style.display = 'flex';
+          }
+        }
+
+        document.querySelectorAll('.legal-link').forEach(link => {
+          link.addEventListener('click', function(e) { e.preventDefault(); openLegalModal(this.getAttribute('data-content')); });
+        });
+
+        closeLegalModalBtn.addEventListener('click', () => { legalModal.style.display = 'none'; });
+        window.addEventListener('click', (event) => { if (event.target === legalModal) { legalModal.style.display = 'none'; } });
+
+        // Load and Render History
+        function renderHistory() {
+            const user = JSON.parse(sessionStorage.getItem('user') || 'null');
+            const storageKey = user ? `userBookings_${user.email}` : 'userBookings_guest';
+            const history = JSON.parse(localStorage.getItem(storageKey) || '[]');
+            const tbody = document.getElementById('bookings-list-body');
+            document.getElementById('total-trips-count').textContent = history.length;
+            const table = document.querySelector('.modern-table');
+            const placeholder = document.getElementById('no-bookings-placeholder');
+            
+            tbody.innerHTML = '';
+
+            if (history.length === 0) {
+                if (table) table.style.display = 'none';
+                if (placeholder) placeholder.style.display = 'block';
+                return;
+            }
+
+            if (table) table.style.display = 'table';
+            if (placeholder) placeholder.style.display = 'none';
+
+            history.forEach((item, index) => {
+                const rating = item.rating || 0;
+                const row = document.createElement('tr');
+                row.className = 'history-row animate-fade-in';
+                row.style.cssText = 'border-bottom: 1px solid rgba(255, 255, 255, 0.05); transition: background-color 0.2s;';
+                row.onmouseover = () => row.style.backgroundColor = 'rgba(74, 222, 128, 0.08)';
+                row.onmouseout = () => row.style.backgroundColor = 'transparent';
+                
+                // All users (guest and registered) will now see the "View Receipt" button.
+                const actionButton = `<a href="services-details.html?id=${item.vehicleId}" class="btn-edit-small" style="text-decoration:none; background:#4ade80; color:white; padding: 0.5rem 1rem; border-radius: 0.375rem; font-size: 0.8rem; font-weight: 600; cursor: pointer;">Service</a>`;
+                const receiptButton = `<button class="btn-edit-small" onclick="openReceiptModal('${item.referenceNumber}')" style="background-color: rgba(74, 222, 128, 0.1); color: #4ade80; border: 1.5px solid rgba(74, 222, 128, 0.3); padding: 0.5rem 1rem; border-radius: 0.375rem; font-size: 0.8rem; font-weight: 600; cursor: pointer;">View Receipt</button>`;
+
+                row.innerHTML = `
+                    <td class="ref-col" style="padding: 1.25rem; color: #4ade80; font-weight: 700; font-size: 0.95rem; text-align: center; vertical-align: middle;">#${item.referenceNumber}</td>
+                    <td class="car-col" style="padding: 1.25rem; text-align: center; vertical-align: middle;">
+                        <span class="car-name" style="color: white; font-weight: 600; font-size: 0.95rem;">${item.vehicleName}</span>
+                    </td>
+                    <td class="date-col" style="padding: 1.25rem; text-align: center; vertical-align: middle;">
+                        <div style="display: flex; align-items: center; justify-content: center; gap: 0.75rem; color: rgba(245, 245, 247, 0.8); font-size: 0.875rem;">
+                            <span style="background-color: rgba(74, 222, 128, 0.1); padding: 0.375rem 0.6rem; border-radius: 0.375rem;">${item.pickupDate}</span>
+                            <span style="color: #4ade80; font-weight: 600;">→</span>
+                            <span style="background-color: rgba(74, 222, 128, 0.1); padding: 0.375rem 0.6rem; border-radius: 0.375rem;">${item.returnDate}</span>
+                        </div>
+                    </td>
+                    <td class="price-col" style="padding: 1.25rem; color: #4ade80; font-weight: 800; font-size: 1rem; text-align: center; vertical-align: middle;">₱${Number(item.totalPrice).toLocaleString()}</td>
+                    <td class="rating-col" style="padding: 1.25rem; text-align: center; vertical-align: middle;">
+                        <div class="star-group" data-ref="${item.referenceNumber}" style="display: flex; gap: 0.25rem; justify-content: center; align-items: center;">
+                            ${[1,2,3,4,5].map(num => `
+                                <span class="star" onclick="rateBooking('${item.referenceNumber}', ${num})" style="cursor: pointer; color: ${num <= rating ? '#4ade80' : 'rgba(245, 245, 247, 0.2)'}; font-size: 1.1rem; transition: all 0.2s; hover-color: #4ade80; display: flex; align-items: center; justify-content: center;">★</span>
+                            `).join('')}
+                        </div>
+                    </td>
+                    <td class="action-col" style="padding: 1.25rem; text-align: center; vertical-align: middle;">
+                        <div style="display: flex; flex-direction: column; gap: 0.65rem; align-items: center; justify-content: center;">
+                            <span style="display: inline-block; background-color: rgba(74, 222, 128, 0.15); color: #4ade80; padding: 0.4rem 0.8rem; border-radius: 0.375rem; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em;">${item.status}</span>
+                            ${receiptButton}
+                            ${item.vehicleId ? actionButton : ''}
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Rating Logic
+        function rateBooking(ref, score) {
+            const user = JSON.parse(sessionStorage.getItem('user') || 'null');
+            const storageKey = user ? `userBookings_${user.email}` : 'userBookings_guest';
+            let history = JSON.parse(localStorage.getItem(storageKey) || '[]');
+            const index = history.findIndex(i => i.referenceNumber === ref);
+            if(index !== -1) {
+                history[index].rating = score;
+                localStorage.setItem(storageKey, JSON.stringify(history));
+                renderHistory();
+            }
+        }
+
+        // Modal Logic
+        const modal = document.getElementById("editModal");
+        const span = document.getElementsByClassName("close-btn")[0];
+        const receiptModal = document.getElementById("receiptModal");
+        const closeReceiptBtn = document.getElementById("close-receipt-modal");
+
+        function openEditModal(ref, pickup, returnDate) {
+            document.getElementById('edit-ref').value = ref;
+            document.getElementById('edit-pickup').value = pickup;
+            document.getElementById('edit-return').value = returnDate;
+            modal.style.display = "flex";
+        }
+
+        span.onclick = () => modal.style.display = "none";
+        closeReceiptBtn.onclick = () => receiptModal.style.display = "none";
+        window.onclick = (e) => { if (e.target == modal) modal.style.display = "none"; }
+        window.onclick = (e) => { if (e.target == receiptModal) receiptModal.style.display = "none"; }
+
+
+        function saveEdit() {
+            const ref = document.getElementById('edit-ref').value;
+            const user = JSON.parse(sessionStorage.getItem('user') || 'null');
+            const storageKey = user ? `userBookings_${user.email}` : 'userBookings_guest';
+            let history = JSON.parse(localStorage.getItem(storageKey) || '[]');
+            const index = history.findIndex(i => i.referenceNumber === ref);
+            
+            if(index !== -1) {
+                history[index].pickupDate = document.getElementById('edit-pickup').value;
+                history[index].returnDate = document.getElementById('edit-return').value;
+                localStorage.setItem(storageKey, JSON.stringify(history));
+                modal.style.display = "none";
+                renderHistory();
+            }
+        }
+
+        function openReceiptModal(ref) {
+            const user = JSON.parse(sessionStorage.getItem('user') || 'null');
+            const storageKey = user ? `userBookings_${user.email}` : 'userBookings_guest';
+            const history = JSON.parse(localStorage.getItem(storageKey) || '[]');
+            const booking = history.find(b => b.referenceNumber === ref);
+
+            if (!booking) return;
+
+            document.getElementById('receipt-ref').textContent = `Ref: ${booking.referenceNumber}`;
+            const receiptBody = document.getElementById('receipt-body');
+
+            const total = booking.totalPrice || 0;
+            const discount = booking.discount || 0;
+            const insurance = 500; // Assuming insurance is always 500
+            const subtotal = (booking.totalPrice || 0) - insurance + (booking.discount || 0);
+
+            const discountRow = discount > 0 
+                ? `<div class="receipt-row discount"><span>${booking.discountLabel}</span><span>-₱${discount.toLocaleString()}</span></div>`
+                : '';
+            receiptBody.innerHTML = `
+                <div class="receipt-section">
+                    <p class="receipt-label">Customer</p>
+                    <p class="receipt-value">${booking.customerName}</p>
+                </div>
+                <div class="receipt-section">
+                    <p class="receipt-label">Vehicle</p>
+                    <p class="receipt-value">${booking.vehicleName}</p>
+                </div>
+                <div class="receipt-section">
+                    <p class="receipt-label">Rental Period</p>
+                    <p class="receipt-value">${booking.pickupDate} to ${booking.returnDate}</p>
+                </div>
+                <div class="receipt-section">
+                    <p class="receipt-label">Payment Method</p>
+                    <p class="receipt-value">${booking.paymentMethod 
+                      ? booking.paymentMethod.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') 
+                      : 'N/A'
+                    }
+                    </p>
+                </div>
+                <div class="receipt-divider"></div>
+                <div class="receipt-pricing">
+                    <div class="receipt-row"><span>Subtotal</span><span>₱${subtotal.toLocaleString()}</span></div>
+                    <div class="receipt-row"><span>Insurance</span><span>₱${insurance.toLocaleString()}</span></div>
+                    ${discountRow}
+                    <div class="receipt-row total"><span>Total Paid</span><span>₱${booking.totalPrice.toLocaleString()}</span></div>
+                </div>
+            `;
+
+            document.getElementById('download-receipt-btn').onclick = () => downloadReceipt(booking);
+            receiptModal.style.display = "flex";
+        }
+
+        function downloadReceipt(booking) {
+            const total = booking.totalPrice || 0;
+            const discount = booking.discount || 0;
+            const insurance = 500;
+            const subtotal = total - insurance + discount;
+            const discountLine = discount > 0 
+                ? `Discount (${booking.discountLabel}): -PHP ${discount.toLocaleString()}` 
+                : '';
+            const receiptContent = `
+========================================
+SMARTDRIVE™ OFFICIAL RECEIPT
+========================================
+
+Booking Reference: ${booking.referenceNumber}
+Date Issued: ${new Date().toLocaleDateString()}
+
+----------------------------------------
+CUSTOMER DETAILS
+----------------------------------------
+Name:    ${booking.customerName}
+Email:   ${booking.customerEmail}
+
+----------------------------------------
+BOOKING DETAILS
+----------------------------------------
+Vehicle:     ${booking.vehicleName}
+Pick-up:     ${booking.pickupDate}
+Return:      ${booking.returnDate}
+
+----------------------------------------
+PAYMENT SUMMARY
+----------------------------------------
+Subtotal:    PHP ${subtotal.toLocaleString()}
+Insurance:   PHP ${insurance.toLocaleString()}
+Payment Via: ${booking.paymentMethod || 'N/A'}
+${discountLine}
+========================================
+TOTAL PAID:  PHP ${booking.totalPrice.toLocaleString()}
+========================================
+
+Thank you for choosing SmartDrive™!
+            `;
+
+            const blob = new Blob([receiptContent.trim()], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `SmartDrive_Receipt_${booking.referenceNumber}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }
+
+        window.onload = renderHistory;
+    </script>
+</body>
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Bookings - SmartDrive™ Admin</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body id="dashboard-page">
+  <header class="header">
+    <div class="container">
+      <a href="admin.html" class="logo">
+        <div class="logo-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg>
+        </div>
+        <span>SmartDrive™ <span style="font-size: 10px; background: var(--primary); color: var(--primary-foreground); padding: 2px 5px; border-radius: 4px; margin-left: 5px;">ADMIN</span></span>
+      </a>
+      <nav class="nav-links">
+        <a href="admin.html" class="nav-link">Admin Dashboard</a>
+      </nav>
+      <div class="nav-actions" id="auth-buttons"></div>
+    </div>
+  </header>
+
+  <div class="dashboard-container">
+    <div class="dashboard-layout">
+      <aside class="dashboard-sidebar">
+        <div class="profile-card">
+          <div class="profile-header">
+            <div class="profile-avatar" id="user-avatar-container">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <div class="profile-info">
+              <h3 id="user-name">Admin User</h3>
+              <p class="profile-badge" style="background-color: var(--destructive); color: white;">Admin</p>
+            </div>
+          </div>
+          <nav class="sidebar-nav">
+            <a href="admin.html" class="nav-item">Overview</a>
+            <a href="managebookings.html" class="nav-item active">Manage Bookings</a>
+            <a href="manageusers.html" class="nav-item">Manage Users</a>
+            <a href="managefleetings.html" class="nav-item">Fleet Management</a>
+            <button class="nav-item danger" id="logout-btn">Sign Out</button>
+          </nav>
+        </div>
+      </aside>
+
+      <main class="dashboard-main">
+        <div class="dashboard-header">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <h1 class="dashboard-title">Booking Management</h1>
+              <p class="dashboard-subtitle">View, confirm, or cancel user bookings.</p>
+            </div>
+            <button id="export-csv-btn" class="btn-primary" style="padding: 0.75rem 1.5rem; font-size: 0.8rem;">Export to CSV</button>
+          </div>
+        </div>
+        <div class="dashboard-content bookings-section">
+            <div class="bookings-table-wrapper">
+                <table class="bookings-table">
+                  <thead>
+                    <tr>
+                      <th>Ref #</th>
+                      <th>Customer</th>
+                      <th>Vehicle</th>
+                      <th>Date Range</th>
+                      <th>Total</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="admin-bookings-body"></tbody>
+                </table>
+              </div>
+          </div>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    function checkAdmin() {
+      const user = JSON.parse(sessionStorage.getItem('user') || 'null');
+      if (!user || user.email !== 'admin@smartrentals.com') {
+        window.location.href = 'login.html';
+      } else {
+        document.getElementById('auth-buttons').innerHTML = `<button onclick="logout()" class="btn-login">Logout</button>`;
+      }
+    }
+    function logout() {
+      sessionStorage.removeItem('user');
+      window.location.href = 'index.html';
+    }
+
+    function getAllBookingsFromStorage() {
+        let allBookings = [];
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key.startsWith('userBookings_')) {
+                const bookings = JSON.parse(localStorage.getItem(key) || '[]');
+                allBookings.push(...bookings);
+            }
+        }
+        return allBookings.sort((a, b) => new Date(b.pickupDate) - new Date(a.pickupDate));
+    }
+
+    function loadAllBookings() {
+        const tbody = document.getElementById('admin-bookings-body');
+        const allBookings = getAllBookingsFromStorage();
+        tbody.innerHTML = '';
+
+        if (allBookings.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6" class="text-center p-12 text-muted-foreground/30">No bookings have been made on the platform yet.</td></tr>`;
+            return;
+        }
+
+        allBookings.forEach(booking => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td>${booking.referenceNumber || 'N/A'}</td>
+              <td>${booking.customerName || 'N/A'}</td>
+              <td>${booking.vehicleName}</td>
+              <td>${booking.pickupDate} to ${booking.returnDate}</td>
+              <td>₱${(booking.totalPrice || 0).toLocaleString()}</td>
+              <td><span class="text-primary font-semibold">Confirmed</span></td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+
+    function exportBookingsToCSV() {
+        const allBookings = getAllBookingsFromStorage();
+        if (allBookings.length === 0) {
+            alert('No bookings to export.');
+            return;
+        }
+
+        const headers = [
+            "Reference Number",
+            "Customer Name",
+            "Customer Email",
+            "Vehicle Name",
+            "Pickup Date",
+            "Return Date",
+            "Total Price",
+            "Status"
+        ];
+
+        const csvRows = [headers.join(',')];
+
+        for (const booking of allBookings) {
+            const values = [
+                booking.referenceNumber || '',
+                `"${booking.customerName || ''}"`,
+                booking.customerEmail || '',
+                `"${booking.vehicleName || ''}"`,
+                booking.pickupDate || '',
+                booking.returnDate || '',
+                booking.totalPrice || 0,
+                booking.status || 'Confirmed'
+            ].join(',');
+            csvRows.push(values);
+        }
+
+        const csvString = csvRows.join('\n');
+        const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement("a");
+        const url = URL.createObjectURL(blob);
+        link.setAttribute("href", url);
+        link.setAttribute("download", `smartdrive_bookings_${new Date().toISOString().split('T')[0]}.csv`);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    document.getElementById('logout-btn')?.addEventListener('click', logout);
+    window.addEventListener('load', () => {
+        checkAdmin();
+        loadAllBookings();
+        document.getElementById('export-csv-btn').addEventListener('click', exportBookingsToCSV);
+    });
+  </script>
+</body>
+</html>

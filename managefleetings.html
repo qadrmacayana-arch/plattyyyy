@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Fleet - SmartDrive™ Admin</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body id="dashboard-page">
+  <header class="header">
+    <div class="container">
+      <a href="admin.html" class="logo">
+        <div class="logo-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg>
+        </div>
+        <span>SmartDrive™ <span style="font-size: 10px; background: var(--primary); color: var(--primary-foreground); padding: 2px 5px; border-radius: 4px; margin-left: 5px;">ADMIN</span></span>
+      </a>
+      <nav class="nav-links">
+        <a href="admin.html" class="nav-link">Admin Dashboard</a>
+      </nav>
+      <div class="nav-actions" id="auth-buttons"></div>
+    </div>
+  </header>
+
+  <div class="dashboard-container">
+    <div class="dashboard-layout">
+      <aside class="dashboard-sidebar">
+        <div class="profile-card">
+          <div class="profile-header">
+            <div class="profile-avatar" id="user-avatar-container">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <div class="profile-info">
+              <h3 id="user-name">Admin User</h3>
+              <p class="profile-badge" style="background-color: var(--destructive); color: white;">Admin</p>
+            </div>
+          </div>
+          <nav class="sidebar-nav">
+            <a href="admin.html" class="nav-item">Overview</a>
+            <a href="managebookings.html" class="nav-item">Manage Bookings</a>
+            <a href="manageusers.html" class="nav-item">Manage Users</a>
+            <a href="managefleetings.html" class="nav-item active">Fleet Management</a>
+            <button class="nav-item danger" id="logout-btn">Sign Out</button>
+          </nav>
+        </div>
+      </aside>
+
+      <main class="dashboard-main">
+        <div class="dashboard-header">
+          <h1 class="dashboard-title">Fleet Management</h1>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <p class="dashboard-subtitle">Add, edit, or remove vehicles from your fleet.</p>
+            <button id="add-vehicle-btn" class="btn-primary" style="padding: 0.75rem 1.5rem; font-size: 0.8rem;">Add New Vehicle</button>
+          </div>
+        </div>
+        <div class="dashboard-content">
+            <div class="bookings-table-wrapper">
+                <table class="bookings-table">
+                  <thead>
+                    <tr>
+                      <th style="width: 40%;">Vehicle</th>
+                      <th>Type</th>
+                      <th>Daily Rate</th>
+                      <th>Status</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="fleet-list-body">
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Archived Vehicles Section -->
+              <div class="dashboard-header" style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border);">
+                <h2 class="dashboard-title" style="font-size: 1.5rem;">Archived Vehicles</h2>
+                <p class="dashboard-subtitle">These vehicles are hidden from users but can be recovered.</p>
+              </div>
+              <div class="bookings-table-wrapper">
+                <table class="bookings-table">
+                  <thead>
+                    <tr>
+                      <th style="width: 40%;">Vehicle</th>
+                      <th>Type</th>
+                      <th>Daily Rate</th>
+                      <th>Status</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="archived-fleet-list-body"></tbody>
+                </table>
+              </div>
+          </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Fleet Management Modal -->
+  <div id="fleet-modal" class="modal" style="display: none;">
+    <div class="modal-content" style="max-width: 600px;">
+      <div class="modal-header">
+        <h2 id="modal-title">Add New Vehicle</h2>
+        <span class="close-btn" id="close-fleet-modal">&times;</span>
+      </div>
+      <div class="modal-body">
+        <form id="fleet-form" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+          <input type="hidden" id="vehicle-id">
+          <div class="form-group" style="grid-column: span 2;">
+            <label class="form-label">Vehicle Name</label>
+            <input type="text" id="vehicle-name" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Vehicle Type</label>
+            <input type="text" id="vehicle-type" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Daily Rate (₱)</label>
+            <input type="number" id="vehicle-price" class="form-input" required>
+          </div>
+          <div class="form-group" style="grid-column: span 2;">
+            <label class="form-label">Image URL</label>
+            <input type="text" id="vehicle-image" class="form-input" required>
+          </div>
+          <button type="submit" class="btn-submit" style="grid-column: span 2; margin-top: 1rem;">Save Vehicle</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="data.js"></script>
+  <script>
+    function checkAdmin() {
+      const user = JSON.parse(sessionStorage.getItem('user') || 'null');
+      if (!user || user.email !== 'admin@smartrentals.com') {
+        window.location.href = 'login.html';
+      } else {
+        document.getElementById('auth-buttons').innerHTML = `<button onclick="logout()" class="btn-login">Logout</button>`;
+      }
+    }
+    function logout() {
+      sessionStorage.removeItem('user');
+      window.location.href = 'index.html';
+    }
+
+    function loadFleetData() {
+        const activeTbody = document.getElementById('fleet-list-body');
+        const archivedTbody = document.getElementById('archived-fleet-list-body');
+        activeTbody.innerHTML = '';
+        archivedTbody.innerHTML = '';
+        CARS = getFleet(); // Ensure we have the latest fleet data
+
+        const activeVehicles = CARS.filter(car => car.status !== 'archived');
+        const archivedVehicles = CARS.filter(car => car.status === 'archived');
+
+        if (activeVehicles.length === 0) {
+            activeTbody.innerHTML = `<tr><td colspan="5" class="text-center p-12 text-muted-foreground/30">No active vehicles in the fleet.</td></tr>`;
+        } else {
+            activeVehicles.forEach(car => {
+                const row = document.createElement('tr');
+                const actionButton = `<button class="btn-icon delete-vehicle-btn" data-id="${car.id}" title="Delete" style="background-color: rgba(255, 69, 58, 0.1); color: var(--destructive);"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>`;
+
+                row.innerHTML = `
+                  <td>
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                      <img src="${car.image}" alt="${car.name}" style="width: 80px; height: 50px; object-fit: cover; border-radius: 0.5rem;">
+                      <span style="font-weight: 600; color: white;">${car.name}</span>
+                    </div>
+                  </td>
+                  <td style="color: white;">${car.type}</td>
+                  <td style="color: white;">₱${car.price.toLocaleString()}</td>
+                  <td><span class="text-primary font-semibold">Available</span></td>
+                  <td class="action-cell" style="display: flex; gap: 0.5rem;">
+                    <button class="btn-icon edit-vehicle-btn" data-id="${car.id}" title="Edit"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg></button>`
+                    + actionButton +
+                  `
+                  </td>
+                `;
+                activeTbody.appendChild(row);
+            });
+        }
+
+        if (archivedVehicles.length === 0) {
+            archivedTbody.innerHTML = `<tr><td colspan="5" class="text-center p-12 text-muted-foreground/30">No archived vehicles.</td></tr>`;
+            return;
+        } else {
+          archivedVehicles.forEach(car => {
+            const row = document.createElement('tr');
+            row.style.opacity = '0.6';
+            row.style.background = 'rgba(255, 255, 255, 0.02)';
+
+            const actionButton = `<button class="btn-icon recover-vehicle-btn" data-id="${car.id}" title="Recover" style="background-color: rgba(74, 222, 128, 0.1); color: var(--primary);"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 4.5a10 10 0 0 1-18.8 4.2"/></svg></button>`;
+
+            row.innerHTML = `
+              <td>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                  <img src="${car.image}" alt="${car.name}" style="width: 80px; height: 50px; object-fit: cover; border-radius: 0.5rem;">
+                  <span style="font-weight: 600; color: white;">${car.name}</span>
+                </div>
+              </td>
+              <td style="color: white;">${car.type}</td>
+              <td style="color: white;">₱${car.price.toLocaleString()}</td>
+              <td><span class="text-destructive font-semibold">Archived</span></td>
+              <td class="action-cell" style="display: flex; gap: 0.5rem;">
+                <button class="btn-icon edit-vehicle-btn" data-id="${car.id}" title="Edit"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg></button>`
+                + actionButton +
+              `
+              </td>
+            `;
+            archivedTbody.appendChild(row);
+          });
+        }
+    }
+
+    document.getElementById('logout-btn')?.addEventListener('click', logout);
+
+    // Modal Handling
+    const modal = document.getElementById('fleet-modal');
+    const addBtn = document.getElementById('add-vehicle-btn');
+    const closeBtn = document.getElementById('close-fleet-modal');
+    const form = document.getElementById('fleet-form');
+
+    addBtn.onclick = function() {
+      document.getElementById('modal-title').textContent = 'Add New Vehicle';
+      form.reset();
+      document.getElementById('vehicle-id').value = '';
+      modal.style.display = "flex";
+    }
+
+    closeBtn.onclick = function() {
+      modal.style.display = "none";
+    }
+
+    window.onclick = function(event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    }
+
+    // Use event delegation for edit/delete buttons
+    document.querySelector('.dashboard-content').addEventListener('click', function(e) {
+      const editBtn = e.target.closest('.edit-vehicle-btn');
+      if (editBtn) {
+        const carId = editBtn.dataset.id;
+        CARS = getFleet(); // Refresh data
+        const car = CARS.find(c => c.id === carId);
+        if (car) {
+          document.getElementById('modal-title').textContent = 'Edit Vehicle';
+          document.getElementById('vehicle-id').value = car.id;
+          document.getElementById('vehicle-name').value = car.name;
+          document.getElementById('vehicle-type').value = car.type;
+          document.getElementById('vehicle-price').value = car.price;
+          document.getElementById('vehicle-image').value = car.image;
+          modal.style.display = 'flex';
+        }
+      }
+
+      const deleteBtn = e.target.closest('.delete-vehicle-btn');
+      if (deleteBtn) {
+        if (confirm('Are you sure you want to archive this vehicle? It will be hidden from users but can be recovered.')) {
+          const carId = deleteBtn.dataset.id;
+          let fleet = getFleet();
+          const carIndex = fleet.findIndex(car => car.id === carId);
+          if (carIndex > -1) {
+            fleet[carIndex].status = 'archived';
+            localStorage.setItem('fleetData', JSON.stringify(fleet));
+            loadFleetData();
+          }
+        }
+      }
+
+      const recoverBtn = e.target.closest('.recover-vehicle-btn');
+      if (recoverBtn) {
+        const carId = recoverBtn.dataset.id;
+        let fleet = getFleet();
+        const carIndex = fleet.findIndex(car => car.id === carId);
+        if (carIndex > -1) {
+          fleet[carIndex].status = 'available';
+          localStorage.setItem('fleetData', JSON.stringify(fleet));
+          loadFleetData();
+        }
+      }
+    });
+
+    // Handle form submission for adding/editing vehicles
+    form.addEventListener('submit', function(e) { // This logic remains the same
+      e.preventDefault();
+      const carId = document.getElementById('vehicle-id').value;
+      const carData = {
+        name: document.getElementById('vehicle-name').value,
+        type: document.getElementById('vehicle-type').value,
+        price: parseInt(document.getElementById('vehicle-price').value, 10),
+        image: document.getElementById('vehicle-image').value,
+      };
+
+      const newCar = {
+        id: carId || String(Date.now()),
+        status: 'available', // Default status for new cars
+        specs: { transmission: "Automatic", fuel: "Gasoline", seats: 5 },
+        features: ["Air Conditioning", "Bluetooth Audio", "Power Steering"],
+        description: "A great vehicle for your next journey."
+      };
+
+      let fleet = getFleet();
+      if (carId) { // Editing existing car
+        const index = fleet.findIndex(c => c.id === carId);
+        if (index > -1) fleet[index] = { ...fleet[index], ...carData };
+      } else { // Adding new car
+        fleet.push({ ...newCar, ...carData });
+      }
+
+      localStorage.setItem('fleetData', JSON.stringify(fleet));
+      modal.style.display = "none";
+      loadFleetData();
+    });
+
+    window.addEventListener('load', () => {
+      checkAdmin();
+      loadFleetData();
+    });
+  </script>
+</body>
+</html>

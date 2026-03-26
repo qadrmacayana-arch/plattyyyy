@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SmartDrive™ Sign Up - Create your account and start renting premium vehicles today.">
+  <meta name="theme-color" content="#4ade80">
+  <title>Sign Up - SmartDrive™</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preload" href="data.js" as="script">
+  <!-- Google Sign-In -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg>
+        </div>
+        <span>SmartDrive<span style="font-size: 10px; margin-left: 2px; opacity: 0.7;">TM</span></span>
+      </a>
+
+      <nav class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="rent-a-car.html" class="nav-link">Rent a Car</a>
+        <a href="aboutpage.html" class="nav-link">About</a>
+        <a href="dashboard.html" class="nav-link">Dashboard</a>
+      </nav>
+
+      <div class="nav-actions" id="auth-buttons">
+        <!-- Auth buttons are dynamically loaded here -->
+      </div>
+
+      <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+      </button>
+    </div>
+
+    <div class="mobile-menu">
+      <div class="mobile-nav-links">
+        <a href="index.html" class="mobile-nav-link">Home</a>
+        <a href="rent-a-car.html" class="mobile-nav-link">Rent a Car</a>
+        <a href="dashboard.html" class="mobile-nav-link">Dashboard</a>
+        <div class="mobile-login p-4 border-t border-border">
+          <a href="login.html" class="text-primary no-underline font-semibold">Login</a>
+        </div>
+        <div class="mobile-signup">
+          <a href="signup.html" class="text-primary-foreground no-underline font-semibold bg-primary p-2 px-4 rounded-lg block text-center">Sign Up</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="auth-container">
+    <div class="auth-card animate-fade-in">
+      <div class="auth-content">
+        <div class="auth-header">
+          <div class="auth-logo">
+            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg>
+          </div>
+          <div>
+            <h1 class="auth-title">Create Account</h1>
+            <p class="auth-subtitle">Start Your SmartDrive Journey</p>
+          </div>
+        </div>
+
+        <form id="signup-form">
+          <div class="form-group">
+            <label class="form-label">Full Name</label>
+            <input type="text" id="name" required placeholder="John Doe" class="form-input pl-6">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Birthday</label>
+            <input type="text" id="birthday" required class="form-input pl-6" placeholder="YYYY-MM-DD" onfocus="(this.type='date')" onblur="(this.type='text')">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Complete Address</label>
+            <input type="text" id="address" required placeholder="Street, City, Province" class="form-input pl-6">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Gender</label>
+            <div class="select-wrapper">
+              <select id="gender" class="form-input pl-6">
+                <option value="">Select Gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+                <option value="prefer_not_to_say">Prefer not to say</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email Address</label>
+            <input type="email" id="email" required placeholder="name@example.com" class="form-input pl-6">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <input type="password" id="password" required placeholder="••••••••" class="form-input pl-6">
+            <small id="password-error" class="text-destructive text-xs hidden">Password must be at least 6 characters</small>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Confirm Password</label>
+            <input type="password" id="confirmPassword" required placeholder="••••••••" class="form-input pl-6">
+            <small id="confirm-error" class="text-destructive text-xs hidden">Passwords do not match</small>
+          </div>
+
+          <div class="divider">
+            <div class="divider-line"></div>
+            <span class="divider-text">OR</span>
+            <div class="divider-line"></div>
+          </div>
+
+          <!-- Google Sign-Up Button -->
+          <div id="g_id_onload"
+              data-client_id="510663240850-61pni9anrq5or0f5tcki3vtqkvo31b9p.apps.googleusercontent.com"
+              data-callback="handleGoogleSignUp"
+              data-auto_prompt="false">
+          </div>
+          <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="signup_with" data-shape="rectangular" data-logo_alignment="left" style="display: flex; justify-content: center; margin-bottom: 1.5rem;"></div>
+
+          <div id="loading" class="hidden text-center mb-4">
+            <div class="border-4 border-primary/30 border-t-primary rounded-full w-10 h-10 animate-spin mx-auto"></div>
+          </div>
+
+          <div id="success-message" class="hidden bg-primary/10 border border-primary text-primary text-center p-4 rounded-lg mb-4">
+            Account created successfully! Redirecting...
+          </div>
+
+          <div id="error-message" class="hidden bg-destructive/10 border border-destructive text-destructive text-center p-4 rounded-lg mb-4"></div>
+
+          <div class="pt-4">
+            <button type="submit" class="btn-submit" id="submit-btn">
+              Sign Up Now
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </button>
+          </div>
+        </form>
+
+        <p class="text-xs text-muted-foreground/20 text-center leading-relaxed font-black uppercase tracking-widest mt-10">
+          By signing up, you agree to our <a href="#" class="legal-link text-primary underline" data-content="terms">Terms</a> and 
+          <a href="#" class="legal-link text-primary underline" data-content="privacy">Privacy Policy</a>.
+        </p>
+      </div>
+
+      <div class="auth-footer">
+        <p class="auth-footer-text">
+          Already a member?
+          <a href="login.html" class="auth-footer-link">Log in</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Legal Modal -->
+  <div id="legal-modal" class="modal" style="display: none;">
+    <div class="modal-content" style="max-width: 800px;">
+      <div class="modal-header">
+        <h2 id="legal-modal-title"></h2>
+        <span class="close-btn" id="close-legal-modal">&times;</span>
+      </div>
+      <div class="modal-body" id="legal-modal-body" style="max-height: 70vh; overflow-y: auto;">
+        <!-- Content will be injected by JavaScript -->
+      </div>
+      <div class="modal-footer">
+        <p style="font-size: 0.8rem; color: var(--muted);">Last Updated: March 15, 2026</p>
+      </div>
+    </div>
+  </div>
+
+  <script defer src="data.js"></script>
+  
+  <script defer>
+    // --- Legal Modal Logic ---
+    const legalModal = document.getElementById('legal-modal');
+    const closeLegalModalBtn = document.getElementById('close-legal-modal');
+    const legalModalTitle = document.getElementById('legal-modal-title');
+    const legalModalBody = document.getElementById('legal-modal-body');
+
+    const legalContent = {
+      terms: {
+        title: 'Terms and Conditions',
+        content: `
+          <h4 style="color: var(--primary); margin-top: 1rem; margin-bottom: 0.5rem;">1. Rental Agreement</h4>
+          <p>This agreement is between SmartDrive™ ('the Company') and the renter. By renting a vehicle, the renter agrees to all terms and conditions. The renter must be at least 21 years old and possess a valid driver's license recognized in the Philippines.</p>
+          <h4 style="color: var(--primary); margin-top: 1rem; margin-bottom: 0.5rem;">2. Vehicle Use</h4>
+          <p>The vehicle shall not be used for any illegal purpose, for racing, or outside the designated geographical limits without prior consent. The renter is responsible for all traffic violations and fines incurred during the rental period.</p>
+          <h4 style="color: var(--primary); margin-top: 1rem; margin-bottom: 0.5rem;">3. Payment and Charges</h4>
+          <p>All rental charges are to be paid in Philippine Peso (PHP). A security deposit is required upon vehicle pick-up. The final rental cost will include the daily rate, insurance, and any additional services availed. Late returns will be charged at 1.5x the daily rate.</p>
+          <h4 style="color: var(--primary); margin-top: 1rem; margin-bottom: 0.5rem;">4. Insurance and Liability</h4>
+          <p>All vehicles are covered by Comprehensive Insurance as mandated by Philippine law. In case of an accident, the renter is liable for a participation fee. The renter is responsible for any damage not covered by the insurance.</p>
+          <h4 style="color: var(--primary); margin-top: 1rem; margin-bottom: 0.5rem;">5. Governing Law</h4>
+          <p>This agreement shall be governed by the laws of the Republic of the Philippines. Any disputes shall be settled in the courts of Quezon City, Philippines.</p>
+        `
+      },
+      privacy: {
+        title: 'Privacy Policy',
+        content: `
+          <p>This Privacy Policy is in compliance with the Republic Act No. 10173, also known as the Data Privacy Act of 2012 of the Philippines.</p>
+          <h4 style="color: var(--primary); margin-top: 1rem; margin-bottom: 0.5rem;">1. Information We Collect</h4>
+          <p>We collect personal information such as your name, email address, contact number, birthday, address, and driver's license details upon registration and booking. We also collect non-personal data like browsing behavior to improve our services.</p>
+          <h4 style="color: var(--primary); margin-top: 1rem; margin-bottom: 0.5rem;">2. Use of Information</h4>
+          <p>Your data is used to process bookings, facilitate payments, communicate with you, and improve our platform. We may use your information for marketing purposes, from which you can opt-out at any time.</p>
+          <h4 style="color: var(--primary); margin-top: 1rem; margin-bottom: 0.5rem;">3. Data Sharing and Security</h4>
+          <p>We do not sell your personal data. We may share your information with trusted third-party partners (e.g., payment gateways) only for the purpose of providing our services. We implement robust security measures to protect your data from unauthorized access.</p>
+          <h4 style="color: var(--primary); margin-top: 1rem; margin-bottom: 0.5rem;">4. Your Rights as a Data Subject</h4>
+          <p>Under the Data Privacy Act of 2012, you have the right to access, correct, and erase your personal data. For any inquiries or to exercise your rights, please contact our Data Protection Officer at <a href="mailto:dpo@smartdrive.com" style="color: var(--primary);">dpo@smartdrive.com</a>.</p>
+          <h4 style="color: var(--primary); margin-top: 1rem; margin-bottom: 0.5rem;">5. Contact Information</h4>
+          <p>For any privacy-related concerns, you may contact us at our office located near the Technological Institute of the Philippines, Quezon City, or via email.</p>
+        `
+      }
+    };
+
+    function openLegalModal(type) {
+      if (legalContent[type]) {
+        legalModalTitle.textContent = legalContent[type].title;
+        legalModalBody.innerHTML = legalContent[type].content;
+        legalModal.style.display = 'flex';
+      }
+    }
+
+    document.querySelectorAll('.legal-link').forEach(link => {
+      link.addEventListener('click', function(e) { e.preventDefault(); openLegalModal(this.getAttribute('data-content')); });
+    });
+
+    closeLegalModalBtn.addEventListener('click', () => { legalModal.style.display = 'none'; });
+    window.addEventListener('click', (event) => { if (event.target === legalModal) { legalModal.style.display = 'none'; } });
+
+    // Check if already logged in
+    window.addEventListener('load', function() {
+      const user = JSON.parse(sessionStorage.getItem('user'));
+      if (user) {
+        window.location.href = 'dashboard.html';
+      }
+      updateAuthButtons();
+    });
+
+    // Format and validate email
+    function isValidEmail(email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
+    }
+
+    // UPDATED: Validate form with Birthday and Address
+    function validateForm(name, email, birthday, address, gender, password, confirmPassword) {
+      let isValid = true;
+      
+      document.getElementById('password-error').style.display = 'none';
+      document.getElementById('confirm-error').style.display = 'none';
+      document.getElementById('error-message').style.display = 'none';
+
+      if (!name || name.trim().length < 3) {
+        showError('Please enter your full name (minimum 3 characters)');
+        isValid = false;
+      }
+
+      if (!birthday) {
+        showError('Please select your birthday');
+        isValid = false;
+      }
+
+      if (!address || address.trim().length < 5) {
+        showError('Please enter a complete address');
+        isValid = false;
+      }
+
+      if (!isValidEmail(email)) {
+        showError('Please enter a valid email address');
+        isValid = false;
+      }
+
+      if (password.length < 6) {
+        document.getElementById('password-error').style.display = 'block';
+        showError('Password must be at least 6 characters');
+        isValid = false;
+      }
+
+      if (password !== confirmPassword) {
+        document.getElementById('confirm-error').style.display = 'block';
+        showError('Passwords do not match');
+        isValid = false;
+      }
+
+      return isValid;
+    }
+
+    function showError(message) {
+      const errorDiv = document.getElementById('error-message');
+      errorDiv.textContent = message;
+      errorDiv.style.display = 'block';
+    }
+
+    function showSuccess(message) {
+      const successDiv = document.getElementById('success-message');
+      successDiv.textContent = message;
+      successDiv.style.display = 'block';
+    }
+
+    function toggleMobileMenu() {
+      const mobileLinks = document.querySelector('.mobile-nav-links');
+      if (mobileLinks) {
+        mobileLinks.style.display = mobileLinks.style.display === 'flex' ? 'none' : 'flex';
+      }
+    }
+
+    function updateAuthButtons() {
+      const navActions = document.querySelector('.nav-actions');
+      const mobileLoginBtn = document.querySelector('.mobile-login');
+      const mobileSignupBtn = document.querySelector('.mobile-signup');
+      const user = JSON.parse(sessionStorage.getItem('user'));
+      
+      if (!navActions) return;
+
+      if (user && user.email) {
+        navActions.innerHTML = `
+          <button onclick="logout()" class="btn-login" style="background: none; border: none; cursor: pointer;">
+            Logout
+          </button>
+        `;
+      } else {
+        navActions.innerHTML = `
+          <a href="login.html" class="btn-login">Login</a>
+          <a href="signup.html" class="btn-signup">Sign Up</a>
+        `;
+      }
+    }
+
+    function logout() {
+      sessionStorage.removeItem('user');
+      setTimeout(() => { window.location.href = 'index.html'; }, 500);
+    }
+
+    // --- Google Sign-Up Handler ---
+    function decodeJwtResponse(token) {
+      var base64Url = token.split('.')[1];
+      var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+      return JSON.parse(jsonPayload);
+    }
+
+    function handleGoogleSignUp(response) {
+      const responsePayload = decodeJwtResponse(response.credential);
+      const email = responsePayload.email;
+      const name = responsePayload.name;
+
+      let users = JSON.parse(localStorage.getItem('users') || '[]');
+      let userExists = users.some(u => u.email === email);
+
+      if (userExists) {
+        showError('An account with this Google account already exists. Please log in.');
+        return;
+      }
+
+      // Create a new user account
+      const newUser = {
+        email: email,
+        name: name,
+        password: `google_sso_${Date.now()}`, // Generate a random secure password for internal use
+        birthday: '', // Google doesn't provide this by default
+        address: '',
+        gender: '',
+        memberType: 'Premium',
+        registrationDate: new Date().toISOString()
+      };
+      users.push(newUser);
+      localStorage.setItem('users', JSON.stringify(users));
+
+      // Automatically log the new user in
+      const sessionUser = {
+        email: newUser.email,
+        fullName: newUser.name,
+        memberType: newUser.memberType,
+        registrationDate: newUser.registrationDate,
+        loginTime: new Date().toISOString()
+      };
+      sessionStorage.setItem('user', JSON.stringify(sessionUser));
+      sessionStorage.setItem('isNewUser', 'true'); // Flag for the welcome banner on the dashboard
+
+      // Show success and redirect
+      showSuccess('Account created successfully with Google! Redirecting...');
+      document.getElementById('signup-form').style.display = 'none'; // Hide form
+
+      setTimeout(() => {
+        window.location.href = 'dashboard.html';
+      }, 1500);
+    }
+
+    // UPDATED: Handle form submission with new fields
+    document.getElementById('signup-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const name = document.getElementById('name').value.trim();
+      const birthday = document.getElementById('birthday').value;
+      const address = document.getElementById('address').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const gender = document.getElementById('gender').value;
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      const submitBtn = document.getElementById('submit-btn');
+
+      if (!validateForm(name, email, birthday, address, gender, password, confirmPassword)) {
+        return;
+      }
+
+      const users = JSON.parse(localStorage.getItem('users') || '[]');
+      if (users.find(u => u.email === email)) {
+        showError('An account with that email already exists');
+        return;
+      }
+
+      document.getElementById('loading').style.display = 'block';
+      submitBtn.disabled = true;
+
+      setTimeout(() => {
+        const newUser = { email, name, birthday, address, gender, password, memberType: 'Premium', registrationDate: new Date().toISOString() };
+        users.push(newUser);
+        localStorage.setItem('users', JSON.stringify(users));
+
+        const userData = {
+          email: email,
+          fullName: name,
+          registrationDate: newUser.registrationDate,
+          birthday: birthday,
+          address: address,
+          gender: gender,
+          memberType: 'Premium'
+        };
+        sessionStorage.setItem('user', JSON.stringify(userData));
+        sessionStorage.setItem('isNewUser', 'true'); // Flag for first-time login experience
+
+        document.getElementById('loading').style.display = 'none';
+        showSuccess('Account created successfully! Redirecting...');
+
+        setTimeout(() => {
+          window.location.href = 'dashboard.html';
+        }, 1500);
+      }, 1500);
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const mobileLinks = document.querySelectorAll('.mobile-nav-links a, .mobile-nav-links button');
+      mobileLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          const menu = document.querySelector('.mobile-nav-links');
+          if (menu) menu.style.display = 'none';
+        });
+      });
+    });
+
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes spin { to { transform: rotate(360deg); } }
+      @media (max-width: 768px) {
+        .mobile-nav-links {
+          display: none;
+          position: absolute;
+          top: 70px;
+          left: 0;
+          right: 0;
+          background-color: rgba(10, 10, 10, 0.95);
+          backdrop-filter: blur(10px);
+          border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+          flex-direction: column;
+          padding: 1rem 0;
+          z-index: 100;
+        }
+        .nav-links { display: none; }
+      }
+    `;
+    document.head.appendChild(style);
+  </script>
+</body>
+</html>

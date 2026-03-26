@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SmartDrive™ Dashboard - Manage your bookings, view rental history, and track your loyalty rewards.">
+  <meta name="theme-color" content="#4ade80">
+  <title>Dashboard - SmartDrive™</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preload" href="data.js" as="script">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+  <style>
+    /* Custom Scrollbar Styling */
+    :root {
+      scrollbar-color: #444 #1c1c1e; /* thumb and track color for Firefox */
+      scrollbar-width: thin;
+    }
+
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background-color: rgba(28, 28, 30, 0.5);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background-color: #444;
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background-color: #4ade80; /* Primary green on hover */
+    }
+  </style>
+</head>
+<body id="dashboard-page">
+  <header class="header">
+    <div class="container">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg>
+        </div>
+        <span>SmartDrive<span style="font-size: 10px; margin-left: 2px; opacity: 0.7;">TM</span></span>
+      </a>
+      <nav class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="rent-a-car.html" class="nav-link">Rent a Car</a>
+        <a href="aboutpage.html" class="nav-link">About</a>
+        <a href="dashboard.html" class="nav-link active">Dashboard</a>
+      </nav>
+      <div class="nav-actions" id="auth-buttons"></div>
+    </div>
+  </header>
+
+  <div class="dashboard-container">
+    <div class="dashboard-layout">
+      <aside class="dashboard-sidebar">
+        <div class="profile-card">
+          <div class="profile-header">
+            <div class="profile-avatar" id="user-avatar-container">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <div class="profile-info">
+              <h3 id="user-name">Guest User</h3>
+              <p class="profile-badge" id="user-badge">Guest</p>
+            </div>
+          </div>
+          
+          <nav class="sidebar-nav">
+            <a href="dashboard.html" class="nav-item active">Overview</a>
+            <a href="bookings.html" class="nav-item">My Bookings</a>
+            <a href="offers.html" class="nav-item">Offers & Promos</a>
+            <a href="srwallet.html" class="nav-item">SR Wallet</a>
+            <button class="nav-item" id="settings-link">Settings</button>
+            <button class="nav-item danger" id="logout-btn">Sign Out</button>
+          </nav>
+        </div>
+      </aside>
+
+      <main class="dashboard-main">
+        <div class="dashboard-header">
+          <h1 class="dashboard-title" id="welcome-message">Welcome!</h1>
+          <p class="dashboard-subtitle">Here's what's happening with your account today.</p>
+        </div>
+
+        <div class="dashboard-content">
+
+            <!-- Ongoing Rental Card -->
+            <div class="ongoing-rental-card" id="ongoing-rental-card" style="display: none;">
+              <div class="ongoing-rental-image">
+                  <img id="ongoing-car-image" src="" alt="Ongoing Rental Car">
+              </div>
+              <div class="ongoing-rental-info">
+                  <p class="ongoing-rental-label">Your Current Ride</p>
+                  <h3 id="ongoing-car-name">Car Name</h3>
+                  <div class="rental-period">
+                      <p><strong>From:</strong> <span id="ongoing-pickup-date"></span></p>
+                      <p><strong>To:</strong> <span id="ongoing-return-date"></span></p>
+                  </div>
+                  <div class="rental-progress">
+                      <div class="progress-bar-container">
+                          <div class="progress-bar" id="rental-duration-progress"></div>
+                      </div>
+                      <p id="rental-days-left" class="progress-info"></p>
+                  </div>
+              </div>
+            </div>
+
+            <div class="welcome-banner" id="first-login-banner">
+              <h2>🎉 Welcome Aboard! Your First Ride Awaits.</h2>
+              <p class="welcome-banner-discount">As a new member, enjoy an exclusive <span>15% OFF</span> your first rental.</p>
+              <p class="welcome-banner-note">This offer is automatically applied when you book your first car. Happy driving!</p>
+            </div>
+
+            <!-- Guest User Welcome Banner -->
+            <div class="welcome-banner" id="guest-user-banner" style="display: none; background: linear-gradient(135deg, #007aff 0%, #1dddd3 100%);">
+              <h2>👋 Welcome, Guest!</h2>
+              <p class="welcome-banner-discount">Join the app for the first time to sign up to avail offers and promos and get exclusive deals and discounts.</p>
+              <a href="signup.html" class="btn-cta-primary" style="margin-top: 1rem; display: inline-block; text-decoration: none;">Sign Up Now</a>
+            </div>
+
+            <div class="stats-grid">
+              <div class="stat-card">
+                <p class="stat-label">Active Bookings</p>
+                <p class="stat-value" id="stat-bookings">0</p>
+              </div>
+              <div class="stat-card">
+                <p class="stat-label">Total Spent</p>
+                <p class="stat-value" id="stat-spent">₱0</p>
+              </div>
+              <div class="stat-card">
+                <p class="stat-label">Hours Driven</p>
+                <p class="stat-value" id="stat-hours">0</p>
+              </div>
+            </div>
+
+            <!-- Loyalty Tier Card -->
+            <div class="loyalty-tier-card" id="loyalty-card" style="display: none;">
+              <div class="loyalty-header">
+                <div class="loyalty-info">
+                  <h3 class="loyalty-title" id="loyalty-message">Your Loyalty Tier</h3>
+                  <p class="loyalty-message">Keep renting to unlock exclusive rewards.</p>
+                </div>
+                <div id="loyalty-badge" class="loyalty-badge"></div>
+              </div>
+              <div class="loyalty-progress">
+                <div class="progress-header">
+                  <span class="progress-text">Spending Progress</span>
+                  <span id="spending-progress">₱0 / ₱5,000</span>
+                </div>
+                <div class="progress-bar-container">
+                  <div class="progress-bar" id="progress-bar" style="width: 0%;"></div>
+                </div>
+                <p class="progress-info" id="tier-info">
+                  You're just getting started! Spend ₱5,000 to reach the Premium tier.
+                </p>
+              </div>
+            </div>
+
+            <section class="bookings-section">
+              <div class="section-header-row">
+                <div>
+                  <h2 class="section-title-small">Recent Activity</h2>
+                  <p class="section-subtitle">Your latest bookings and transactions</p>
+                </div>
+                <a href="bookings.html" class="view-all-link">View All History →</a>
+              </div>
+              
+              <div class="bookings-table-wrapper">
+                <table class="bookings-table">
+                  <thead>
+                    <tr>
+                      <th>Ref #</th>
+                      <th>Vehicle</th>
+                      <th>Date Range</th>
+                      <th>Total</th>
+                      <th>Status</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="recent-bookings-body">
+                    <tr>
+                      <td colspan="6" class="text-center p-8 text-muted-foreground/20">
+                        Loading activity...
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </section>
+
+            <div class="satisfaction-meter-card">
+              <div class="satisfaction-header">
+                <h3>How Satisfied Are You?</h3>
+                <p class="satisfaction-subtitle">Help us improve your experience</p>
+              </div>
+              <div class="satisfaction-scale">
+                <button type="button" class="satisfaction-btn" data-value="1" title="Very Dissatisfied">
+                  😡
+                </button>
+                <button type="button" class="satisfaction-btn" data-value="2" title="Dissatisfied">
+                  😞
+                </button>
+                <button type="button" class="satisfaction-btn" data-value="3" title="Neutral">
+                  😐
+                </button>
+                <button type="button" class="satisfaction-btn" data-value="4" title="Satisfied">
+                  😊
+                </button>
+                <button type="button" class="satisfaction-btn" data-value="5" title="Very Satisfied">
+                  😁
+                </button>
+              </div>
+              <p class="satisfaction-feedback" id="satisfaction-feedback">Select a rating</p>
+            </div>
+
+            <div class="quick-action-card">
+              <div class="quick-action-content">
+                <div>
+                  <h3>Need a ride for your next adventure?</h3>
+                  <p>Choose from our premium fleet of electric and luxury vehicles.</p>
+                </div>
+                <a href="rent-a-car.html" class="btn-book-new">Book New Car</a>
+              </div>
+            </div>
+
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3 class="footer-title">About SmartDrive™</h3>
+        <p class="footer-text">Premium car rental service providing luxury vehicles for your journey. Experience the future of mobility with our electric and premium fleet.</p>
+      </div>
+
+      <div class="footer-section">
+        <h3 class="footer-title">Quick Links</h3>
+        <div class="footer-links">
+          <a href="index.html">Home</a>
+          <a href="rent-a-car.html">Rent a Car</a>
+          <a href="aboutpage.html">About Us</a>
+          <a href="dashboard.html">Dashboard</a>
+        </div>
+      </div>
+
+      <div class="footer-section">
+        <h3 class="footer-title">Support</h3>
+        <div class="footer-links">
+          <a href="aboutpage.html#contact-us">Contact Us</a>
+          <a href="#" class="legal-link" data-content="terms">Terms & Conditions</a>
+          <a href="#" class="legal-link" data-content="privacy">Privacy Policy</a>
+        </div>
+      </div>
+
+      <div class="footer-section">
+        <h3 class="footer-title">Company</h3>
+        <div class="footer-links">
+          <a href="#">Careers</a>
+          <a href="#">Blog</a>
+          <a href="#">Partners</a>
+          <a href="#">Fleet</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2026 SmartDrive™. All rights reserved. | Revolutionizing Premium Car Rentals</p>
+    </div>
+  </footer>
+
+  <!-- Legal Modal -->
+  <div id="legal-modal" class="modal" style="display: none;">
+    <div class="modal-content" style="max-width: 800px;">
+      <div class="modal-header">
+        <h2 id="legal-modal-title"></h2>
+        <span class="close-btn" id="close-legal-modal">&times;</span>
+      </div>
+      <div class="modal-body" id="legal-modal-body" style="max-height: 70vh; overflow-y: auto;">
+        <!-- Content will be injected by JavaScript -->
+      </div>
+      <div class="modal-footer">
+        <p style="font-size: 0.8rem; color: var(--muted);">Last Updated: March 15, 2026</p>
+      </div>
+    </div>
+  </div>
+
+  <script defer src="data.js"></script>
+  <script defer>
+    // --- Legal Modal Logic ---
+    const legalModal = document.getElementById('legal-modal');
+    const closeLegalModalBtn = document.getElementById('close-legal-modal');
+    const legalModalTitle = document.getElementById('legal-modal-title');
+    const legalModalBody = document.getElementById('legal-modal-body');
+
+    const legalContent = {
+      terms: {
+        title: 'Terms and Conditions',
+        content: `
+          <h4 style="color: var(--primary); margin-top: 1rem; margin-bottom: 0.5rem;">1. Rental Agreement</h4>
+          <p>This agreement is between SmartDrive™ ('the Company') and the renter. By renting a vehicle, the renter agrees to all terms and conditions. The renter must be at least 21 years old and possess a valid driver's license recognized in the Philippines.</p>
+          <h4 style="color: var(--primary); margin-top: 1rem; margin-bottom: 0.5rem;">2. Vehicle Use</h4>
+          <p>The vehicle shall not be used for any illegal purpose, for racing, or outside the designated geographical limits without prior consent. The renter is responsible for all traffic violations and fines incurred during the rental period.</p>
+          <h4 style="color: var(--primary); margin-top: 1rem; margin-bottom: 0.5rem;">3. Payment and Charges</h4>
+          <p>All rental charges are to be paid in Philippine Peso (PHP). A security deposit is required upon vehicle pick-up. The final rental cost will include the daily rate, insurance, and any additional services availed. Late returns will be charged at 1.5x the daily rate.</p>
+          <h4 style="color: var(--primary); margin-top: 1rem; margin-bottom: 0.5rem;">4. Insurance and Liability</h4>
+          <p>All vehicles are covered by Comprehensive Insurance as mandated by Philippine law. In case of an accident, the renter is liable for a participation fee. The renter is responsible for any damage not covered by the insurance.</p>
+          <h4 style="color: var(--primary); margin-top: 1rem; margin-bottom: 0.5rem;">5. Governing Law</h4>
+          <p>This agreement shall be governed by the laws of the Republic of the Philippines. Any disputes shall be settled in the courts of Quezon City, Philippines.</p>
+        `
+      },
+      privacy: {
+        title: 'Privacy Policy',
+        content: `
+          <p>This Privacy Policy is in compliance with the Republic Act No. 10173, also known as the Data Privacy Act of 2012 of the Philippines.</p>
+          <h4 style="color: var(--primary); margin-top: 1rem; margin-bottom: 0.5rem;">1. Information We Collect</h4>
+          <p>We collect personal information such as your name, email address, contact number, birthday, address, and driver's license details upon registration and booking. We also collect non-personal data like browsing behavior to improve our services.</p>
+          <h4 style="color: var(--primary); margin-top: 1rem; margin-bottom: 0.5rem;">2. Use of Information</h4>
+          <p>Your data is used to process bookings, facilitate payments, communicate with you, and improve our platform. We may use your information for marketing purposes, from which you can opt-out at any time.</p>
+          <h4 style="color: var(--primary); margin-top: 1rem; margin-bottom: 0.5rem;">3. Data Sharing and Security</h4>
+          <p>We do not sell your personal data. We may share your information with trusted third-party partners (e.g., payment gateways) only for the purpose of providing our services. We implement robust security measures to protect your data from unauthorized access.</p>
+          <h4 style="color: var(--primary); margin-top: 1rem; margin-bottom: 0.5rem;">4. Your Rights as a Data Subject</h4>
+          <p>Under the Data Privacy Act of 2012, you have the right to access, correct, and erase your personal data. For any inquiries or to exercise your rights, please contact our Data Protection Officer at <a href="mailto:dpo@smartdrive.com" style="color: var(--primary);">dpo@smartdrive.com</a>.</p>
+          <h4 style="color: var(--primary); margin-top: 1rem; margin-bottom: 0.5rem;">5. Contact Information</h4>
+          <p>For any privacy-related concerns, you may contact us at our office located near the Technological Institute of the Philippines, Quezon City, or via email.</p>
+        `
+      }
+    };
+
+    function openLegalModal(type) {
+      if (legalContent[type]) {
+        legalModalTitle.textContent = legalContent[type].title;
+        legalModalBody.innerHTML = legalContent[type].content;
+        legalModal.style.display = 'flex';
+      }
+    }
+
+    document.querySelectorAll('.legal-link').forEach(link => {
+      link.addEventListener('click', function(e) { e.preventDefault(); openLegalModal(this.getAttribute('data-content')); });
+    });
+
+    closeLegalModalBtn.addEventListener('click', () => { legalModal.style.display = 'none'; });
+    window.addEventListener('click', (event) => { if (event.target === legalModal) { legalModal.style.display = 'none'; } });
+
+    function initDashboard() {
+      loadUserData();
+      processNewBooking(); // Capture the latest transaction from the session
+      loadBookingStats();
+      updateAuthButtons();
+      updateWalletDisplay();
+      initSatisfactionMeter();
+    }
+
+    // Initialize Satisfaction Meter
+    function initSatisfactionMeter() {
+      const buttons = document.querySelectorAll('.satisfaction-btn');
+      const feedback = document.getElementById('satisfaction-feedback');
+      const feedbackLabels = {
+        1: '😞 We\'re sorry! Help us improve.',
+        2: '😐 There\'s room for improvement.',
+        3: '😊 Good! What could be better?',
+        4: '😄 Great experience! Thanks!',
+        5: '🤩 Excellent! You\'re awesome!'
+      };
+
+      buttons.forEach(btn => {
+        btn.addEventListener('click', function() {
+          const value = this.dataset.value;
+          
+          // Remove active from all buttons
+          buttons.forEach(b => b.classList.remove('active'));
+          
+          // Add active to clicked button
+          this.classList.add('active');
+          
+          // Update feedback message
+          feedback.textContent = feedbackLabels[value];
+          feedback.style.color = 'var(--primary)';
+          
+          // Save to localStorage
+          localStorage.setItem('UserSatisfaction', JSON.stringify({
+            rating: value,
+            date: new Date().toISOString()
+          }));
+          
+          // Show brief animation
+          feedback.style.animation = 'none';
+          setTimeout(() => {
+            feedback.style.animation = 'fadeIn 0.3s ease-out';
+          }, 10);
+        });
+      });
+
+      // Load previous rating if exists
+      const savedSatisfaction = JSON.parse(localStorage.getItem('UserSatisfaction') || 'null');
+      if (savedSatisfaction) {
+        const btn = document.querySelector(`[data-value="${savedSatisfaction.rating}"]`);
+        if (btn) {
+          btn.click();
+        }
+      }
+    }
+
+    // Transfers 'pendingBooking' from the confirmation page to 'userBookings' history
+    function processNewBooking() {
+      const pending = JSON.parse(sessionStorage.getItem('pendingBooking') || 'null');
+      const user = JSON.parse(sessionStorage.getItem('user') || 'null');
+      if (pending) {
+        const storageKey = user ? `userBookings_${user.email}` : 'userBookings_guest';
+        let history = JSON.parse(localStorage.getItem(storageKey) || '[]');
+        // Avoid duplicates
+        if (!history.find(b => b.referenceNumber === pending.referenceNumber)) {
+          history.unshift(pending); // Add to top
+          localStorage.setItem(storageKey, JSON.stringify(history));
+        }
+        sessionStorage.removeItem('pendingBooking'); // Clear the buffer
+      }
+    }
+
+    function loadUserData() {
+      const user = JSON.parse(sessionStorage.getItem('user') || 'null');
+      const logoutBtn = document.getElementById('logout-btn');
+      const settingsLink = document.getElementById('settings-link');
+      const avatarContainer = document.getElementById('user-avatar-container');
+      const loyaltyCard = document.getElementById('loyalty-card');
+
+
+      if (user) {
+        document.getElementById('user-name').textContent = user.fullName || 'User';
+        document.getElementById('user-badge').textContent = 'Member';
+        
+        // Check if it's a new user's first visit
+        if (sessionStorage.getItem('isNewUser') === 'true') {
+          document.getElementById('welcome-message').textContent = `Welcome, ${user.fullName.split(' ')[0]}!`;
+        } else {
+          document.getElementById('welcome-message').textContent = `Welcome back, ${user.fullName.split(' ')[0]}!`;
+        }
+        // Keep admin green, make regular users blue
+        if (user.email !== 'admin@smartrentals.com') {
+          avatarContainer.classList.add('member');
+        }
+        if (logoutBtn) logoutBtn.style.display = 'flex';
+        if (settingsLink) settingsLink.style.display = 'flex';
+        // Show loyalty card for registered users
+        document.getElementById('guest-user-banner').style.display = 'none';
+        if (loyaltyCard) loyaltyCard.style.display = 'block';
+      } else {
+        avatarContainer.classList.add('guest'); // Make guest avatar blue
+        document.getElementById('user-name').textContent = 'Guest User';
+        document.getElementById('welcome-message').textContent = 'Welcome, Guest!';
+        if (logoutBtn) logoutBtn.style.display = 'none';
+        document.getElementById('guest-user-banner').style.display = 'block';
+        if (settingsLink) settingsLink.style.display = 'none';
+        // Hide loyalty card for guests
+        if (loyaltyCard) loyaltyCard.style.display = 'none';
+      }
+    }
+
+    function updateWalletDisplay() {
+      const user = JSON.parse(sessionStorage.getItem('user') || 'null');
+      if (!user) return;
+
+      // In a real app, this would be an API call. We'll simulate it with localStorage.
+      const balance = parseFloat(localStorage.getItem(`wallet_${user.email}`) || '0');
+      const walletBalanceEl = document.getElementById('wallet-balance');
+      if (walletBalanceEl) {
+        walletBalanceEl.textContent = `₱${balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      }
+    }
+
+    function loadBookingStats() {
+      const user = JSON.parse(sessionStorage.getItem('user') || 'null');
+      const storageKey = user ? `userBookings_${user.email}` : 'userBookings_guest';
+      const bookings = JSON.parse(localStorage.getItem(storageKey) || '[]');
+      const tbody = document.getElementById('recent-bookings-body');
+      tbody.innerHTML = '';
+
+      if (bookings.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="text-center p-12 text-muted-foreground/30">No History or Transaction made yet!<br><a href="rent-a-car.html" class="text-primary no-underline">Start your first journey →</a></td></tr>`;
+        updateLoyaltyTier(0, true);
+        return;
+      }
+
+      let active = 0, spent = 0, totalHours = 0;
+      const today = new Date();
+      let ongoingBooking = null;
+
+      bookings.slice(0, 5).forEach(booking => {
+        spent += (booking.totalPrice || 0);
+        const pickup = new Date(booking.pickupDate);
+        const dropoff = new Date(booking.returnDate);
+        if (dropoff >= today) active++;
+        totalHours += Math.round((dropoff - pickup) / (1000 * 60 * 60));
+
+        // Check for the current ongoing booking
+        if (pickup <= today && dropoff >= today && !ongoingBooking) {
+          ongoingBooking = booking;
+        }
+
+        const row = document.createElement('tr');
+        const isTesla = booking.vehicleName.toLowerCase().includes('tesla');
+        row.innerHTML = `
+          <td class="font-semibold">${booking.referenceNumber}</td>
+          <td>${booking.vehicleName}</td>
+          <td class="text-sm opacity-80">${pickup.toLocaleDateString()} - ${dropoff.toLocaleDateString()}</td>
+          <td>₱${(booking.totalPrice || 0).toLocaleString()}</td>
+          <td><span class="text-primary font-semibold">Confirmed</span></td>
+          <td>
+            <a href="services-details.html?id=${booking.vehicleId}" class="btn-small" style="text-decoration:none; background:#4ade80; color:white; padding:5px 12px; border-radius:4px; font-weight:600; font-size:0.75rem;">SERVICE</a>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+
+      document.getElementById('stat-bookings').textContent = active;
+      document.getElementById('stat-spent').textContent = `₱${spent.toLocaleString()}`;
+      document.getElementById('stat-hours').textContent = totalHours;
+
+      // Update loyalty tier based on spending
+      updateLoyaltyTier(spent, bookings.length === 1);
+
+      // Display the ongoing rental card if an active booking is found
+      if (ongoingBooking) {
+        displayOngoingRental(ongoingBooking);
+      }
+    }
+
+    function displayOngoingRental(booking) {
+      const card = document.getElementById('ongoing-rental-card');
+      const car = CARS.find(c => c.id === booking.vehicleId || c.name === booking.vehicleName);
+
+      if (!card || !car) return;
+
+      document.getElementById('ongoing-car-image').src = car.image;
+      document.getElementById('ongoing-car-name').textContent = car.name;
+      
+      const pickupDate = new Date(booking.pickupDate);
+      const returnDate = new Date(booking.returnDate);
+      
+      document.getElementById('ongoing-pickup-date').textContent = pickupDate.toLocaleDateString();
+      document.getElementById('ongoing-return-date').textContent = returnDate.toLocaleDateString();
+
+      // Calculate progress
+      const totalDuration = returnDate - pickupDate;
+      const elapsedDuration = new Date() - pickupDate;
+      const progressPercentage = Math.min((elapsedDuration / totalDuration) * 100, 100);
+      document.getElementById('rental-duration-progress').style.width = `${progressPercentage}%`;
+
+      const daysLeft = Math.ceil((returnDate - new Date()) / (1000 * 60 * 60 * 24));
+      document.getElementById('rental-days-left').textContent = daysLeft > 0 
+        ? `${daysLeft} day${daysLeft > 1 ? 's' : ''} remaining`
+        : 'Rental ends today';
+
+      card.style.display = 'grid';
+      document.getElementById('first-login-banner').style.display = 'none'; // Hide welcome banner
+    }
+
+    function updateLoyaltyTier(totalSpent, isFirstBooking) {
+      const progressBar = document.getElementById('progress-bar');
+      const progressText = document.getElementById('spending-progress');
+      const tierInfo = document.getElementById('tier-info');
+      const loyaltyMessage = document.getElementById('loyalty-message');
+      const loyaltyBadge = document.getElementById('loyalty-badge');
+      const banner = document.getElementById('first-login-banner');
+
+      // Calculate progress percentage
+      const progressPercentage = Math.min((totalSpent / 5000) * 100, 100).toFixed(2);
+      progressBar.style.width = `${progressPercentage}%`;
+      progressText.textContent = `₱${totalSpent.toLocaleString()} / ₱5,000`;
+
+      // Show first-login banner if user just logged in and hasn't made a booking
+      const user = JSON.parse(sessionStorage.getItem('user') || 'null');
+      if (user && isFirstBooking) {
+        banner.style.display = 'block';
+        // Fire confetti when the banner appears
+        if (sessionStorage.getItem('isNewUser') === 'true' && typeof confetti === 'function') {
+          confetti({
+            particleCount: 150,
+            spread: 90,
+            origin: { y: 0.6 },
+            zIndex: 1000
+          });
+        }
+        sessionStorage.removeItem('isNewUser'); // Remove flag after showing banner
+      }
+
+      // Update tier message and badge based on spending
+      if (totalSpent >= 5000) {
+        loyaltyBadge.textContent = '👑';
+        loyaltyMessage.textContent = 'Premium Member - Deals Unlocked!';
+        tierInfo.innerHTML = `<span class="font-semibold">🎁 You've unlocked exclusive deals & premium discounts!</span><br><span class="text-sm mt-2 block">Enjoy special pricing and early access to new vehicles.</span>`;
+        // progressBar.parentElement.parentElement.style.display = 'none'; // Hide progress bar for premium members
+      } else if (totalSpent > 0) {
+        loyaltyBadge.textContent = '⭐';
+        loyaltyMessage.textContent = 'Member - Keep renting to unlock exclusive deals!';
+        const remaining = 5000 - totalSpent;
+        tierInfo.textContent = `Spend ₱${remaining.toLocaleString()} more to unlock exclusive deals and premium discounts!`;
+      }
+    }
+
+    function updateAuthButtons() {
+      const user = JSON.parse(sessionStorage.getItem('user') || 'null');
+      const container = document.getElementById('auth-buttons');
+      if (user) {
+        container.innerHTML = `<button onclick="logout()" class="btn-login" style="background: none; border: none; cursor: pointer;">Logout</button>`;
+      } else {
+        container.innerHTML = `
+          <a href="login.html" class="btn-login">Login</a>
+          <a href="signup.html" class="btn-signup">Sign Up</a>
+        `;
+      }
+    }
+
+    function logout() {
+      sessionStorage.removeItem('user');
+      window.location.href = 'index.html';
+    }
+
+    document.getElementById('logout-btn')?.addEventListener('click', logout);
+    document.getElementById('settings-link')?.addEventListener('click', () => window.location.href = 'settings.html');
+
+    window.addEventListener('load', initDashboard);
+  </script>
+</body>
+</html>

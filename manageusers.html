@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Users - SmartDrive™ Admin</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body id="dashboard-page">
+  <header class="header">
+    <div class="container">
+      <a href="admin.html" class="logo">
+        <div class="logo-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg>
+        </div>
+        <span>SmartDrive™ <span style="font-size: 10px; background: var(--primary); color: var(--primary-foreground); padding: 2px 5px; border-radius: 4px; margin-left: 5px;">ADMIN</span></span>
+      </a>
+      <nav class="nav-links">
+        <a href="admin.html" class="nav-link">Admin Dashboard</a>
+      </nav>
+      <div class="nav-actions" id="auth-buttons"></div>
+    </div>
+  </header>
+
+  <div class="dashboard-container">
+    <div class="dashboard-layout">
+      <aside class="dashboard-sidebar">
+        <div class="profile-card">
+          <div class="profile-header">
+            <div class="profile-avatar" id="user-avatar-container">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <div class="profile-info">
+              <h3 id="user-name">Admin User</h3>
+              <p class="profile-badge" style="background-color: var(--destructive); color: white;">Admin</p>
+            </div>
+          </div>
+          <nav class="sidebar-nav">
+            <a href="admin.html" class="nav-item">Overview</a>
+            <a href="managebookings.html" class="nav-item">Manage Bookings</a>
+            <a href="manageusers.html" class="nav-item active">Manage Users</a>
+            <a href="managefleetings.html" class="nav-item">Fleet Management</a>
+            <button class="nav-item danger" id="logout-btn">Sign Out</button>
+          </nav>
+        </div>
+      </aside>
+
+      <main class="dashboard-main" style="max-width: none;">
+        <div class="dashboard-header">
+          <h1 class="dashboard-title">User Management</h1>
+          <p class="dashboard-subtitle">View, edit, or suspend user accounts.</p>
+        </div>
+        <div class="dashboard-content bookings-section">
+            <div class="bookings-table-wrapper">
+                <table class="bookings-table">
+                  <thead>
+                    <tr>
+                      <th>Full Name</th>
+                      <th>Email</th>
+                      <th>Member Since</th>
+                      <th>Total Bookings</th>
+                      <th>Total Spent</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="admin-users-body">
+                  </tbody>
+                </table>
+              </div>
+          </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Edit User Modal -->
+  <div id="edit-user-modal" class="modal" style="display: none;">
+    <div class="modal-content" style="max-width: 500px;">
+      <div class="modal-header">
+        <h2>Edit User</h2>
+        <span class="close-btn" id="close-edit-modal-btn">&times;</span>
+      </div>
+      <div class="modal-body">
+        <form id="edit-user-form">
+          <input type="hidden" id="edit-user-email-original">
+          <div class="form-group">
+            <label class="form-label">Full Name</label>
+            <input type="text" id="edit-user-name" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input type="email" id="edit-user-email" class="form-input" required>
+          </div>
+          <div style="grid-column: span 2; display: flex; gap: 1rem; margin-top: 1rem;">
+            <button type="submit" class="btn-submit" style="width: 100%;">Save Changes</button>
+            <button type="button" id="delete-user-btn" class="btn-submit" style="width: auto; background-color: var(--destructive); padding: 0 2rem;">Delete</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- User Details Modal -->
+  <div id="user-details-modal" class="modal" style="display: none;">
+    <div class="modal-content" style="max-width: 800px;">
+      <div class="modal-header">
+        <h2>User Details</h2>
+        <span class="close-btn" id="close-modal-btn">&times;</span>
+      </div>
+      <div class="modal-body" id="user-modal-body">
+        <!-- User details will be populated here -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function checkAdmin() {
+      const user = JSON.parse(sessionStorage.getItem('user') || 'null');
+      if (!user || user.email !== 'admin@smartrentals.com') {
+        window.location.href = 'login.html';
+      } else {
+        document.getElementById('auth-buttons').innerHTML = `<button onclick="logout()" class="btn-login">Logout</button>`;
+      }
+    }
+    function logout() {
+      sessionStorage.removeItem('user');
+      window.location.href = 'index.html';
+    }
+
+    function loadAllUsers() {
+        const tbody = document.getElementById('admin-users-body');
+        const allUsers = JSON.parse(localStorage.getItem('users') || '[]');
+        tbody.innerHTML = '';
+
+        if (allUsers.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6" class="text-center p-12 text-muted-foreground/30">No users have registered yet.</td></tr>`;
+            return;
+        }
+
+        allUsers.forEach(user => {
+            // Get booking history for each user
+            const storageKey = `userBookings_${user.email}`;
+            const userBookings = JSON.parse(localStorage.getItem(storageKey) || '[]');
+            const totalBookings = userBookings.length;
+            const totalSpent = userBookings.reduce((sum, booking) => sum + (booking.totalPrice || 0), 0);
+
+            // For "Member Since", we'll just use a placeholder for now
+            // In a real app, you'd store the registration date.
+            const memberSince = user.registrationDate ? new Date(user.registrationDate).toLocaleDateString() : 'N/A';
+
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td>${user.name}</td>
+              <td>${user.email}</td>
+              <td>${memberSince}</td>
+              <td>${totalBookings}</td>
+              <td>₱${totalSpent.toLocaleString()}</td>
+              <td class="action-cell">
+                <button class="btn-small view-btn" data-email="${user.email}">View</button>
+                <button class="btn-small edit-btn" data-email="${user.email}" style="background-color: var(--primary); color: var(--primary-foreground);">Edit</button>
+              </td>
+            `;
+            tbody.appendChild(row);
+        });
+
+        // Add event listeners for the new buttons
+        addUserActionListeners();
+    }
+
+    function addUserActionListeners() {
+      document.querySelectorAll('.view-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const userEmail = this.dataset.email;
+          openUserDetailsModal(userEmail);
+        });
+      });
+
+      document.querySelectorAll('.edit-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const userEmail = this.dataset.email;
+          openEditUserModal(userEmail);
+        });
+      });
+    }
+
+    function openUserDetailsModal(email) {
+      const allUsers = JSON.parse(localStorage.getItem('users') || '[]');
+      const user = allUsers.find(u => u.email === email);
+      const storageKey = `userBookings_${email}`;
+      const userBookings = JSON.parse(localStorage.getItem(storageKey) || '[]');
+
+      if (!user) return;
+
+      const modalBody = document.getElementById('user-modal-body');
+      let bookingsHtml = '<h4>Booking History</h4>';
+      if (userBookings.length > 0) {
+        bookingsHtml += `
+          <table class="bookings-table">
+            <thead><tr><th>Ref #</th><th>Vehicle</th><th>Total</th></tr></thead>
+            <tbody>
+              ${userBookings.map(b => `
+                <tr>
+                  <td>${b.referenceNumber}</td>
+                  <td>${b.vehicleName}</td>
+                  <td>₱${(b.totalPrice || 0).toLocaleString()}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        `;
+      } else {
+        bookingsHtml += '<p>No bookings found for this user.</p>';
+      }
+
+      modalBody.innerHTML = `
+        <div class="user-details-grid">
+          <div><strong>Name:</strong> ${user.name}</div>
+          <div><strong>Email:</strong> ${user.email}</div>
+          <div><strong>Birthday:</strong> ${user.birthday || 'N/A'}</div>
+          <div><strong>Address:</strong> ${user.address || 'N/A'}</div>
+        </div>
+        <hr style="border-color: var(--border); margin: 1.5rem 0;">
+        ${bookingsHtml}
+      `;
+
+      document.getElementById('user-details-modal').style.display = 'flex';
+    }
+
+    function openEditUserModal(email) {
+      const allUsers = JSON.parse(localStorage.getItem('users') || '[]');
+      const user = allUsers.find(u => u.email === email);
+      if (!user) return;
+
+      document.getElementById('edit-user-email-original').value = user.email;
+      document.getElementById('edit-user-name').value = user.name;
+      document.getElementById('edit-user-email').value = user.email;
+
+      document.getElementById('edit-user-modal').style.display = 'flex';
+    }
+
+    document.getElementById('close-modal-btn').addEventListener('click', () => {
+      document.getElementById('user-details-modal').style.display = 'none';
+    });
+
+    document.getElementById('close-edit-modal-btn').addEventListener('click', () => {
+      document.getElementById('edit-user-modal').style.display = 'none';
+    });
+
+    document.getElementById('delete-user-btn').addEventListener('click', function() {
+        const originalEmail = document.getElementById('edit-user-email-original').value;
+        if (confirm(`Are you sure you want to delete the user ${originalEmail}? This action cannot be undone.`)) {
+            let users = JSON.parse(localStorage.getItem('users') || '[]');
+            const updatedUsers = users.filter(u => u.email !== originalEmail);
+            localStorage.setItem('users', JSON.stringify(updatedUsers));
+
+            // Close modal and refresh table
+            document.getElementById('edit-user-modal').style.display = 'none';
+            loadAllUsers();
+            alert('User has been deleted.');
+        }
+    });
+
+    document.getElementById('edit-user-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const originalEmail = document.getElementById('edit-user-email-original').value;
+      const newName = document.getElementById('edit-user-name').value;
+      const newEmail = document.getElementById('edit-user-email').value;
+
+      let users = JSON.parse(localStorage.getItem('users') || '[]');
+      const userIndex = users.findIndex(u => u.email === originalEmail);
+
+      if (userIndex !== -1) {
+        users[userIndex].name = newName;
+        users[userIndex].email = newEmail;
+        // In a real app, you'd also update the password if changed.
+        localStorage.setItem('users', JSON.stringify(users));
+        
+        // Also update the session if the edited user is the currently logged-in admin
+        const currentUser = JSON.parse(sessionStorage.getItem('user'));
+        if (currentUser && currentUser.email === originalEmail) {
+          currentUser.fullName = newName;
+          currentUser.email = newEmail;
+          sessionStorage.setItem('user', JSON.stringify(currentUser));
+        }
+      }
+      document.getElementById('edit-user-modal').style.display = 'none';
+      loadAllUsers(); // Refresh the table
+    });
+
+    document.getElementById('logout-btn')?.addEventListener('click', logout);
+    window.addEventListener('load', () => {
+        checkAdmin();
+        loadAllUsers();
+    });
+  </script>
+</body>
+</html>

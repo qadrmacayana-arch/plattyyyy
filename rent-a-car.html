@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SmartDrive™ - Browse and rent premium luxury and electric vehicles in the Philippines. Fast booking, competitive prices.">
+  <meta name="theme-color" content="#4ade80">
+  <title>Rent a Car - SmartDrive™</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preload" href="data.js" as="script">
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    main {
+      flex-grow: 1;
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg>
+        </div>
+        <span>SmartDrive<span style="font-size: 10px; margin-left: 2px; opacity: 0.7;">TM</span></span>
+      </a>
+
+      <nav class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="rent-a-car.html" class="nav-link active">Rent a Car</a>
+        <a href="aboutpage.html" class="nav-link">About</a>
+        <a href="dashboard.html" class="nav-link">Dashboard</a>
+      </nav>
+
+      <div class="nav-actions" id="auth-buttons">
+        <a href="login.html" class="btn-login">Login</a>
+        <a href="signup.html" class="btn-signup">Sign Up</a>
+      </div>
+
+      <button class="mobile-menu-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+      </button>
+    </div>
+
+    <div class="mobile-menu">
+      <div class="mobile-nav-links">
+        <a href="index.html" class="mobile-nav-link">Home</a>
+        <a href="rent-a-car.html" class="mobile-nav-link active">Rent a Car</a>
+        <a href="dashboard.html" class="mobile-nav-link">Dashboard</a>
+      </div>
+      <div id="mobile-auth-links" class="flex flex-col gap-3 pt-2 border-t border-border mt-4"></div>
+    </div>
+  </header>
+
+  <main style="padding-top: 80px;">
+    <div class="container py-10">
+      <header class="page-header">
+        <h1 class="page-title">Our Premium Fleet</h1>
+        <p class="page-description">Carefully curated vehicles for your Philippine journey.</p>
+      </header>
+
+      <div class="search-filters">
+        <div class="search-bar-wrapper">
+          <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input type="text" id="search-input" placeholder="Search by car name or model..." class="search-bar">
+        </div>
+        
+        <div class="filter-buttons" id="filter-buttons">
+          <button class="filter-btn active" data-filter="All">All</button>
+          <button class="filter-btn" data-filter="Electric">Electric</button>
+          <button class="filter-btn" data-filter="Luxury Sedan">Luxury Sedan</button>
+          <button class="filter-btn" data-filter="SUV">SUV</button>
+          <button class="filter-btn" data-filter="Sports Car">Sports Car</button>
+        </div>
+      </div>
+
+      <!-- Favorites Section -->
+      <div id="favorites-section" class="favorites-section" style="display: none;">
+        <div class="section-header-row">
+          <div>
+            <h2 class="section-title-small">⭐ Your Favorites</h2>
+            <p class="section-subtitle">Your saved cars for quick access.</p>
+          </div>
+        </div>
+        <div class="cars-grid" id="favorites-grid"></div>
+      </div>
+
+      <div class="section-header-row" style="margin-top: 2rem;">
+        <h2 class="section-title-small">All Vehicles</h2>
+        <p class="section-subtitle">Browse our entire collection</p>
+      </div>
+
+      <div class="cars-grid" id="cars-grid"></div>
+
+      <div id="no-results" class="no-results" style="display: none; text-align: center; padding: 50px;">
+        <h2>No cars found</h2>
+        <p>Try adjusting your filters or search terms.</p>
+        <button id="clear-filters" class="btn-clear-filters">Clear all filters</button>
+      </div>
+    </div>
+  </main>
+
+  <script defer src="data.js"></script>
+  <script defer src="shared.js"></script>
+  <script defer>
+    function formatNumber(num) {
+      return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+    let currentFilter = 'All';
+    let currentSearch = '';
+
+    function getFavorites() {
+      return JSON.parse(localStorage.getItem('favoriteCars') || '[]');
+    }
+
+    function renderFavorites() {
+      const favoritesSection = document.getElementById('favorites-section');
+      const container = document.getElementById('favorites-grid');
+      const allFavorites = getFavorites();
+
+      if (typeof CARS === 'undefined') return;
+
+      const favoriteCars = CARS.filter(car => allFavorites.includes(car.id));
+
+      if (favoriteCars.length === 0) {
+        favoritesSection.style.display = 'none';
+        container.innerHTML = '';
+      } else {
+        favoritesSection.style.display = 'block';
+        container.innerHTML = favoriteCars.map((car, index) => `
+          <div class="car-card animate-fade-in" style="animation-delay: ${index * 0.05}s;">
+            <div class="car-image">
+              <img src="${car.image}" alt="${car.name}" loading="lazy">
+              <div style="position: absolute; top: 1rem; left: 1rem; display: flex; flex-direction: column; gap: 0.5rem; align-items: flex-start;">
+                <div class="car-badge">${car.type}</div>
+                <div class="car-badge" style="background-color: #fbbf24; color: black;">✨ Earn ${car.srPoints || 100} Points</div>
+              </div>
+            </div>
+            <div class="car-content">
+              <div>
+                <h3 class="car-name">${car.name}</h3>
+                <p class="car-condition m-0 text-xs">High Quality Condition</p>
+              </div>
+
+              <div class="car-price" style="margin-top: -1.5rem; margin-bottom: 1rem; text-align: right;">
+                <span class="price-currency">₱</span>
+                <span class="price-amount">${formatNumber(car.price)}</span>
+                <span class="price-period">/day</span>
+              </div>
+              
+              <div class="car-specs">
+                <div class="car-spec">
+                  <div class="spec-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+                  <span class="spec-label">${car.specs.seats} Seats</span>
+                </div>
+                <div class="car-spec">
+                  <div class="spec-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+                  <span class="spec-label">${car.specs.transmission}</span>
+                </div>
+                <div class="car-spec">
+                  <div class="spec-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 22V4a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v18"/><path d="M14 13h2a2 2 0 0 1 2 2v2a2 2 0 0 0 2 2h0a2 2 0 0 0 2-2V9.83a2 2 0 0 0-.59-1.42L18 5"/></svg></div>
+                  <span class="spec-label">${car.specs.fuel}</span>
+                </div>
+              </div>
+              
+              <div class="flex gap-4">
+                <a href="calendar-selection.html?vehicle=${car.id}" class="btn-view-details" style="flex-grow: 1; text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center;">
+                  Book Now
+                </a>
+                <a href="services-details.html?id=${car.id}" class="btn-icon" title="View Details"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg></a>
+                <button class="btn-icon favorite-btn-action active" data-car-id="${car.id}" title="Remove from favorites">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // Add listeners to the buttons inside the favorites section
+      addFavoriteButtonListeners();
+    }
+
+    function renderCars() {
+      const container = document.getElementById('cars-grid');
+      const noResults = document.getElementById('no-results');
+      
+      const user = JSON.parse(sessionStorage.getItem('user') || 'null');
+
+      if (typeof CARS === 'undefined') {
+        console.error('CARS data not loaded');
+        container.innerHTML = '<p style="color: white;">Error loading cars data. Please refresh the page.</p>';
+        return;
+      }
+      const favorites = getFavorites();
+      CARS = getFleet(); // Get latest fleet data
+
+      const filteredCars = CARS.filter(car => {
+        const isAvailable = car.status !== 'archived';
+        const matchesSearch = car.name.toLowerCase().includes(currentSearch.toLowerCase()) || car.type.toLowerCase().includes(currentSearch.toLowerCase());
+        const matchesFilter = currentFilter === 'All' || car.type === currentFilter;
+        return isAvailable && matchesSearch && matchesFilter;
+      });
+
+      if (filteredCars.length === 0) {
+        container.style.display = 'none';
+        noResults.style.display = 'block';
+      } else {
+        container.style.display = 'grid';
+        noResults.style.display = 'none';
+        
+        container.innerHTML = filteredCars.map((car, index) => {
+          const srPointsHTML = user ? `
+            <div class="car-badge" style="background-color: #fbbf24; color: black;">✨ Earn ${car.srPoints || 100} Points</div>
+          ` : '';
+
+          return `
+          <div class="car-card animate-fade-in" style="animation-delay: ${index * 0.05}s;">
+            <div class="car-image">
+              <img src="${car.image}" alt="${car.name}" loading="lazy">
+              <div style="position: absolute; top: 1rem; left: 1rem; display: flex; flex-direction: column; gap: 0.5rem; align-items: flex-start;">
+                <div class="car-badge">${car.type}</div>
+                ${srPointsHTML}
+              </div>
+            </div>
+            <div class="car-content">
+              <div>
+                <h3 class="car-name">${car.name}</h3>
+                <p class="car-condition m-0 text-xs">High Quality Condition</p>
+              </div>
+
+              <div class="car-price" style="margin-top: -1.5rem; margin-bottom: 1rem; text-align: right;">
+                <span class="price-currency">₱</span>
+                <span class="price-amount">${formatNumber(car.price)}</span>
+                <span class="price-period">/day</span>
+              </div>
+              
+              <div class="car-specs">
+                <div class="car-spec">
+                  <div class="spec-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+                  <span class="spec-label">${car.specs.seats} Seats</span>
+                </div>
+                <div class="car-spec">
+                  <div class="spec-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+                  <span class="spec-label">${car.specs.transmission}</span>
+                </div>
+                <div class="car-spec">
+                  <div class="spec-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 22V4a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v18"/><path d="M14 13h2a2 2 0 0 1 2 2v2a2 2 0 0 0 2 2h0a2 2 0 0 0 2-2V9.83a2 2 0 0 0-.59-1.42L18 5"/></svg></div>
+                  <span class="spec-label">${car.specs.fuel}</span>
+                </div>
+              </div>
+              
+              <div class="flex gap-4">
+                <a href="calendar-selection.html?vehicle=${car.id}" class="btn-view-details" style="flex-grow: 1; text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center;">
+                  Book Now
+                </a>
+                <a href="services-details.html?id=${car.id}" class="btn-icon" title="View Details"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg></a>
+                <button class="btn-icon favorite-btn-action ${favorites.includes(car.id) ? 'active' : ''}" data-car-id="${car.id}" title="Add to favorites"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg></button>
+              </div>
+            </div>
+          </div>`;
+        }).join('');
+      }
+
+      // Add event listeners to the new favorite buttons
+      addFavoriteButtonListeners();
+    }
+
+    function addFavoriteButtonListeners() {
+      document.querySelectorAll('.favorite-btn-action').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const carId = this.dataset.carId;
+          let favorites = getFavorites();
+          if (favorites.includes(carId)) {
+            favorites = favorites.filter(id => id !== carId);
+            this.classList.remove('active');
+          } else {
+            favorites.push(carId);
+            this.classList.add('active');
+          }
+          localStorage.setItem('favoriteCars', JSON.stringify(favorites));
+          renderFavorites(); // Re-render favorites section
+          renderCars(); // Re-render main grid to update star states
+        });
+      });
+    }
+
+    function updateAuthButtons() {
+      const user = JSON.parse(sessionStorage.getItem('user') || 'null');
+      const authButtons = document.getElementById('auth-buttons');
+      const mobileAuthLinks = document.getElementById('mobile-auth-links');
+
+      if (user) {
+        authButtons.innerHTML = `
+          <button onclick="logout()" class="btn-login">Logout</button>
+        `;
+        mobileAuthLinks.innerHTML = `
+          <button onclick="logout()" class="mobile-nav-link">Logout</button>
+        `;
+      } else {
+        authButtons.innerHTML = `
+          <a href="login.html" class="btn-login">Login</a>
+          <a href="signup.html" class="btn-signup">Sign Up</a>
+        `;
+        mobileAuthLinks.innerHTML = `
+          <a href="login.html" class="mobile-nav-link">Login</a>
+          <a href="signup.html" class="btn-signup" style="text-align: center;">Sign Up</a>
+        `;
+      }
+    }
+    function logout() {
+      sessionStorage.removeItem('user');
+      window.location.href = 'index.html';
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      renderCars();
+      renderFavorites();
+      updateAuthButtons();
+
+      document.getElementById('search-input').addEventListener('input', function(e) {
+        currentSearch = e.target.value;
+        renderCars();
+      });
+
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+          currentFilter = this.dataset.filter;
+          renderCars();
+        });
+      });
+
+      document.getElementById('clear-filters').addEventListener('click', function() {
+        currentSearch = '';
+        currentFilter = 'All';
+        document.getElementById('search-input').value = '';
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        document.querySelector('[data-filter="All"]').classList.add('active');
+        renderCars();
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SmartDrive™ - Secure payment processing for your car rental booking.">
+  <meta name="theme-color" content="#4ade80">
+  <title>Payment - SmartDrive™</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preload" href="data.js" as="script">
+</head>
+<body id="payment-page">
+  <header class="header">
+    <div class="container">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg>
+        </div>
+        <span>SmartDrive<span style="font-size: 10px; margin-left: 2px; opacity: 0.7;">TM</span></span>
+      </a>
+      <nav class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="rent-a-car.html" class="nav-link">Rent a Car</a>
+        <a href="aboutpage.html" class="nav-link">About</a>
+        <a href="dashboard.html" class="nav-link">Dashboard</a>
+      </nav>
+      <div id="auth-buttons" class="nav-actions"></div>
+    </div>
+  </header>
+
+  <main class="container py-10">
+    <!-- Stepper -->
+    <div class="stepper-container" style="max-width: 48rem; margin: 0 auto 3rem;">
+      <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+        <div style="text-align: center; flex: 1;"><div style="width: 2.5rem; height: 2.5rem; background-color: #4ade80; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem; font-weight: 900;">✓</div><p style="font-size: 0.75rem; font-weight: 700; color: #4ade80;">DATES</p></div>
+        <div style="text-align: center; flex: 1;"><div style="width: 2.5rem; height: 2.5rem; background-color: #4ade80; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem; font-weight: 900;">✓</div><p style="font-size: 0.75rem; font-weight: 700; color: #4ade80;">DETAILS</p></div>
+        <div style="text-align: center; flex: 1;"><div style="width: 2.5rem; height: 2.5rem; background-color: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem; font-weight: 900;">3</div><p style="font-size: 0.75rem; font-weight: 700; color: var(--primary);">PAYMENT</p></div>
+        <div style="text-align: center; flex: 1;"><div style="width: 2.5rem; height: 2.5rem; background-color: rgba(255, 255, 255, 0.1); color: var(--muted); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem; font-weight: 900;">4</div><p style="font-size: 0.75rem; font-weight: 700; color: var(--muted);">CONFIRM</p></div>
+      </div>
+      <div style="height: 2px; background-color: rgba(255, 255, 255, 0.1); border-radius: 9999px; overflow: hidden;">
+        <div style="height: 100%; width: 75%; background-color: var(--primary);"></div>
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 2rem; align-items: start;">
+      <!-- Payment Form -->
+      <section class="glass-panel" style="padding: 2.5rem;">
+        <h2 style="font-size: 1.5rem; font-weight: 800; color: white; margin-bottom: 2rem; letter-spacing: -0.025em;">PAYMENT INFORMATION</h2>
+
+        <form id="payment-form" style="display: grid; gap: 1.5rem;">
+          <!-- Payment Method Selection -->
+          <div>
+            <label style="font-size: 0.75rem; font-weight: 700; color: var(--muted); text-transform: uppercase; display: block; margin-bottom: 1rem;">Payment Method</label>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1rem;">
+              <div class="payment-method-option" data-method="credit-card">
+                <input type="radio" name="payment_method" value="credit-card" id="card-option" checked style="display: none;" />
+                <label for="card-option" class="payment-method-label active">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                    <line x1="1" y1="10" x2="23" y2="10"></line>
+                  </svg>
+                  <span>Credit Card</span>
+                </label>
+              </div>
+              <div class="payment-method-option" data-method="gcash">
+                <input type="radio" name="payment_method" value="gcash" id="gcash-option" style="display: none;" />
+                <label for="gcash-option" class="payment-method-label">
+                  <img src="https://brandlogos.net/wp-content/uploads/2024/01/gcash-logo_brandlogos.net_kiaqh-512x427.png" alt="GCash" style="height: 24px;">
+                  <span>GCash</span>
+                </label>
+              </div>
+              <div class="payment-method-option" data-method="maya">
+                <input type="radio" name="payment_method" value="maya" id="maya-option" style="display: none;" />
+                <label for="maya-option" class="payment-method-label">
+                  <img src="https://play-lh.googleusercontent.com/fdQjxsIO8BTLaw796rQPZtLEnGEV8OJZJBJvl8dFfZLZcGf613W93z7y9dFAdDhvfqw" alt="Maya" style="height: 24px; border-radius: 4px;">
+                  <span>Maya</span>
+                </label>
+              </div>
+              <div class="payment-method-option" data-method="srwallet">
+                <input type="radio" name="payment_method" value="srwallet" id="srwallet-option" style="display: none;" />
+                <label for="srwallet-option" class="payment-method-label">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"></path><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"></path><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"></path>
+                  </svg>
+                  <span>SR Wallet</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Credit Card Section -->
+          <div id="credit-card-section">
+            <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.5rem;">
+              <label style="font-size: 0.75rem; font-weight: 700; color: var(--muted); text-transform: uppercase;">Card Holder Name</label>
+              <input type="text" id="card-holder" placeholder="John Doe" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 0.5rem; padding: 0.8rem; color: white;">
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.5rem;">
+              <label style="font-size: 0.75rem; font-weight: 700; color: var(--muted); text-transform: uppercase;">Card Number</label>
+              <input type="text" id="card-number" placeholder="1234 5678 9012 3456" maxlength="19" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 0.5rem; padding: 0.8rem; color: white; font-family: monospace; letter-spacing: 0.15em;">
+            </div>
+
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1rem;">
+              <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                <label style="font-size: 0.75rem; font-weight: 700; color: var(--muted); text-transform: uppercase;">Expiry Date</label>
+                <input type="text" id="expiry-date" placeholder="MM/YY" maxlength="5" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 0.5rem; padding: 0.8rem; color: white;">
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                <label style="font-size: 0.75rem; font-weight: 700; color: var(--muted); text-transform: uppercase;">CVV</label>
+                <input type="password" id="cvv" placeholder="***" maxlength="4" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 0.5rem; padding: 0.8rem; color: white;">
+              </div>
+            </div>
+          </div>
+
+          <!-- Maya Section -->
+          <div id="maya-section" style="display: none;">
+            <div class="e-wallet-instructions">
+              <div class="qr-placeholder">
+                <p>QR Under Development</p>
+              </div>
+              <div class="e-wallet-text">
+                <p class="e-wallet-title">Maya Payment Instructions</p>
+                <p class="e-wallet-desc">
+                  Send the exact amount to the Maya number below and enter the transaction ID to confirm.
+                </p>
+                <div class="e-wallet-number">0917 987 6543</div>
+              </div>
+            </div>
+            <!-- New Customer Fields for Maya -->
+             <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1.5rem;">
+              <label style="font-size: 0.75rem; font-weight: 700; color: var(--muted); text-transform: uppercase;">Maya Transaction ID</label>
+              <input type="text" id="maya-ref" placeholder="Enter Maya transaction ID" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 0.5rem; padding: 0.8rem; color: white;">
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem;">
+              <label style="font-size: 0.75rem; font-weight: 700; color: var(--muted); text-transform: uppercase;">Full Name</label>
+              <input type="text" id="maya-name" placeholder="Full Name" class="form-input">
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem;">
+              <label style="font-size: 0.75rem; font-weight: 700; color: var(--muted); text-transform: uppercase;">Address</label>
+              <input type="text" id="maya-address" placeholder="Address" class="form-input">
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem;">
+              <label style="font-size: 0.75rem; font-weight: 700; color: var(--muted); text-transform: uppercase;">Phone Number</label>
+              <input type="tel" id="maya-phone" placeholder="Phone Number" class="form-input">
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem;">
+              <label style="font-size: 0.75rem; font-weight: 700; color: var(--muted); text-transform: uppercase;">License Type</label>
+              <input type="text" id="maya-license" placeholder="e.g., Non-Professional" class="form-input">
+            </div>
+          </div>
+
+          <!-- GCash Section -->
+          <div id="gcash-section" style="display: none;">
+            <div class="e-wallet-instructions">
+              <div class="qr-placeholder"><p>QR Under Development</p></div>
+              <div class="e-wallet-text"><p class="e-wallet-title">GCash Payment Instructions</p><p class="e-wallet-desc">Send the exact amount to the GCash number below and enter the transaction reference number to confirm.</p><div class="e-wallet-number">0917 123 4567</div></div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1.5rem;"><label style="font-size: 0.75rem; font-weight: 700; color: var(--muted); text-transform: uppercase;">Reference Number</label><input type="text" id="gcash-ref" placeholder="GCash reference number" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 0.5rem; padding: 0.8rem; color: white;"></div>
+            <!-- New Customer Fields for GCash --><div style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem;"><label style="font-size: 0.75rem; font-weight: 700; color: var(--muted); text-transform: uppercase;">Full Name</label><input type="text" id="gcash-name" placeholder="Full Name" class="form-input"></div><div style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem;"><label style="font-size: 0.75rem; font-weight: 700; color: var(--muted); text-transform: uppercase;">Address</label><input type="text" id="gcash-address" placeholder="Address" class="form-input"></div><div style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem;"><label style="font-size: 0.75rem; font-weight: 700; color: var(--muted); text-transform: uppercase;">Phone Number</label><input type="tel" id="gcash-phone" placeholder="Phone Number" class="form-input"></div><div style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem;"><label style="font-size: 0.75rem; font-weight: 700; color: var(--muted); text-transform: uppercase;">License Type</label><input type="text" id="gcash-license" placeholder="e.g., Non-Professional" class="form-input"></div>
+          </div>
+
+          <!-- SRPay Section -->
+          <div id="srpay-section" style="display: none; background: rgba(74, 222, 128, 0.1); border: 1px solid rgba(74, 222, 128, 0.2); border-radius: 1rem; padding: 1.5rem;">
+            <h3 style="font-size: 1.1rem; font-weight: 700; color: white; margin-top: 0; margin-bottom: 1.5rem;">Confirm SRPay Transaction</h3>
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+              <p style="color: var(--muted-foreground); font-size: 0.9rem; text-align: center; line-height: 1.6;">
+                You are about to pay using your SR Wallet. The total amount will be deducted from your available balance.
+              </p>
+              <div id="wallet-balance-info" style="text-align: center; margin-top: 0.5rem;">
+                <p style="font-size: 0.8rem; color: var(--muted); margin: 0;">Available Balance</p>
+                <p id="wallet-balance" class="wallet-balance-display" style="font-size: 1.75rem; font-weight: 800; color: var(--primary); margin: 0.25rem 0 0 0;">₱0</p>
+              </div>
+              <div id="wallet-status-message" style="text-align: center; font-weight: 600; font-size: 0.9rem;"></div>
+            </div>
+          </div>
+
+          <!-- Billing Address -->
+          <div id="billing-address-section" style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem;">
+            <h3 style="font-size: 0.875rem; font-weight: 700; color: white; margin-bottom: 1rem;">Billing Address</h3>
+            
+            <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;">
+              <label style="font-size: 0.75rem; font-weight: 700; color: var(--muted); text-transform: uppercase;">Full Address</label>
+              <input type="text" id="billing-address" placeholder="123 Main Street" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 0.5rem; padding: 0.8rem; color: white;">
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+              <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                <label style="font-size: 0.75rem; font-weight: 700; color: var(--muted); text-transform: uppercase;">City</label>
+                <input type="text" id="billing-city" placeholder="Manila" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 0.5rem; padding: 0.8rem; color: white;">
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                <label style="font-size: 0.75rem; font-weight: 700; color: var(--muted); text-transform: uppercase;">Postal Code</label>
+                <input type="text" id="billing-postal" placeholder="1000" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 0.5rem; padding: 0.8rem; color: white;">
+              </div>
+            </div>
+          </div>
+
+          <!-- Terms & Conditions -->
+          <div style="display: flex; align-items: flex-start; gap: 0.75rem; padding-top: 1rem;">
+            <input type="checkbox" id="terms-agree" style="margin-top: 0.25rem; cursor: pointer;">
+            <label for="terms-agree" style="font-size: 0.875rem; color: rgba(255,255,255,0.7); cursor: pointer;">
+              I agree to the <a href="#" style="color: var(--primary); text-decoration: underline;">Terms and Conditions</a> and <a href="#" style="color: var(--primary); text-decoration: underline;">Privacy Policy</a>
+            </label>
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" class="btn-confirm" style="margin-top: 1.5rem; width: 100%;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 10px;">
+              <path d="M12 2v20m10-10H2"></path>
+            </svg>
+            COMPLETE PAYMENT
+          </button>
+
+          <!-- Loading State -->
+          <div id="payment-loading" style="display: none; text-align: center; padding: 2rem;">
+            <div style="width: 2.5rem; height: 2.5rem; border: 3px solid rgba(255,255,255,0.2); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 1rem;" style="--spin: spin 1s linear infinite;"></div>
+            <p style="color: var(--muted);">Processing your payment...</p>
+          </div>
+
+          <!-- Error Message -->
+          <div id="payment-error" style="display: none; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 0.5rem; padding: 1rem; color: #fca5a5;"></div>
+
+          <!-- Success Message -->
+          <div id="payment-success" style="display: none; background: rgba(74, 222, 128, 0.1); border: 1px solid rgba(74, 222, 128, 0.3); border-radius: 0.5rem; padding: 1rem; color: #4ade80;">
+            Payment successful! Redirecting to confirmation...
+          </div>
+        </form>
+      </section>
+
+      <!-- Payment Summary Sidebar -->
+      <aside class="glass-panel" style="padding: 2rem; position: sticky; top: 100px;">
+        <h2 style="font-size: 1.1rem; font-weight: 800; color: white; margin-bottom: 1.5rem;">PAYMENT SUMMARY</h2>
+
+        <!-- Vehicle Details -->
+        <div style="margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1);">
+          <div id="vehicle-preview" style="text-align: center;">
+            <img id="vehicle-image" src="" alt="Vehicle" style="width: 100%; height: 150px; object-fit: cover; border-radius: 0.5rem; margin-bottom: 1rem; display: none;">
+            <h3 id="vehicle-name" style="color: white; font-weight: 700; margin-bottom: 0.25rem;">Loading...</h3>
+            <p id="vehicle-type" style="color: var(--muted); font-size: 0.875rem;">-</p>
+          </div>
+        </div>
+
+        <!-- Booking Details -->
+        <div style="margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1);">
+          <h4 style="font-size: 0.875rem; font-weight: 700; color: white; margin-bottom: 0.75rem;">Booking Details</h4>
+          <div style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.875rem;">
+            <div style="display: flex; justify-content: space-between;">
+              <span style="color: var(--muted);">Pick-up Date:</span>
+              <span id="summary-pickup" style="color: white; font-weight: 600;">-</span>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span style="color: var(--muted);">Return Date:</span>
+              <span id="summary-return" style="color: white; font-weight: 600;">-</span>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span style="color: var(--muted);">Duration:</span>
+              <span id="summary-duration" style="color: white; font-weight: 600;">-</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pricing Breakdown -->
+        <div style="margin-bottom: 1.5rem;">
+          <div style="display: flex; justify-content: space-between; font-size: 0.875rem; margin-bottom: 0.75rem;">
+            <span style="color: var(--muted);">Daily Rate</span>
+            <span id="summary-daily-rate" style="color: white; font-weight: 600;">₱0</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 0.875rem; margin-bottom: 0.75rem;">
+            <span style="color: var(--muted);">Rental Days</span>
+            <span id="summary-days" style="color: white; font-weight: 600;">0</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 0.875rem; margin-bottom: 0.75rem;">
+            <span style="color: var(--muted);">Subtotal</span>
+            <span id="subtotal" style="color: white; font-weight: 600;">₱0</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 0.875rem; margin-bottom: 0.75rem;">
+            <span style="color: var(--muted);">Insurance</span>
+            <span style="color: white; font-weight: 600;">₱500</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 0.875rem; margin-bottom: 1rem;">
+            <span style="color: var(--muted);">Discount</span>
+            <span id="discount-amount" style="color: #4ade80; font-weight: 600;">-₱0</span>
+          </div>
+
+          <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="color: white; font-weight: 700;">Total Amount</span>
+              <span id="total-price-display" style="color: var(--primary); font-size: 1.5rem; font-weight: 900;">₱0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Security Badge -->
+        <div style="background: rgba(74, 222, 128, 0.1); border: 1px solid rgba(74, 222, 128, 0.3); border-radius: 0.5rem; padding: 1rem; text-align: center;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin: 0 auto 0.5rem;">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          </svg>
+          <p style="font-size: 0.75rem; color: #4ade80; font-weight: 600;">Secure Payment</p>
+          <p style="font-size: 0.7rem; color: rgba(74, 222, 128, 0.7);">SSL Encrypted</p>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3 class="footer-title">About SmartDrive™</h3>
+        <p class="footer-text">Premium car rental service providing luxury vehicles for your journey. Experience the future of mobility with our electric and premium fleet.</p>
+      </div>
+
+      <div class="footer-section">
+        <h3 class="footer-title">Quick Links</h3>
+        <div class="footer-links">
+          <a href="index.html">Home</a>
+          <a href="rent-a-car.html">Rent a Car</a>
+          <a href="aboutpage.html">About Us</a>
+          <a href="dashboard.html">Dashboard</a>
+        </div>
+      </div>
+
+      <div class="footer-section">
+        <h3 class="footer-title">Support</h3>
+        <div class="footer-links">
+          <a href="#">Help Center</a>
+          <a href="#">Contact Us</a>
+          <a href="#">Terms & Conditions</a>
+          <a href="#">Privacy Policy</a>
+        </div>
+      </div>
+
+      <div class="footer-section">
+        <h3 class="footer-title">Company</h3>
+        <div class="footer-links">
+          <a href="#">Careers</a>
+          <a href="#">Blog</a>
+          <a href="#">Partners</a>
+          <a href="#">Fleet</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2026 SmartDrive™. All rights reserved. | Revolutionizing Premium Car Rentals</p>
+    </div>
+  </footer>
+
+  <script defer src="data.js"></script>
+  <script defer src="shared.js"></script>
+  <script defer>
+    // Payment form handling
+    const paymentForm = document.getElementById('payment-form');
+    const paymentMethod = document.querySelectorAll('input[name="payment_method"]');
+    const creditCardSection = document.getElementById('credit-card-section');
+    const gcashSection = document.getElementById('gcash-section');
+    const mayaSection = document.getElementById('maya-section');
+    const srpaySection = document.getElementById('srpay-section');
+    const billingAddressSection = document.getElementById('billing-address-section');
+
+    // Toggle payment method sections
+    paymentMethod.forEach(method => {
+      method.addEventListener('change', function() {
+        // Hide all sections first
+        creditCardSection.style.display = 'none';
+        billingAddressSection.style.display = 'none';
+        gcashSection.style.display = 'none';
+        mayaSection.style.display = 'none';
+        srpaySection.style.display = 'none';
+
+        // Show the selected one
+        if (this.value === 'credit-card') {
+          creditCardSection.style.display = 'block';
+          billingAddressSection.style.display = 'block';
+        } else if (this.value === 'gcash') {
+          gcashSection.style.display = 'block';
+        } else if (this.value === 'maya') {
+          mayaSection.style.display = 'block';
+        } else if (this.value === 'srwallet') {
+          srpaySection.style.display = 'block';
+          updateWalletDisplay(); // Fetch and show balance when selected
+        }
+      });
+    });
+
+    // Payment method option styling
+    document.querySelectorAll('.payment-method-option input').forEach(input => {
+      input.addEventListener('change', function() {
+        document.querySelectorAll('.payment-method-option label').forEach(label => {
+          label.classList.remove('active');
+        });
+        if (this.checked) {
+          this.nextElementSibling.classList.add('active');
+        }
+      });
+    });
+    // Ensure the default active class is set on load
+    const defaultActiveRadio = document.querySelector('.payment-method-option input:checked');
+    if (defaultActiveRadio) {
+      defaultActiveRadio.nextElementSibling.classList.add('active');
+    }
+
+
+    // Card number formatting
+    document.getElementById('card-number')?.addEventListener('input', function(e) {
+      let value = e.target.value.replace(/\s/g, '');
+      let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
+      e.target.value = formattedValue;
+    });
+
+    // Expiry date formatting
+    document.getElementById('expiry-date')?.addEventListener('input', function(e) {
+      let value = e.target.value.replace(/\D/g, '');
+      if (value.length >= 2) {
+        value = value.substring(0, 2) + '/' + value.substring(2, 4);
+      }
+      e.target.value = value;
+    });
+
+    // --- SR Wallet Logic ---
+    let walletBalance = 0;
+    function updateWalletDisplay() {
+      const user = JSON.parse(sessionStorage.getItem('user') || 'null');
+      if (!user) {
+        walletBalance = 0;
+      } else {
+        walletBalance = parseFloat(localStorage.getItem(`wallet_${user.email}`) || '0');
+      }
+      const walletBalanceEl = document.getElementById('wallet-balance');
+      if(walletBalanceEl) {
+        walletBalanceEl.textContent = `₱${walletBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      }
+    }
+
+    // Load booking data
+    function loadPaymentData() {
+      const bookingData = sessionStorage.getItem('bookingData');
+      const parsedBookingData = JSON.parse(bookingData || '{}');
+
+      if (!bookingData || !parsedBookingData.customer) {
+        console.warn('Missing booking data. Using demo data.');
+        // Load demo data if available
+        loadDemoData();
+        return;
+      }
+
+      try {
+        const booking = parsedBookingData;
+        const customer = parsedBookingData.customer;
+
+        // Populate payment summary
+        updatePaymentSummary(booking, customer);
+
+        // Populate customer info in payment form if available
+        if (customer.fullName) {
+          document.getElementById('card-holder').value = customer.fullName;
+        }
+        
+        // NEW: If user is logged in, pre-fill billing address from their main account info
+        const loggedInUser = JSON.parse(sessionStorage.getItem('user') || 'null');
+        if (loggedInUser && loggedInUser.address) {
+          document.getElementById('billing-address').value = loggedInUser.address;
+          // You can add logic here to parse city/postal from the full address if needed
+        }
+
+
+      } catch (error) {
+        console.error('Error loading booking data:', error);
+        loadDemoData();
+      }
+    }
+
+    function loadDemoData() {
+      // Use demo booking data
+      const demoBooking = {
+        vehicleId: '1',
+        vehicleName: 'Tesla Model 3',
+        vehicleType: 'Electric',
+        pickupDate: '2026-03-15',
+        returnDate: '2026-03-18',
+        dailyRate: 2500
+      };
+
+      const demoCustomer = {
+        fullName: 'John Doe'
+      };
+
+      updatePaymentSummary(demoBooking, demoCustomer);
+    }
+
+    function updatePaymentSummary(booking, customer) {
+      // Find vehicle from CARS array
+      const vehicle = CARS.find(car => car.id === booking.vehicleId || car.name === booking.vehicleName);
+
+      if (vehicle) {
+        document.getElementById('vehicle-image').src = vehicle.image;
+        document.getElementById('vehicle-image').style.display = 'block';
+        document.getElementById('vehicle-name').textContent = vehicle.name;
+        document.getElementById('vehicle-type').textContent = vehicle.type;
+      }
+
+      // Update booking details
+      document.getElementById('summary-pickup').textContent = formatDate(booking.pickupDate);
+      document.getElementById('summary-return').textContent = formatDate(booking.returnDate);
+
+      // Calculate duration
+      const pickup = new Date(booking.pickupDate);
+      const returnDate = new Date(booking.returnDate);
+      const duration = Math.ceil((returnDate - pickup) / (1000 * 60 * 60 * 24));
+
+      // Check for discounts
+      const loggedInUser = JSON.parse(sessionStorage.getItem('user') || 'null');
+      const userBookingsKey = loggedInUser ? `userBookings_${loggedInUser.email}` : null;
+      const userHistory = userBookingsKey ? JSON.parse(localStorage.getItem(userBookingsKey) || '[]') : [];
+      const isNewUser = loggedInUser && userHistory.length === 0;
+      const isPwdOrSenior = customer.isPwdOrSenior;
+
+      document.getElementById('summary-duration').textContent = `${duration} day${duration !== 1 ? 's' : ''}`;
+      document.getElementById('summary-days').textContent = duration;
+      document.getElementById('summary-daily-rate').textContent = `₱${(booking.dailyRate || vehicle?.price || 0).toLocaleString()}`;
+
+      // Calculate pricing
+      const dailyRate = booking.dailyRate || vehicle?.price || 0;
+      let subtotal = dailyRate * duration;
+      const insurance = 500;
+      
+      // --- MODIFIED: Discount Logic ---
+      let bestDiscount = 0;
+      let discountLabel = "N/A";
+
+      // 1. Check for promo code from offers page
+      const promoCodeData = JSON.parse(sessionStorage.getItem('discountCode') || 'null');
+      if (promoCodeData && promoCodeData.discount) {
+        bestDiscount = subtotal * (promoCodeData.discount / 100);
+        discountLabel = `${promoCodeData.description} (${promoCodeData.code})`;
+      }
+
+      // 2. Check for PWD/Senior discount and apply if it's better
+      if (isPwdOrSenior) {
+        const pwdDiscount = subtotal * 0.20;
+        if (pwdDiscount > bestDiscount) {
+          bestDiscount = pwdDiscount;
+          discountLabel = "PWD/Senior Discount (20%)";
+        }
+      }
+      // 3. Check for new user discount and apply if it's better
+      if (isNewUser) {
+        const newUserDiscount = subtotal * 0.15;
+        if (newUserDiscount > bestDiscount) {
+          bestDiscount = newUserDiscount;
+          discountLabel = "New Member Discount (15%)";
+        }
+      }
+
+      const total = subtotal + insurance - bestDiscount;
+
+      document.getElementById('subtotal').textContent = `₱${subtotal.toLocaleString()}`;
+      document.getElementById('discount-amount').textContent = `-₱${bestDiscount.toLocaleString()}`;
+      document.getElementById('total-price-display').textContent = `₱${total.toLocaleString()}`;
+
+      // Store for later use
+      const bookingData = JSON.parse(sessionStorage.getItem('bookingData') || '{}');
+      bookingData.payment = {
+        dailyRate,
+        days: duration,
+        insurance,
+        discount: bestDiscount,
+        totalAmount: total,
+        discountLabel: bestDiscount > 0 ? discountLabel : "N/A"
+      };
+      sessionStorage.setItem('bookingData', JSON.stringify(bookingData));
+    }
+
+    function formatDate(dateString) {
+      const options = { year: 'numeric', month: 'short', day: 'numeric' };
+      return new Date(dateString).toLocaleDateString('en-US', options);
+    }
+
+    // Form submission
+    paymentForm?.addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const termsCheckbox = document.getElementById('terms-agree');
+      if (!termsCheckbox.checked) {
+        showError('Please accept the terms and conditions');
+        return;
+      }
+
+      const paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
+      let isValid = true;
+
+      if (paymentMethod === 'credit-card') {
+        isValid = validateCreditCard();
+      } else if (paymentMethod === 'gcash') {
+        isValid = validateGCash();
+      } else if (paymentMethod === 'maya') {
+        isValid = validateMaya();
+      } else if (paymentMethod === 'srwallet') {
+        isValid = validateSRPay();
+      }
+
+      if (!isValid) return;
+
+      await processPayment(paymentMethod);
+    });
+
+    function validateCreditCard() {
+      const cardHolder = document.getElementById('card-holder').value.trim();
+      const cardNumber = document.getElementById('card-number').value.replace(/\s/g, '');
+      const expiryDate = document.getElementById('expiry-date').value;
+      const cvv = document.getElementById('cvv').value;
+
+      if (!cardHolder) {
+        showError('Please enter cardholder name');
+        return false;
+      }
+
+      if (cardNumber.length !== 16 || !/^\d+$/.test(cardNumber)) {
+        showError('Please enter a valid 16-digit card number');
+        return false;
+      }
+
+      if (!/^\d{2}\/\d{2}$/.test(expiryDate)) {
+        showError('Please enter a valid expiry date (MM/YY)');
+        return false;
+      }
+
+      if (cvv.length < 3 || !/^\d+$/.test(cvv)) {
+        showError('Please enter a valid CVV');
+        return false;
+      }
+
+      return true;
+    }
+
+    function validateGCash() {
+      const gcashRef = document.getElementById('gcash-ref').value.trim();
+      const gcashName = document.getElementById('gcash-name').value.trim();
+      const gcashAddress = document.getElementById('gcash-address').value.trim();
+      const gcashPhone = document.getElementById('gcash-phone').value.trim();
+      const gcashLicense = document.getElementById('gcash-license').value.trim();
+
+      if (!gcashRef || !gcashName || !gcashAddress || !gcashPhone || !gcashLicense) {
+        showError('Please fill in all GCash payment and customer details');
+        return false;
+      }
+
+      return true;
+    }
+
+    function validateMaya() {
+      const mayaRef = document.getElementById('maya-ref').value.trim();
+      const mayaName = document.getElementById('maya-name').value.trim();
+      const mayaAddress = document.getElementById('maya-address').value.trim();
+      const mayaPhone = document.getElementById('maya-phone').value.trim();
+      const mayaLicense = document.getElementById('maya-license').value.trim();
+
+      if (!mayaRef || !mayaName || !mayaAddress || !mayaPhone || !mayaLicense) {
+        showError('Please fill in all Maya payment and customer details');
+        return false;
+      }
+      return true;
+    }
+
+    function validateSRPay() {
+        const bookingData = JSON.parse(sessionStorage.getItem('bookingData') || '{}');
+        const totalDue = bookingData.payment?.totalAmount || 0;
+        const user = JSON.parse(sessionStorage.getItem('user') || 'null');
+
+        // Directly fetch the latest balance for accurate validation
+        const currentWalletBalance = user ? parseFloat(localStorage.getItem(`wallet_${user.email}`) || '0') : 0;
+        updateWalletDisplay(); // Update UI
+
+        if (currentWalletBalance < totalDue) {
+            showError(`Insufficient SR Wallet balance. You need ₱${totalDue.toLocaleString()} but only have ₱${currentWalletBalance.toLocaleString()}. Please top up or choose another method.`);
+            const walletStatus = document.getElementById('wallet-status-message');
+            if(walletStatus) {
+              walletStatus.textContent = 'Insufficient Balance';
+              walletStatus.classList.add('insufficient-balance');
+            }
+            const walletBalanceEl = document.getElementById('wallet-balance');
+            if(walletBalanceEl) walletBalanceEl.classList.add('insufficient-balance');
+            
+            return false;
+        }
+        return true;
+    }
+
+    async function processPayment(method) {
+      const loadingDiv = document.getElementById('payment-loading');
+      const submitButton = document.querySelector('#payment-form button[type="submit"]');
+
+      loadingDiv.style.display = 'block';
+      if (submitButton) submitButton.disabled = true;
+
+      try {
+        // Simulate payment processing
+        await new Promise(resolve => setTimeout(resolve, 2000));
+
+        // If SRWallet, deduct from balance
+        const user = JSON.parse(sessionStorage.getItem('user') || 'null');
+        const bookingDetails = JSON.parse(sessionStorage.getItem('bookingData') || '{}'); // Use the main bookingData
+        const vehicle = CARS.find(car => car.id === bookingDetails.vehicleId);
+
+        // --- Award SR Points for registered users ---
+        if (user && bookingDetails.payment?.totalAmount > 0) {
+          const pointsEarned = vehicle?.srPoints || 0;
+          if (pointsEarned > 0) {
+            const currentBalance = parseFloat(localStorage.getItem(`wallet_${user.email}`) || '0');
+            const newBalance = currentBalance + pointsEarned;
+            localStorage.setItem(`wallet_${user.email}`, newBalance);
+            // The transaction history is correctly updated by the addTransaction call below
+            addTransaction(user.email, `Booking Reward (${vehicle.name})`, pointsEarned);
+          }
+        }
+
+        // Handle SRWallet deduction
+        if (method === 'srwallet') {
+          const totalDue = bookingDetails.payment?.totalAmount || 0;
+          const currentBalance = user ? parseFloat(localStorage.getItem(`wallet_${user.email}`) || '0') : 0;
+          const newBalance = currentBalance - totalDue;
+          
+          if (user) {
+            localStorage.setItem(`wallet_${user.email}`, newBalance);
+            addTransaction(user.email, `Payment for Booking #${bookingDetails.referenceNumber}`, -totalDue); // Deduction from wallet
+          }
+        }
+
+        // Generate reference number (moved here to ensure it's always generated)
+        const referenceNumber = `REF-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
+
+        // Update booking data with payment method and reference number
+        const currentBookingData = JSON.parse(sessionStorage.getItem('bookingData') || '{}');
+        const updatedBookingData = { 
+          ...currentBookingData,
+          referenceNumber: referenceNumber,
+          paymentMethod: method
+        };
+        sessionStorage.setItem('bookingData', JSON.stringify(updatedBookingData));
+
+        showSuccess('Payment processed successfully!');
+        loadingDiv.style.display = 'none';
+
+        // Redirect to confirmation page
+        setTimeout(() => {
+          window.location.href = 'confirmation.html';
+        }, 1500);
+
+      } catch (error) {
+        console.error('Payment error:', error);
+        showError('Payment failed. Please try again.');
+        if (loadingDiv) loadingDiv.style.display = 'none';
+        if (submitButton) submitButton.disabled = false;
+      }
+    }
+
+    function showError(message) {
+      const errorDiv = document.getElementById('payment-error');
+      errorDiv.textContent = message;
+      errorDiv.style.display = 'block';
+      setTimeout(() => {
+        errorDiv.style.display = 'none';
+      }, 5000);
+    }
+
+    function showSuccess(message) {
+      const successDiv = document.getElementById('payment-success');
+      successDiv.textContent = message;
+      successDiv.style.display = 'block';
+    }
+
+    // Initialize on page load
+    window.addEventListener('load', () => {
+      loadPaymentData();
+      updateAuthButtons();
+      updateWalletDisplay();
+    });
+
+    function updateAuthButtons() {
+      const user = JSON.parse(sessionStorage.getItem('user') || 'null');
+      const authButtons = document.getElementById('auth-buttons');
+
+      if (user) {
+        authButtons.innerHTML = `
+          <button onclick="logout()" class="btn-login" style="background: none; border: none; cursor: pointer;">
+            Logout
+          </button>
+        `;
+      } else {
+        authButtons.innerHTML = `
+          <a href="login.html" class="btn-login">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" x2="3" y1="12" y2="12"/></svg>
+            Login
+          </a>
+          <a href="signup.html" class="btn-signup">Sign Up</a>
+        `;
+      }
+    }
+
+    function logout() {
+      sessionStorage.removeItem('user');
+      window.location.href = 'index.html';
+    }
+
+    // CSS animation for loading spinner
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+    `;
+    document.head.appendChild(style);
+  </script>
+</body>
+</html>

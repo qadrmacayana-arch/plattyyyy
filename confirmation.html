@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SmartDrive™ - Booking Confirmation. Your car rental is confirmed! Review your booking details and details.">
+  <meta name="theme-color" content="#4ade80">
+  <title>Booking Confirmation - SmartDrive™</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preload" href="data.js" as="script">
+</head>
+<body>
+  <!-- Header/Navigation -->
+  <header class="header">
+    <div class="container">
+      <a href="index.html" class="logo">
+        <div class="logo-icon" style="background-color: #4ade80; padding: 0.5rem; border-radius: 0.5rem; display: flex; align-items: center; justify-content: center;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg>
+        </div>
+        <span style="color: white; font-weight: 700; font-size: 1.25rem;">SmartDrive<span style="font-size: 10px; margin-left: 2px; opacity: 0.7;">TM</span></span>
+      </a>
+
+      <nav class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="rent-a-car.html" class="nav-link">Rent a Car</a>
+        <a href="aboutpage.html" class="nav-link">About</a>
+        <a href="dashboard.html" class="nav-link">Dashboard</a>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="login.html" class="btn-login" id="nav-login">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" x2="3" y1="12" y2="12"/></svg>
+          Login
+        </a>
+        <a href="signup.html" class="btn-signup" id="nav-signup">Sign Up</a>
+      </div>
+
+      <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+      </button>
+    </div>
+
+    <div class="mobile-menu">
+      <div class="mobile-nav-links">
+        <a href="index.html" class="mobile-nav-link">Home</a>
+        <a href="rent-a-car.html" class="mobile-nav-link">Rent a Car</a>
+        <a href="dashboard.html" class="mobile-nav-link">Dashboard</a>
+      </div>
+      <hr style="border-color: rgba(255, 255, 255, 0.05);">
+      <div style="display: flex; flex-direction: column; gap: 0.75rem; padding-top: 0.5rem;">
+        <a href="login.html" class="mobile-nav-link" id="mobile-login" style="display: flex; align-items: center; gap: 0.5rem;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" x2="3" y1="12" y2="12"/></svg>
+          Login
+        </a>
+        <a href="signup.html" class="mobile-nav-link" id="mobile-signup">Sign Up</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Confirmation Container -->
+  <div class="confirmation-container">
+    <div class="confirmation-card animate-fade-in">
+      <!-- Success Icon -->
+      <div class="confirmation-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"></polyline>
+          <circle cx="12" cy="12" r="10"></circle>
+        </svg>
+      </div>
+
+      <!-- Confirmation Header -->
+      <div class="confirmation-header">
+        <h1 class="confirmation-title">Booking Confirmed!</h1>
+        <p class="confirmation-subtitle">Your reservation has been successfully processed</p>
+      </div>
+
+      <!-- Confirmation Details -->
+      <div class="confirmation-details">
+        <div class="detail-section">
+          <h3 class="detail-label">Booking Reference</h3>
+          <p class="detail-value" id="ref-number">REF-2024-000000</p>
+        </div>
+
+        <div class="detail-grid">
+          <div class="detail-item">
+            <h4 class="detail-label">Vehicle</h4>
+            <p class="detail-value" id="vehicle-info">Loading...</p>
+          </div>
+          <div class="detail-item">
+            <h4 class="detail-label">Pick-up Date</h4>
+            <p class="detail-value" id="pickup-date">Loading...</p>
+          </div>
+          <div class="detail-item">
+            <h4 class="detail-label">Return Date</h4>
+            <p class="detail-value" id="return-date">Loading...</p>
+          </div>
+          <div class="detail-item">
+            <h4 class="detail-label">Location</h4>
+            <p class="detail-value" id="location">Loading...</p>
+          </div>
+          <div class="detail-item">
+            <h4 class="detail-label">Payment Method</h4>
+            <p class="detail-value" id="payment-method-info">Loading...</p>
+          </div>
+        </div>
+
+        <div class="detail-divider"></div>
+
+        <div class="pricing-section">
+          <div class="pricing-row">
+            <span>Subtotal</span>
+            <span id="subtotal-cost">₱0</span>
+          </div>
+          <div class="pricing-row">
+            <span>Insurance</span>
+            <span id="insurance-cost">₱0</span>
+          </div>
+          <div class="pricing-row" id="discount-row" style="display: none;">
+            <span id="discount-label">Discount</span>
+            <span id="discount-cost" style="color: #4ade80;">-₱0</span>
+          </div>
+          <div class="pricing-row pricing-total">
+            <span>Total Amount</span>
+            <span id="total-amount">₱0</span>
+          </div>
+        </div>
+
+        <div class="detail-divider"></div>
+
+        <!-- Customer Information -->
+        <div class="customer-info">
+          <h3 style="margin-bottom: 1rem; color: #fff;">Customer Information</h3>
+          <div class="info-grid">
+            <div>
+              <p class="info-label">Full Name</p>
+              <p class="info-value" id="customer-name">Loading...</p>
+            </div>
+            <div>
+              <p class="info-label">Email</p>
+              <p class="info-value" id="customer-email">Loading...</p>
+            </div>
+            <div>
+              <p class="info-label">Phone</p>
+              <p class="info-value" id="customer-phone">Loading...</p>
+            </div>
+            <div>
+              <p class="info-label">License Type</p>
+              <p class="info-value" id="license-type">Loading...</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Important Notes -->
+        <div class="important-notes">
+          <h4 style="color: #fbbf24; margin-bottom: 0.75rem;">Important Information:</h4>
+          <ul style="list-style: none; padding: 0; color: rgba(255,255,255,0.7);">
+            <li style="margin-bottom: 0.5rem;">✓ A confirmation email has been sent to your registered email address</li>
+            <li style="margin-bottom: 0.5rem;">✓ Please arrive 15 minutes early for vehicle inspection</li>
+            <li style="margin-bottom: 0.5rem;">✓ Bring a valid driver's license and identification</li>
+            <li style="margin-bottom: 0.5rem;">✓ Vehicle must be returned with a full fuel tank</li>
+            <li>✓ Late returns will be charged at 1.5x the daily rate</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="confirmation-actions">
+        <a href="dashboard.html" class="btn btn-primary">View Booking in Dashboard</a>
+        <a href="index.html" class="btn btn-secondary">Return to Home</a>
+      </div>
+
+      <!-- Download Receipt Link -->
+      <div style="text-align: center; margin-top: 1.5rem;">
+        <button id="download-receipt" class="receipt-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: inline; margin-right: 0.5rem;">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          Download Receipt
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3 class="footer-title">About SmartDrive™</h3>
+        <p class="footer-text">Premium car rental service providing luxury vehicles for your journey. Experience the future of mobility with our electric and premium fleet.</p>
+      </div>
+
+      <div class="footer-section">
+        <h3 class="footer-title">Quick Links</h3>
+        <div class="footer-links">
+          <a href="index.html">Home</a>
+          <a href="rent-a-car.html">Rent a Car</a>
+          <a href="aboutpage.html">About Us</a>
+          <a href="dashboard.html">Dashboard</a>
+        </div>
+      </div>
+
+      <div class="footer-section">
+        <h3 class="footer-title">Support</h3>
+        <div class="footer-links">
+          <a href="aboutpage.html#contact-us" class="contact-link">Contact Us</a>
+          <a href="#" class="legal-link" data-content="terms">Terms & Conditions</a>
+          <a href="#" class="legal-link" data-content="privacy">Privacy Policy</a>
+        </div>
+      </div>
+
+      <div class="footer-section">
+        <h3 class="footer-title">Company</h3>
+        <div class="footer-links">
+          <a href="#">Careers</a>
+          <a href="#">Blog</a>
+          <a href="#">Partners</a>
+          <a href="#">Fleet</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2026 SmartDrive™. All rights reserved. | Revolutionizing Premium Car Rentals</p>
+    </div>
+  </footer>
+
+  <!-- Legal Modal -->
+  <div id="legal-modal" class="modal" style="display: none;">
+    <div class="modal-content" style="max-width: 800px;">
+      <div class="modal-header">
+        <h2 id="legal-modal-title"></h2>
+        <span class="close-btn" id="close-legal-modal">&times;</span>
+      </div>
+      <div class="modal-body" id="legal-modal-body" style="max-height: 70vh; overflow-y: auto;">
+        <!-- Content will be injected by JavaScript -->
+      </div>
+      <div class="modal-footer">
+        <p style="font-size: 0.8rem; color: var(--muted);">Last Updated: March 15, 2026</p>
+      </div>
+    </div>
+  </div>
+
+  <script defer src="data.js"></script>
+  <script defer src="shared.js"></script>
+  <script>
+    // Mobile menu toggle function
+    function toggleMobileMenu() {
+      const mobileMenu = document.querySelector('.mobile-menu');
+      if (mobileMenu) {
+        const isActive = mobileMenu.style.display === 'flex';
+        mobileMenu.style.display = isActive ? 'none' : 'flex';
+      }
+    }
+
+    // Load confirmation data and SYNC to Dashboard History
+    function loadConfirmationData() {
+      const bookingDataString = sessionStorage.getItem('bookingData');
+
+      if (!bookingDataString) {
+        console.warn('Missing booking data. Redirecting to start.');
+        // Optional: Redirect if no data is found at all
+        // window.location.href = 'rent-a-car.html';
+        return;
+      }
+
+      try {
+        const booking = JSON.parse(bookingDataString);
+        const customer = booking.customer || {};
+        const payment = booking.payment || {};
+
+        // --- NEW: Apply color theme to the UI based on payment method ---
+        let themeColor = '#4ade80'; // Default green
+        const paymentMethodValue = booking.paymentMethod;
+
+        if (paymentMethodValue === 'credit-card') themeColor = '#FFBF00'; // Yellow
+        else if (paymentMethodValue === 'maya') themeColor = '#00C7B7'; // Maya Green
+        else if (paymentMethodValue === 'gcash') themeColor = '#007AFF'; // GCash Blue
+        else if (paymentMethodValue === 'srwallet') themeColor = '#8A2BE2'; // Purple
+
+        // Apply the theme
+        const confirmationIcon = document.querySelector('.confirmation-icon');
+        if (confirmationIcon) {
+          confirmationIcon.style.background = `linear-gradient(135deg, ${themeColor} 0%, ${themeColor} 100%)`;
+          confirmationIcon.style.boxShadow = `0 0 30px ${themeColor.replace(')', ', 0.4)').replace('rgb', 'rgba')}`;
+        }
+        const detailValues = document.querySelectorAll('.detail-value');
+        detailValues.forEach(el => el.style.color = themeColor);
+
+        // Apply theme to total price
+        const totalAmountEl = document.getElementById('total-amount');
+        if (totalAmountEl) totalAmountEl.style.color = themeColor;
+
+        // Apply theme to the total row background
+        const pricingTotalRow = document.querySelector('.pricing-total');
+        if (pricingTotalRow) pricingTotalRow.style.background = themeColor.replace(')', ', 0.1)').replace('rgb', 'rgba');
+
+        const cardBorder = document.querySelector('.confirmation-card');
+        if(cardBorder) cardBorder.style.borderColor = themeColor;
+
+
+        // 1. Update UI Elements
+        if (booking) {
+          document.getElementById('ref-number').textContent = booking.referenceNumber || 'REF-2024-000000';
+          document.getElementById('vehicle-info').textContent = booking.vehicleName || 'Loading...';
+          document.getElementById('pickup-date').textContent = booking.pickupDate || 'Loading...';
+          document.getElementById('return-date').textContent = booking.returnDate || 'Loading...';
+          document.getElementById('location').textContent = booking.location || 'Loading...';
+          document.getElementById('payment-method-info').textContent = booking.paymentMethod
+            ? booking.paymentMethod
+                .split('-')
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(' ')
+            : 'N/A';
+        }
+
+        const subtotal = (payment.dailyRate || 0) * (payment.days || 0);
+        document.getElementById('subtotal-cost').textContent = `₱${subtotal.toLocaleString()}`;
+        document.getElementById('insurance-cost').textContent = `₱${(payment.insurance || 0).toLocaleString()}`;
+        
+        if (payment.discount && payment.discount > 0) {
+          document.getElementById('discount-row').style.display = 'flex';
+          document.getElementById('discount-label').textContent = payment.discountLabel || 'Discount';
+          document.getElementById('discount-cost').textContent = `-₱${(payment.discount || 0).toLocaleString()}`;
+        } else {
+          document.getElementById('discount-row').style.display = 'none';
+        }
+
+        document.getElementById('total-amount').textContent = `₱${(payment.totalAmount || 0).toLocaleString()}`;
+        
+        if (customer) {
+          document.getElementById('customer-name').textContent = customer.fullName || 'Loading...';
+          document.getElementById('customer-email').textContent = customer.email || 'Loading...';
+          document.getElementById('customer-phone').textContent = customer.phone || 'Loading...';
+          document.getElementById('license-type').textContent = customer.licenseType || 'Loading...';
+          
+          // Apply theme to customer info values as well
+          const infoValues = document.querySelectorAll('.info-value');
+          infoValues.forEach(el => el.style.color = themeColor);
+        }
+
+        // --- This is the key part for saving to history ---
+        const finalBookingRecord = { 
+          ...booking, 
+          customerName: customer.fullName, // Flatten for easier display in history
+          customerEmail: customer.email,
+          totalPrice: payment.totalAmount,
+          status: 'Confirmed', 
+          rating: 0 
+        };
+        sessionStorage.setItem('pendingBooking', JSON.stringify(finalBookingRecord));
+
+        updateAuthButtons();
+      } catch (error) {
+        console.error('Error loading confirmation data:', error);
+      }
+    }
+
+    function updateAuthButtons() {
+      const user = JSON.parse(sessionStorage.getItem('user') || 'null');
+      const navLogin = document.getElementById('nav-login');
+      const navSignup = document.getElementById('nav-signup');
+
+      if (user && user.email) {
+        if (navLogin) {
+          navLogin.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" x2="3" y1="12" y2="12"/></svg> Logout`;
+          navLogin.onclick = logout;
+        }
+        if (navSignup) navSignup.style.display = 'none';
+      }
+    }
+
+    function logout() {
+      sessionStorage.removeItem('user');
+      window.location.href = 'index.html';
+    }
+
+    // Download receipt functionality
+    document.getElementById('download-receipt')?.addEventListener('click', function() {
+      const booking = JSON.parse(sessionStorage.getItem('bookingData') || '{}');
+
+      if (!booking || !booking.customer || !booking.payment) {
+        alert('Could not generate receipt. Data is missing.');
+        return;
+      }
+
+      const receiptContent = `
+        Booking Reference: ${booking.referenceNumber}
+        Date Issued: ${new Date().toLocaleDateString()}
+        ----------------------------------------
+        CUSTOMER DETAILS
+        Name:    ${booking.customer.fullName}
+        Email:   ${booking.customer.email || 'N/A'}
+        Phone:   ${booking.customer.phone || 'N/A'}
+        Address: ${booking.customer.address || 'N/A'}
+        ----------------------------------------
+        BOOKING DETAILS
+        Vehicle:     ${booking.vehicleName}
+        Pick-up:     ${booking.pickupDate}
+        Return:      ${booking.returnDate}
+        Payment Via: ${booking.paymentMethod 
+          ? booking.paymentMethod
+              .split('-')
+              .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+              .join(' ') 
+          : 'N/A'}
+        ----------------------------------------
+        PAYMENT SUMMARY
+        Subtotal:    PHP ${(booking.payment.dailyRate * booking.payment.days).toLocaleString()}
+        Insurance:   PHP ${booking.payment.insurance.toLocaleString()}
+        ${booking.payment.discount > 0 ? `Discount (${booking.payment.discountLabel}): -PHP ${booking.payment.discount.toLocaleString()}` : ''}
+        ========================================
+        TOTAL PAID:  PHP ${booking.payment.totalAmount.toLocaleString()}
+        ========================================
+        Thank you for choosing SmartDrive™!
+      `;
+
+      const blob = new Blob([`<pre>${receiptContent.trim()}</pre>`], { type: 'text/html' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `SmartDrive_Receipt_${booking.referenceNumber}.html`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    });
+
+    window.addEventListener('load', loadConfirmationData);
+  </script>
+</body>
+</html>

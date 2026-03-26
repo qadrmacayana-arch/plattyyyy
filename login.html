@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SmartDrive™ Login - Securely access your car rental account and manage bookings.">
+  <meta name="theme-color" content="#4ade80">
+  <title>Login - SmartDrive™</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preload" href="data.js" as="script">
+  <!-- Google Sign-In -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg>
+        </div>
+        <span>SmartDrive<span style="font-size: 10px; margin-left: 2px; opacity: 0.7;">TM</span></span>
+      </a>
+
+      <nav class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="rent-a-car.html" class="nav-link">Rent a Car</a>
+        <a href="aboutpage.html" class="nav-link">About</a>
+        <a href="dashboard.html" class="nav-link">Dashboard</a>
+      </nav>
+
+      <div class="nav-actions" id="auth-buttons">
+        <!-- Auth buttons are dynamically loaded here -->
+      </div>
+
+      <button class="mobile-menu-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="auth-container">
+    <div class="auth-card animate-fade-in">
+      <div class="auth-content">
+        <div class="auth-header">
+          <div class="auth-logo">
+            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg>
+          </div>
+          <div>
+            <h1 class="auth-title">SmartDrive<span class="tm">™</span></h1>
+            <p class="auth-subtitle">Premium Member Access</p>
+          </div>
+        </div>
+
+        <form id="login-form">
+          <div class="form-group">
+            <label class="form-label" for="email">Email Address</label>
+            <div class="input-wrapper">
+              <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+              <input type="email" id="email" name="email" required placeholder="name@example.com" class="form-input" autocomplete="email" inputmode="email" spellcheck="false">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="flex justify-between items-center mb-3 ml-1">
+              <label class="form-label m-0" for="password">Password</label>
+              <button type="button" id="forgot-password-btn" class="text-link-small text-primary bg-none border-none cursor-pointer" style="font-size: 0.75rem; font-weight: 600;">Forgot?</button>
+            </div>
+            <div class="input-wrapper" style="position: relative;">
+              <input type="password" id="password" name="password" required placeholder="••••••••" class="form-input" autocomplete="current-password">
+              <button type="button" id="toggle-password-btn" class="password-toggle-btn" style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--muted-foreground); padding: 0.25rem;" title="Toggle password visibility">
+                <svg id="eye-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-group" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem;">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <input type="checkbox" id="remember-me" name="remember-me" style="width: 1rem; height: 1rem; cursor: pointer;">
+              <label for="remember-me" style="font-size: 0.875rem; color: var(--muted-foreground); font-weight: 500; cursor: pointer;">
+                Remember Me
+              </label>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-submit">
+            Log In to Dashboard
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </button>
+        </form>
+
+        <div class="divider">
+          <div class="divider-line"></div>
+          <span class="divider-text">Connect with</span>
+          <div class="divider-line"></div>
+        </div>
+
+        <!-- Google Sign-In Button -->
+        <div id="g_id_onload"
+             data-client_id="510663240850-61pni9anrq5or0f5tcki3vtqkvo31b9p.apps.googleusercontent.com"
+             data-callback="handleCredentialResponse"
+             data-auto_prompt="false">
+        </div>
+        <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="sign_in_with" data-shape="rectangular" data-logo_alignment="left" style="display: flex; justify-content: center;">
+        </div>
+      </div>
+
+      <div class="auth-footer">
+        <p class="auth-footer-text">
+          New to SmartDrive?
+          <a href="signup.html" class="auth-footer-link">Create Account</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Forgot Password Modal -->
+  <div id="forgot-password-modal" class="modal" style="display: none;">
+    <div class="auth-card animate-fade-in" style="max-width: 28rem; padding: 0;">
+      <div class="auth-content">
+        <div class="auth-header" style="margin-bottom: 2rem;">
+          <div class="auth-logo" style="padding: 1rem; border-radius: 1.25rem; margin-bottom: 1rem;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" /><path d="M12 17h.01" /></svg>
+          </div>
+          <div>
+            <h1 class="auth-title" style="font-size: 1.75rem;">Forgot Password</h1>
+            <p class="auth-subtitle" style="font-size: 0.625rem;">RECOVER YOUR ACCOUNT</p>
+          </div>
+        </div>
+
+        <form id="forgot-password-form">
+          <p style="color: var(--muted-foreground); font-size: 0.875rem; margin-bottom: 1.5rem; text-align: center;">Enter your email and we'll send you your password.</p>
+          <div class="form-group">
+            <label class="form-label">Email Address</label>
+            <div class="input-wrapper">
+              <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+              <input type="email" id="forgot-email" class="form-input" required placeholder="name@example.com">
+            </div>
+          </div>
+          <button type="submit" class="btn-submit" style="width: 100%; margin-top: 1.5rem;">Send Recovery Info</button>
+        </form>
+        <div id="forgot-message" style="display: none; margin-top: 1.5rem; padding: 1rem; border-radius: 1rem; text-align: center; font-weight: 600; font-size: 0.875rem;"></div>
+      </div>
+      <button id="close-forgot-modal" class="auth-footer-link" style="background: none; border: none; cursor: pointer; width: 100%; padding: 1rem; font-size: 0.8rem;">Cancel</button>
+    </div>
+  </div>
+
+  <script defer src="data.js"></script>
+  <script defer src="shared.js"></script>
+  <script defer>
+    // Mobile menu functionality
+    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+    const mobileMenu = document.querySelector('.mobile-menu');
+
+    if (mobileMenuBtn) {
+      mobileMenuBtn.addEventListener('click', () => {
+        mobileMenu?.classList.toggle('active');
+      });
+    }
+
+    // Password visibility toggle
+    const togglePasswordBtn = document.getElementById('toggle-password-btn');
+    const passwordInput = document.getElementById('password');
+    const eyeIcon = document.getElementById('eye-icon');
+
+    if (togglePasswordBtn) {
+      togglePasswordBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const isPassword = passwordInput.type === 'password';
+        passwordInput.type = isPassword ? 'text' : 'password';
+        
+        // Update icon
+        if (isPassword) {
+          eyeIcon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
+          // eyeIcon.setAttribute('stroke-width', '2'); // This was causing an issue, the default is fine.
+        } else {
+          eyeIcon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+          eyeIcon.setAttribute('stroke-width', '2');
+        }
+      });
+    }
+
+    // Login form submission
+    document.getElementById('login-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const rememberMe = document.getElementById('remember-me').checked;
+
+      // Validate inputs
+      if (!email || !password) {
+        showError('Please fill in all fields');
+        return;
+      }
+
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        showError('Please enter a valid email address');
+        return;
+      }
+
+      if (password.length < 6) {
+        showError('Password must be at least 6 characters');
+        return;
+      }
+
+      // Simulate authentication (in production, this would call a backend API)
+      await authenticateUser(email, password, rememberMe);
+    });
+
+    async function authenticateUser(email, password, rememberMe) {
+      const submitBtn = document.querySelector('.btn-submit');
+      const originalText = submitBtn.innerHTML;
+
+      // Show loading state
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = 'Logging in...';
+
+      try {
+        // Simulate API call with delay
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        
+        let found = null;
+        // Explicitly check for admin credentials
+        if (email === 'admin@smartrentals.com' && password === 'adminpassword') {
+          found = {
+            email: 'admin@smartrentals.com',
+            name: 'Admin User',
+            memberType: 'Admin'
+          };
+        } else {
+          // Look up user list stored in localStorage for regular users
+          const users = JSON.parse(localStorage.getItem('users') || '[]');
+          found = users.find(u => u.email === email && u.password === password);
+        }
+
+        if (!found) {
+        showError('Invalid email or password');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
+        return;
+      }
+
+      // Create user object without password
+      const user = {
+        email: found.email,
+        fullName: found.name || email.split('@')[0].charAt(0).toUpperCase() + email.split('@')[0].slice(1),
+        memberType: found.memberType || 'Member',
+        loginTime: new Date().toISOString()
+      };
+
+      // Store user in sessionStorage
+      sessionStorage.setItem('user', JSON.stringify(user));
+
+      // Handle "Remember Me"
+      if (rememberMe) {
+        localStorage.setItem('rememberedEmail', email);
+      } else {
+        localStorage.removeItem('rememberedEmail');
+      }
+
+      // Show success message
+      showSuccess('Login successful! Redirecting to dashboard...');
+
+        // Redirect to dashboard after 1.5 seconds
+        // NEW: Check if the user is the admin
+        setTimeout(() => {
+          if (user.email === 'admin@smartrentals.com') {
+            window.location.href = 'admin.html';
+          } else {
+            window.location.href = 'dashboard.html';
+          }
+        }, 1500);
+
+      } catch (error) {
+        console.error('Login error:', error);
+        showError('An error occurred during login. Please try again.');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
+      }
+    }
+
+    function showError(message) {
+      clearMessages();
+      
+      const errorDiv = document.createElement('div');
+      errorDiv.id = 'error-message';
+      errorDiv.style.cssText = `
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        border-radius: 0.5rem;
+        padding: 1rem;
+        color: #fca5a5;
+        margin-bottom: 1.5rem;
+        font-size: 0.875rem;
+        animation: slideDown 0.3s ease;
+      `;
+      errorDiv.textContent = message;
+
+      const form = document.getElementById('login-form');
+      form.insertBefore(errorDiv, form.firstChild);
+
+      // Auto remove after 5 seconds
+      setTimeout(() => {
+        errorDiv.remove();
+      }, 5000);
+    }
+
+    function showSuccess(message) {
+      clearMessages();
+      
+      const successDiv = document.createElement('div');
+      successDiv.id = 'success-message';
+      successDiv.style.cssText = `
+        background: rgba(74, 222, 128, 0.1);
+        border: 1px solid rgba(74, 222, 128, 0.3);
+        border-radius: 0.5rem;
+        padding: 1rem;
+        color: #4ade80;
+        margin-bottom: 1.5rem;
+        font-size: 0.875rem;
+        animation: slideDown 0.3s ease;
+      `;
+      successDiv.textContent = message;
+
+      const form = document.getElementById('login-form');
+      form.insertBefore(successDiv, form.firstChild);
+    }
+
+    function clearMessages() {
+      const errorMsg = document.getElementById('error-message');
+      const successMsg = document.getElementById('success-message');
+      
+      if (errorMsg) errorMsg.remove();
+      if (successMsg) successMsg.remove();
+    }
+
+    // Forgot password button
+    const forgotModal = document.getElementById('forgot-password-modal');
+    const forgotBtn = document.getElementById('forgot-password-btn');
+    const closeForgotBtn = document.getElementById('close-forgot-modal');
+    const forgotForm = document.getElementById('forgot-password-form');
+    const forgotMessage = document.getElementById('forgot-message'); 
+
+    forgotBtn?.addEventListener('click', function(e) {
+      e.preventDefault();
+      forgotMessage.style.display = 'none';
+      forgotForm.style.display = 'block';
+      forgotForm.reset();
+      forgotModal.style.display = 'flex';
+    });
+
+    if(closeForgotBtn) closeForgotBtn.onclick = () => forgotModal.style.display = 'none';
+
+    forgotForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const email = document.getElementById('forgot-email').value;
+      const users = JSON.parse(localStorage.getItem('users') || '[]');
+      const user = users.find(u => u.email === email);
+
+      forgotMessage.style.display = 'block';
+
+      if (user) {
+        forgotMessage.style.background = 'rgba(74, 222, 128, 0.1)';
+        forgotMessage.style.border = '1px solid rgba(74, 222, 128, 0.3)';
+        forgotMessage.style.color = '#4ade80';
+        forgotForm.style.display = 'none';
+        forgotMessage.innerHTML = `<strong>Success!</strong> If an account exists for ${email}, we have sent the password to it.`;
+      } else {
+        forgotMessage.style.background = 'rgba(239, 68, 68, 0.1)';
+        forgotMessage.style.border = '1px solid rgba(239, 68, 68, 0.3)';
+        forgotMessage.style.color = '#ef4444';
+        // To prevent user enumeration, show a generic message for both success and failure.
+        forgotMessage.innerHTML = `<strong>Success!</strong> If an account exists for ${email}, we have sent the password to it.`;
+      }
+    });
+
+    window.addEventListener('click', function(event) {
+      if (event.target == forgotModal) {
+        forgotModal.style.display = "none";
+      }
+    });
+
+    // --- Google Sign-In Handler ---
+    function decodeJwtResponse(token) {
+      var base64Url = token.split('.')[1];
+      var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+      return JSON.parse(jsonPayload);
+    }
+
+    function handleCredentialResponse(response) {
+      const responsePayload = decodeJwtResponse(response.credential);
+
+      const email = responsePayload.email;
+      const name = responsePayload.name;
+
+      // Simulate login/signup with auto-registration
+      let users = JSON.parse(localStorage.getItem('users') || '[]');
+      let userToLogin = users.find(u => u.email === email);
+
+      if (!userToLogin) { 
+        // If user doesn't exist, create a new account automatically
+        const newUser = {
+          email: email,
+          name: name,
+          password: `google_sso_${Date.now()}`, // Securely generated password
+          birthday: '', 
+          address: '',
+          gender: '',
+          memberType: 'Premium',
+          registrationDate: new Date().toISOString()
+        };
+        users.push(newUser);
+        localStorage.setItem('users', JSON.stringify(users));
+        userToLogin = newUser;
+        sessionStorage.setItem('isNewUser', 'true'); // Flag for welcome banner
+      }
+
+      // Log the user in
+      const sessionUser = {
+        email: userToLogin.email,
+        fullName: userToLogin.name,
+        memberType: userToLogin.memberType || 'Member',
+        registrationDate: userToLogin.registrationDate,
+        loginTime: new Date().toISOString()
+      };
+
+      sessionStorage.setItem('user', JSON.stringify(sessionUser));
+
+      // Show success and redirect
+      showSuccess('Google Sign-In successful! Redirecting...');
+      setTimeout(() => {
+        window.location.href = 'dashboard.html';
+      }, 1500);
+    }
+
+
+
+    // Add animation styles
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    `;
+    document.head.appendChild(style);
+
+    // Check if user is already logged in
+    function checkAuth() {
+      const user = JSON.parse(sessionStorage.getItem('user') || 'null');
+      if (user) {
+        // User is already logged in, redirect to dashboard
+        window.location.href = 'dashboard.html';
+      }
+    }
+
+    // Run on page load
+    window.addEventListener('load', function() {
+      checkAuth();
+
+      // Check for redirect reason
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('reason') === 'offers_unauthorized') {
+        showError('You must be logged in to view exclusive offers.');
+      }
+
+      // Pre-fill email if it was remembered
+      const rememberedEmail = localStorage.getItem('rememberedEmail');
+      if (rememberedEmail) {
+        document.getElementById('email').value = rememberedEmail;
+        document.getElementById('remember-me').checked = true;
+      }
+
+      updateAuthButtons();
+
+    function updateAuthButtons() {
+      const user = JSON.parse(sessionStorage.getItem('user') || 'null');
+      const authButtons = document.getElementById('auth-buttons');
+
+      if (user) {
+        authButtons.innerHTML = `<button onclick="logout()" class="btn-login" style="background: none; border: none; cursor: pointer;">Logout</button>`;
+      } else {
+        authButtons.innerHTML = `
+          <a href="login.html" class="btn-login">Login</a>
+          <a href="signup.html" class="btn-signup">Sign Up</a>
+        `;
+      }
+    }
+    function logout() { sessionStorage.removeItem('user'); window.location.href = 'index.html'; }
+    });
+
+  </script>
+</body>
+</html>

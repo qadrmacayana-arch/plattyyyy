@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SmartDrive™ - Exclusive offers and discounts on premium car rentals.">
+  <meta name="theme-color" content="#4ade80">
+  <title>Offers - SmartDrive™</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preload" href="data.js" as="script">
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg>
+        </div>
+        <span>SmartDrive<span style="font-size: 10px; margin-left: 2px; opacity: 0.7;">TM</span></span>
+      </a>
+      <nav class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="rent-a-car.html" class="nav-link">Rent a Car</a>
+        <a href="aboutpage.html" class="nav-link">About</a>
+        <a href="dashboard.html" class="nav-link">Dashboard</a>
+      </nav>
+      <div class="nav-actions" id="auth-buttons"></div>
+    </div>
+  </header>
+
+  <main class="container py-10">
+    <div class="offers-header" style="margin-bottom: 3rem;">
+      <h1 class="offers-title">Exclusive Offers & Promos</h1>
+      <p class="offers-subtitle">Take advantage of our special promotions to get the best value on your next rental.</p>
+    </div>
+
+    <div class="offers-grid" id="offers-grid">
+      <!-- Offers will be dynamically loaded and rotated here -->
+    </div>
+
+    <!-- Claimable Rewards & Offers -->
+    <div class="claimable-rewards-section" style="margin-top: 3rem;">
+      <div class="section-header">
+        <h2 class="section-title-small">🎁 Claimable Rewards</h2>
+        <p class="section-subtitle">Complete tasks and meet requirements to unlock exclusive discount codes</p>
+      </div>
+      <div class="claimable-offers-grid" id="claimable-offers-grid">
+        <!-- Claimable offers will be dynamically loaded here -->
+      </div>
+    </div>
+
+    <!-- Discount Code Section -->
+    <div class="discount-info-section" style="margin-top: 3rem;">
+      <h2 class="section-title-small">Your Loyalty Discount Codes</h2>
+      <p class="section-subtitle">Unlock codes based on your spending and membership level</p>
+      
+      <!-- Promo Code Input Section -->
+      <div class="promo-code-input-section">
+        <h3>Enter Promo Code</h3>
+        <div class="promo-code-input-group">
+          <input 
+            type="text" 
+            id="promo-code-input" 
+            class="promo-code-input" 
+            placeholder="Enter your promo code"
+            maxlength="20"
+            aria-label="Promo code input"
+          >
+          <button id="validate-promo-btn" class="btn-validate-promo" aria-label="Validate promo code">Validate Code</button>
+        </div>
+        <div id="promo-validation-message" class="promo-validation-message" style="display: none;" role="alert"></div>
+      </div>
+
+      <!-- Available Codes Based on User Requirements -->
+      <div id="available-codes-section">
+        <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Your Available Codes</h3>
+        <div class="discount-codes-list" id="discount-codes-list">
+          <!-- Codes will be dynamically loaded based on user eligibility -->
+        </div>
+      </div>
+
+      <!-- Locked Codes Section -->
+      <div id="locked-codes-section" style="margin-top: 2rem;">
+        <h3 style="margin-bottom: 1rem;">🔒 Locked Codes - Unlock by Spending More</h3>
+        <div class="locked-codes-list" id="locked-codes-list">
+          <!-- Locked codes will be displayed here -->
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3 class="footer-title">About SmartDrive™</h3>
+        <p class="footer-text">Premium car rental service providing luxury vehicles for your journey. Experience the future of mobility with our electric and premium fleet.</p>
+      </div>
+      <div class="footer-section">
+        <h3 class="footer-title">Quick Links</h3>
+        <div class="footer-links">
+          <a href="index.html">Home</a>
+          <a href="rent-a-car.html">Rent a Car</a>
+          <a href="offers.html">Offers</a>
+          <a href="aboutpage.html">About Us</a>
+          <a href="dashboard.html">Dashboard</a>
+        </div>
+      </div>
+      <div class="footer-section">
+        <h3 class="footer-title">Support</h3>
+        <div class="footer-links">
+          <a href="aboutpage.html#contact-us">Contact Us</a>
+          <a href="#" class="legal-link" data-content="terms">Terms & Conditions</a>
+          <a href="#" class="legal-link" data-content="privacy">Privacy Policy</a>
+        </div>
+      </div>
+      <div class="footer-section">
+        <h3 class="footer-title">Company</h3>
+        <div class="footer-links">
+          <a href="#">Careers</a>
+          <a href="#">Blog</a>
+          <a href="#">Partners</a>
+          <a href="#">Fleet</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 SmartDrive™. All rights reserved. | Revolutionizing Premium Car Rentals</p>
+    </div>
+  </footer>
+  <!-- Legal Modal is now in shared.js -->
+  <script defer src="shared.js"></script>
+  <script>
+    // All available promo codes with requirements
+    const promoCodes = {
+      'WELCOME15': { // This is for new users, handled separately in payment.html
+        name: 'New Member Welcome',
+        discount: 15,
+        description: '15% Off Your First Booking',
+        minSpending: 0,
+        minBookings: 1,
+        locked: false
+      },
+      'LOYAL10': { // This is a base code, always available for members
+        name: 'Standard Member',
+        discount: 10,
+        description: '10% Off Your Bookings',
+        minSpending: 0,
+        minBookings: 1,
+        locked: false
+      },
+      'LOYAL15': { // Premium member code
+        name: 'Premium Member',
+        discount: 15,
+        description: '15% Off Your Bookings',
+        minSpending: 5000,
+        minBookings: 2,
+        locked: false
+      },
+      'LOYAL20': { // Gold member code
+        name: 'Gold Member',
+        discount: 20,
+        description: '20% Off Your Bookings',
+        minSpending: 10000,
+        minBookings: 3,
+        locked: false
+      }
+    };
+
+    // All available offers and promos (static content for display)
+    const allOffers = [
+      {
+        tag: 'New Members',
+        title: '15% OFF Your First Ride',
+        description: 'Welcome to SmartDrive! As a new member, enjoy a special discount on your first booking. The discount is applied automatically at checkout.',
+        info: 'Code: WELCOME15',
+        link: 'rent-a-car.html',
+        premium: false
+      },
+      {
+        tag: 'Weekend Deal',
+        title: 'Weekend SUV Special',
+        description: 'Planning a weekend getaway? Rent any SUV for 3 days and get the 3rd day at 50% off. Perfect for family trips or adventures.',
+        info: 'Valid: Fri-Sun',
+        link: 'rent-a-car.html?filter=SUV',
+        premium: false
+      },
+      {
+        tag: 'Long-Term',
+        title: 'Weekly Rental Discount',
+        description: 'Rent any vehicle for 7 days or more and receive a 20% discount on the total rental fee. Ideal for longer business trips or vacations.',
+        info: 'Min. 7 Days',
+        link: 'rent-a-car.html',
+        premium: false
+      },
+      {
+        tag: 'Premium Members',
+        title: 'Free Upgrade',
+        description: 'As a thank you to our loyal premium members, enjoy a complimentary one-class upgrade on your next booking, subject to availability.',
+        info: 'Status: 👑',
+        link: 'dashboard.html',
+        premium: true
+      },
+      {
+        tag: 'Holiday Promo',
+        title: 'Extended Weekend Getaway',
+        description: 'Book for a 4-day extended weekend and save 25% on your total rental. Perfect for holiday trips and special occasions.',
+        info: 'Limited Time Offer',
+        link: 'rent-a-car.html',
+        premium: false
+      },
+      {
+        tag: 'Corporate',
+        title: 'Business Travel Package',
+        description: 'Get 15% off when you book 3 or more vehicles for business travel. Includes flexible cancellation and priority support.',
+        info: 'For Business Accounts',
+        link: 'rent-a-car.html',
+        premium: false
+      },
+      {
+        tag: 'Flash Sale',
+        title: 'Luxury Car Flash Deal',
+        description: 'Rent a luxury vehicle mid-week and get up to 30% off. Available only on Tuesday to Thursday bookings.',
+        info: 'Tue-Thu Only',
+        link: 'rent-a-car.html',
+        premium: false
+      }
+    ];
+
+    // Claimable Rewards with Tasks (initial state, user-specific state stored in localStorage)
+    const claimableRewards = [
+      {
+        id: 'referral-reward',
+        title: '🎯 Refer a Friend',
+        description: 'Share your unique code with friends and earn ₱500 discount per successful referral',
+        reward: { discount: 15, code: 'REFERRAL15' },
+        requirements: [
+          { text: 'Invite at least 1 friend', completed: false },
+          { text: 'Friend makes their first booking', completed: false }
+        ],
+        totalRequirements: 2,
+        completedRequirements: 0, // This will be calculated dynamically
+        claimed: false
+      },
+      {
+        id: 'review-reward',
+        title: '⭐ Leave a Review',
+        description: 'Share your experience and get a 10% discount on your next booking',
+        reward: { discount: 10, code: 'REVIEW10' },
+        requirements: [
+          { text: 'Complete a booking', completed: false },
+          { text: 'Leave a 5-star review', completed: false }
+        ],
+        totalRequirements: 2,
+        completedRequirements: 0, // This will be calculated dynamically
+        claimed: false
+      },
+      {
+        id: 'loyalty-milestone',
+        title: '🏆 Loyalty Milestone',
+        description: 'Reach ₱5,000 lifetime spending and unlock an exclusive 12% discount code',
+        reward: { discount: 12, code: 'MILESTONE12' },
+        requirements: [
+          { text: 'Spend ₱5,000', completed: false }
+        ],
+        totalRequirements: 1,
+        completedRequirements: 0, // This will be calculated dynamically
+        claimed: false
+      },
+      {
+        id: 'social-share',
+        title: '📱 Share on Social Media',
+        description: 'Share SmartDrive on social and get an extra 8% off your next rental',
+        reward: { discount: 8, code: 'SOCIAL8' },
+        requirements: [
+          { text: 'Follow our social media account', completed: false },
+          { text: 'Share a booking screenshot', completed: false }
+        ],
+        totalRequirements: 2,
+        completedRequirements: 0, // This will be calculated dynamically
+        claimed: false
+      },
+      {
+        id: 'weekend-warrior',
+        title: '🚗 Weekend Warrior',
+        description: 'Book 3 weekend rentals and earn a 15% weekend-only discount code',
+        reward: { discount: 15, code: 'WEEKEND15' },
+        requirements: [
+          { text: 'Complete 3 weekend bookings', completed: false }
+        ],
+        totalRequirements: 1,
+        completedRequirements: 0, // This will be calculated dynamically
+        claimed: false
+      },
+      {
+        id: 'premium-upgrade',
+        title: '👑 Go Premium',
+        description: 'Spend ₱10,000 and unlock premium status with exclusive 20% discounts',
+        reward: { discount: 20, code: 'PREMIUM20' },
+        requirements: [
+          { text: 'Spend ₱10,000', completed: false },
+          { text: 'Complete 5 bookings', completed: false }
+        ],
+        totalRequirements: 2,
+        completedRequirements: 0, // This will be calculated dynamically
+        claimed: false
+      }
+    ];
+
+    // Get user's booking stats and loyalty tier
+    function getUserLoyaltyStats() {
+      const user = JSON.parse(sessionStorage.getItem('user') || 'null');
+      if (!user) return { totalSpent: 0, bookingCount: 0, loyaltyTier: 'guest' };
+
+      const storageKey = `userBookings_${user.email}`;
+      const bookings = JSON.parse(localStorage.getItem(storageKey) || '[]');
+      
+      let totalSpent = 0;
+      bookings.forEach(booking => {
+        totalSpent += (booking.totalPrice || 0);
+      });
+
+      let loyaltyTier = 'guest';
+      if (bookings.length > 0 && totalSpent >= 10000) {
+        loyaltyTier = 'gold';
+      } else if (bookings.length >= 2 && totalSpent >= 5000) {
+        loyaltyTier = 'premium';
+      } else if (bookings.length > 0) {
+        loyaltyTier = 'standard';
+      }
+
+      return {
+        totalSpent: totalSpent,
+        bookingCount: bookings.length,
+        loyaltyTier: loyaltyTier
+      };
+    }
+
+    // Global variable to hold dynamic promo codes (including claimed ones)
+    let dynamicPromoCodes = JSON.parse(localStorage.getItem('dynamicPromoCodes') || JSON.stringify(promoCodes));
+
+    // Function to update dynamicPromoCodes in localStorage
+    function updateDynamicPromoCodes(newCode, codeDetails) {
+      dynamicPromoCodes[newCode] = codeDetails;
+      localStorage.setItem('dynamicPromoCodes', JSON.stringify(dynamicPromoCodes));
+    }
+
+    // Function to get promo code details, considering dynamic ones
+    function getPromoCodeDetails(code) {
+      return dynamicPromoCodes[code];
+    }
+
+    // Check if user qualifies for a code
+    function userQualifiesForCode(code, stats) {
+      const codeInfo = getPromoCodeDetails(code);
+      if (!codeInfo) return false;
+
+      return stats.bookingCount >= codeInfo.minBookings && 
+             stats.totalSpent >= codeInfo.minSpending;
+    }
+
+    // Render available and locked codes
+    function renderPromoCodeSections() {
+      const stats = getUserLoyaltyStats();
+      const availableCodesList = document.getElementById('discount-codes-list');
+      const lockedCodesList = document.getElementById('locked-codes-list');
+      const user = JSON.parse(sessionStorage.getItem('user') || 'null');
+      const isGuest = !user;
+      const userBookingsKey = user ? `userBookings_${user.email}` : null;
+      const userHistory = userBookingsKey ? JSON.parse(localStorage.getItem(userBookingsKey) || '[]') : [];
+      const isNewRegisteredUser = user && userHistory.length === 0;
+
+      availableCodesList.innerHTML = '';
+      lockedCodesList.innerHTML = '';
+
+      Object.entries(dynamicPromoCodes).forEach(([code, info]) => {
+        // Special handling for WELCOME15
+        if (code === 'WELCOME15') {
+          if (isNewRegisteredUser) {
+            const codeItem = document.createElement('div');
+            codeItem.className = 'discount-code-item available-code';
+            codeItem.innerHTML = `
+              <div class="code-details">
+                <h4>${info.name}</h4>
+                <p class="discount-code-display"><strong>${code}</strong></p>
+                <p class="code-description">${info.description}</p>
+                <p class="code-badge">✓ Unlocked</p>
+              </div>
+              <button class="btn-copy-code" onclick="copyToClipboard('${code}')">Copy Code</button>
+            `;
+            availableCodesList.appendChild(codeItem);
+          }
+          return; // Skip further processing for WELCOME15 here
+        }
+
+        const qualifies = userQualifiesForCode(code, stats);
+
+        if (qualifies) {
+          // Available code
+          const codeItem = document.createElement('div');
+          codeItem.className = 'discount-code-item available-code';
+          codeItem.innerHTML = `
+            <div class="code-details">
+              <h4>${info.name}</h4>
+              <p class="discount-code-display"><strong>${code}</strong></p>
+              <p class="code-description">${info.description}</p>
+              <p class="code-badge">✓ Unlocked</p>
+            </div>
+            <button class="btn-copy-code" onclick="copyToClipboard('${code}')">Copy Code</button>
+          `;
+          availableCodesList.appendChild(codeItem);
+        } else {
+          // Locked code
+          const lockItem = document.createElement('div'); // This was missing 'const'
+          lockItem.className = 'discount-code-item locked-code';
+          
+          let requirement = '';
+          const needsSpending = stats.totalSpent < info.minSpending;
+          const needsBookings = stats.bookingCount < info.minBookings;
+
+          if (needsSpending) {
+            const remaining = info.minSpending - stats.totalSpent;
+            requirement = `Spend ₱${remaining.toLocaleString()} more`;
+          }
+          if (needsBookings) {
+            const remaining = info.minBookings - stats.bookingCount;
+            if (requirement) requirement += ' and ';
+            requirement += `Complete ${remaining} more booking${remaining > 1 ? 's' : ''}`;
+          }
+
+          lockItem.innerHTML = `
+            <div class="code-details">
+              <h4>🔒 ${info.name}</h4>
+              <p class="discount-code-display locked"><strong>••••••</strong></p>
+              <p class="code-description">${info.description}</p>
+              <p class="code-requirement">Unlock: ${requirement || 'Keep renting!'}</p>
+            </div>
+            <button class="btn-copy-code" disabled>Locked</button>
+          `;
+          lockedCodesList.appendChild(lockItem);
+        }
+      });
+    }
+
+    // Function to copy discount code to clipboard
+    function copyToClipboard(code) {
+      navigator.clipboard.writeText(code).then(() => {
+        showSuccessNotification(`✓ Code "${code}" copied to clipboard!`);
+      }).catch(() => {
+        // Fallback for older browsers
+        const input = document.createElement('input');
+        input.value = code;
+        document.body.appendChild(input);
+        input.select();
+        document.execCommand('copy');
+        document.body.removeChild(input);
+        showSuccessNotification(`✓ Code "${code}" copied to clipboard!`);
+      });
+    }
+
+    // Validate promo code input
+    function validatePromoCode() {
+      const input = document.getElementById('promo-code-input');
+      const message = document.getElementById('promo-validation-message');
+      const stats = getUserLoyaltyStats();
+      const code = input.value.trim().toUpperCase();
+      const validateBtn = document.getElementById('validate-promo-btn');
+      const user = JSON.parse(sessionStorage.getItem('user') || 'null');
+      const isGuest = !user;
+
+      // Clear previous messages
+      message.style.display = 'block';
+
+      if (!code) {
+        message.textContent = '⚠️ Please enter a promo code.';
+        message.style.color = '#ff453a';
+        return;
+      }
+
+      // Show loading state
+      const originalText = validateBtn.textContent;
+      validateBtn.disabled = true;
+      validateBtn.textContent = '⏳ Validating...';
+
+      // Simulate validation delay for better UX feedback
+      setTimeout(() => {
+        const codeInfo = getPromoCodeDetails(code);
+
+        if (!codeInfo) {
+          message.textContent = '✗ Invalid promo code.';
+          message.style.color = '#ff453a';
+        } else if (isGuest && (code === 'WELCOME15' || code.startsWith('LOYAL') || codeInfo.name.includes('Claimed'))) {
+          message.textContent = '✗ This promo code is for registered members only. Please log in or sign up.';
+          message.style.color = '#ff453a';
+        } else if (userQualifiesForCode(code, stats)) {
+          message.textContent = `✓ Code "${code}" is valid! ${codeInfo.discount}% discount applied.`;
+          message.style.color = '#4ade80';
+          
+          // Save to sessionStorage for booking use (this will be the active discount)
+          sessionStorage.setItem('discountCode', JSON.stringify({
+            code: code,
+            discount: codeInfo.discount,
+            description: codeInfo.description
+          }));
+
+          // Clear input and show success
+          input.value = '';
+          setTimeout(() => {
+            message.style.display = 'none';
+          }, 3000);
+        } else {
+          const info = codeInfo;
+          message.textContent = `✗ You don't qualify for "${code}" yet. Requirements: ${info.minBookings} bookings, ₱${info.minSpending.toLocaleString()} spent`;
+          message.style.color = '#ff453a';
+        }
+
+        // Restore button
+        validateBtn.disabled = false;
+        validateBtn.textContent = originalText;
+      }, 300);
+    }
+
+    // Function to rotate offers
+    function rotateOffers() {
+      const offersGrid = document.getElementById('offers-grid');
+      offersGrid.innerHTML = '';
+      
+      // Get 4 random offers
+      const shuffled = [...allOffers].sort(() => 0.5 - Math.random());
+      const selectedOffers = shuffled.slice(0, 4);
+      
+      selectedOffers.forEach(offer => {
+        const offerCard = document.createElement('div');
+        offerCard.className = `offer-card ${offer.premium ? 'premium-offer' : ''}`;
+        offerCard.innerHTML = `
+          <div class="offer-tag">${offer.tag}</div>
+          <h3 class="offer-card-title">${offer.title}</h3>
+          <p class="offer-card-description">${offer.description}</p>
+          <div class="offer-card-footer">
+            <span>${offer.info}</span>
+            <a href="${offer.link}" class="btn-offer">Book Now</a>
+          </div>
+        `;
+        offersGrid.appendChild(offerCard);
+      });
+    }
+
+    // Initialize or load user-specific claimable rewards from localStorage
+    function initializeUserClaimableRewards() {
+      const user = JSON.parse(sessionStorage.getItem('user') || 'null');
+      if (!user) return [];
+
+      const userRewardsKey = `claimableRewards_${user.email}`;
+      let userRewards = JSON.parse(localStorage.getItem(userRewardsKey) || 'null');
+      if (!userRewards) {
+        userRewards = JSON.parse(JSON.stringify(claimableRewards)); // Deep copy initial rewards
+        localStorage.setItem(userRewardsKey, JSON.stringify(userRewards));
+      }
+      return userRewards;
+    }    
+
+    // Update claimable rewards progress based on user stats
+    function updateRewardsProgress() {
+      const user = JSON.parse(sessionStorage.getItem('user') || 'null');
+      const stats = getUserLoyaltyStats();
+      const rewards = initializeUserClaimableRewards();
+
+      // Update completion status for each reward based on current user stats
+      rewards.forEach(reward => {
+        reward.completedRequirements = 0;
+        
+        if (reward.id === 'referral-reward') {
+          // Check if referral requirements met
+          if (stats.bookingCount > 0) {
+            reward.requirements[0].completed = true;
+            reward.completedRequirements++;
+          }
+        } else if (reward.id === 'review-reward') {
+          // Check if review requirements met
+          if (stats.bookingCount > 0) {
+            reward.requirements[0].completed = true;
+            reward.completedRequirements++;
+          }
+        } else if (reward.id === 'loyalty-milestone') {
+          // Check if spending ₱5,000
+          if (stats.totalSpent >= 5000) {
+            reward.requirements[0].completed = true;
+            reward.completedRequirements = 1;
+          }
+        } else if (reward.id === 'social-share') {
+          // Check if social requirements met
+          if (stats.bookingCount > 0) {
+            reward.requirements[0].completed = true;
+            reward.requirements[1].completed = true;
+            reward.completedRequirements = 2;
+          }
+        } else if (reward.id === 'weekend-warrior') {
+          // Check if 3 weekend bookings
+          if (stats.bookingCount >= 3) {
+            reward.requirements[0].completed = true;
+            reward.completedRequirements = 1;
+          }
+        } else if (reward.id === 'premium-upgrade') {
+          // Check if ₱10,000 spent and 5 bookings
+          if (stats.totalSpent >= 10000) {
+            reward.requirements[0].completed = true;
+            reward.completedRequirements++;
+          }
+          if (stats.bookingCount >= 5) {
+            reward.requirements[1].completed = true;
+            reward.completedRequirements++;
+          }
+        }
+      });
+
+      // Save updated rewards
+      const storageKey = `claimableRewards_${user.email}`; // Ensure this matches initializeUserClaimableRewards
+      localStorage.setItem(storageKey, JSON.stringify(rewards));
+      return rewards;
+    }
+
+    // Render claimable rewards
+    function renderClaimableRewards() {
+      const rewards = updateRewardsProgress();
+      const grid = document.getElementById('claimable-offers-grid');
+      grid.innerHTML = '';
+
+      rewards.forEach(reward => {
+        const progressPercent = (reward.completedRequirements / reward.totalRequirements) * 100;
+        const isCompleted = reward.completedRequirements === reward.totalRequirements;
+
+        const card = document.createElement('div');
+        card.className = `claimable-reward-card ${isCompleted ? 'completed' : ''} ${reward.claimed ? 'claimed' : ''}`;
+        
+        let requirementsHTML = '';
+        reward.requirements.forEach(req => {
+          requirementsHTML += `
+            <div class="requirement-item ${req.completed ? 'completed' : ''}">
+              <span class="requirement-checkbox">${req.completed ? '✓' : '○'}</span>
+              <span>${req.text}</span>
+            </div>
+          `;
+        });
+
+        let buttonHTML = '';
+        if (reward.claimed) {
+          buttonHTML = `<button class="btn-claimed" disabled>✓ Claimed</button>`;
+        } else if (isCompleted) {
+          buttonHTML = `<button class="btn-claim-reward" onclick="claimReward('${reward.id}')">Claim Reward</button>`;
+        } else {
+          buttonHTML = `<button class="btn-claim-reward disabled" disabled>${reward.completedRequirements}/${reward.totalRequirements} Complete</button>`;
+        }
+
+        card.innerHTML = `
+          <div class="reward-header">
+            <h3>${reward.title}</h3>
+            <span class="reward-badge">+${reward.reward.discount}%</span>
+          </div>
+          <p class="reward-description">${reward.description}</p>
+          <div class="requirements-list">
+            ${requirementsHTML}
+          </div>
+          <div class="progress-bar-container">
+            <div class="progress-bar" style="width: ${progressPercent}%"></div>
+          </div>
+          <div class="reward-footer">
+            ${buttonHTML}
+          </div>
+        `;
+        
+        grid.appendChild(card);
+      });
+    }
+
+    // Claim a reward
+    // Debounce helper to prevent double clicks
+    function debounce(func, delay = 300) {
+      let timeout;
+      return function(...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func(...args), delay);
+      };
+    }
+
+    function claimReward(rewardId) {
+      const user = JSON.parse(sessionStorage.getItem('user') || 'null');
+      const storageKey = `claimableRewards_${user.email}`;
+      const rewards = JSON.parse(localStorage.getItem(storageKey) || '[]');
+
+      const reward = rewards.find(r => r.id === rewardId);
+      if (!reward || reward.claimed) return;
+
+      // Find the button and disable it temporarily
+      const buttons = document.querySelectorAll(`[onclick*="${rewardId}"]`);
+      buttons.forEach(btn => {
+        const button = btn.closest('.btn-claim-reward');
+        if (button) {
+          button.disabled = true;
+          const originalText = button.textContent;
+          button.textContent = '✓ Claiming...';
+          
+          // Simulate processing
+          setTimeout(() => {
+            // Mark as claimed
+            reward.claimed = true;
+
+            // Add new promo code
+            const newCode = reward.reward.code; // Use the code from the reward object
+            updateDynamicPromoCodes(newCode, { // Use the new update function
+              name: reward.title,
+              discount: reward.reward.discount,
+              description: reward.description + ' (Claimed)',
+              minSpending: 0,
+              minBookings: 0,
+              locked: false
+            });
+            // Save changes
+            localStorage.setItem(storageKey, JSON.stringify(rewards));
+            
+            // Add to user's claimed codes
+            const claimedKey = `claimedCodes_${user.email}`;
+            let claimedCodes = JSON.parse(localStorage.getItem(claimedKey) || '[]');
+            claimedCodes.push(newCode);
+            localStorage.setItem(claimedKey, JSON.stringify(claimedCodes));
+
+            // Refresh UI
+            renderClaimableRewards(); // Re-render to show claimed state
+            renderPromoCodeSections();
+
+            // Show success message with better styling
+            showSuccessNotification(`🎉 Reward Claimed! You've unlocked ${newCode} - ${reward.reward.discount}% off your next booking!`);
+          }, 400);
+        }
+      });
+    }
+
+    // Show beautiful success notification
+    function showSuccessNotification(message) {
+      const notification = document.createElement('div');
+      notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, #4ade80 0%, #3fce74 100%);
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 0.75rem;
+        box-shadow: 0 8px 24px rgba(74, 222, 128, 0.3);
+        font-weight: 600;
+        z-index: 1000;
+        animation: slideInRight 0.3s ease;
+        max-width: 90vw;
+      `;
+      notification.textContent = message;
+      document.body.appendChild(notification);
+
+      // Auto remove after 4 seconds
+      setTimeout(() => {
+        notification.style.animation = 'slideOutRight 0.3s ease';
+        setTimeout(() => notification.remove(), 300);
+      }, 4000);
+    }
+
+    // Add animation styles
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes slideInRight {
+        from {
+          opacity: 0;
+          transform: translateX(100px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+      @keyframes slideOutRight {
+        from {
+          opacity: 1;
+          transform: translateX(0);
+        }
+        to {
+          opacity: 0;
+          transform: translateX(100px);
+        }
+      }
+    `;
+    document.head.appendChild(style);
+
+    window.addEventListener('load', function() {
+      const user = JSON.parse(sessionStorage.getItem('user') || 'null');
+      if (!user) {
+        // If no user is logged in, redirect to the login page with a reason
+        window.location.href = 'login.html?reason=offers_unauthorized';
+      } else {        
+        // If a user is logged in, show the page and update auth buttons
+        updateAuthButtons();
+        rotateOffers(); // Load initial offers
+        renderClaimableRewards(); // Render claimable rewards (which initializes user-specific rewards)
+        renderPromoCodeSections(); // Render promo codes based on user (which uses dynamicPromoCodes)
+
+        // Rotate offers every 30 seconds
+        setInterval(rotateOffers, 30000);
+
+        // Setup promo code validation
+        const validateBtn = document.getElementById('validate-promo-btn');
+        const promoInput = document.getElementById('promo-code-input');
+        
+        validateBtn?.addEventListener('click', validatePromoCode);
+        promoInput?.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') {
+            validatePromoCode();
+          }
+        });
+      }
+    });
+
+    function updateAuthButtons() {
+      const user = JSON.parse(sessionStorage.getItem('user') || 'null');
+      const authButtons = document.getElementById('auth-buttons');
+      if (user) {
+        authButtons.innerHTML = `<button onclick="logout()" style="background:none; border:none; color:white; font-weight:600; cursor:pointer;">Logout</button>`;
+      }
+    }
+
+    function logout() { sessionStorage.removeItem('user'); window.location.href = 'index.html'; }
+  </script>
+</body>
+</html>

@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings - SmartDrive™</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg>
+        </div>
+        <span>SmartDrive<span style="font-size: 10px; margin-left: 2px; opacity: 0.7;">TM</span></span>
+      </a>
+      <nav class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="rent-a-car.html" class="nav-link">Rent a Car</a>
+        <a href="aboutpage.html" class="nav-link">About</a>
+        <a href="dashboard.html" class="nav-link">Dashboard</a>
+      </nav>
+      <div class="nav-actions" id="auth-buttons"></div>
+    </div>
+  </header>
+
+  <main class="container py-10" style="max-width: 800px; padding-top: 2rem; padding-bottom: 5rem;">
+    <h1 class="page-title">Account Settings</h1>
+    <p class="page-description">Manage your personal information and security.</p>
+
+    <form id="settings-form" class="bg-card border rounded-2xl p-8 mt-6">
+      
+      <div class="form-group">
+        <label class="form-label" for="settings-name">Full Name</label>
+        <input type="text" id="settings-name" class="form-input" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="settings-birthday">Birthday</label>
+        <input type="date" id="settings-birthday" class="form-input">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="settings-address">Complete Address</label>
+        <input type="text" id="settings-address" class="form-input" placeholder="Street, City, Province">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="settings-gender">Gender</label>
+        <div class="select-wrapper">
+          <select id="settings-gender" class="form-input">
+            <option value="">Select Gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+            <option value="prefer_not_to_say">Prefer not to say</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="settings-email">Email Address</label>
+        <input type="email" id="settings-email" class="form-input" required>
+      </div>
+
+      <hr class="border-t border-border my-8">
+
+      <div class="form-group">
+        <label class="form-label" for="settings-password">New Password (leave blank to keep current)</label>
+        <input type="password" id="settings-password" class="form-input" placeholder="••••••••">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="settings-confirm">Confirm New Password</label>
+        <input type="password" id="settings-confirm" class="form-input" placeholder="••••••••">
+      </div>
+
+      <hr class="border-t border-border my-8">
+
+
+      <div id="settings-message" style="display:none; margin-bottom:1rem; padding:1rem; border-radius:0.5rem; text-align: center; font-weight: 500;"></div>
+
+      <button type="submit" class="btn-submit" style="width: 100%; margin-top: 1rem;">Save Changes</button>
+    </form>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3 class="footer-title">About SmartDrive™</h3>
+        <p class="footer-text">Premium car rental service providing luxury vehicles for your journey. Experience the future of mobility with our electric and premium fleet.</p>
+      </div>
+
+      <div class="footer-section">
+        <h3 class="footer-title">Quick Links</h3>
+        <div class="footer-links">
+          <a href="index.html">Home</a>
+          <a href="rent-a-car.html">Rent a Car</a>
+          <a href="aboutpage.html">About Us</a>
+          <a href="dashboard.html">Dashboard</a>
+        </div>
+      </div>
+
+      <div class="footer-section">
+        <h3 class="footer-title">Support</h3>
+        <div class="footer-links">
+          <a href="aboutpage.html#contact-us">Contact Us</a>
+          <a href="#" class="legal-link" data-content="terms">Terms & Conditions</a>
+          <a href="#" class="legal-link" data-content="privacy">Privacy Policy</a>
+        </div>
+      </div>
+
+      <div class="footer-section">
+        <h3 class="footer-title">Company</h3>
+        <div class="footer-links">
+          <a href="#">Careers</a>
+          <a href="#">Blog</a>
+          <a href="#">Partners</a>
+          <a href="#">Fleet</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2026 SmartDrive™. All rights reserved. | Revolutionizing Premium Car Rentals</p>
+    </div>
+  </footer>
+  <!-- Legal Modal -->
+  <div id="legal-modal" class="modal" style="display: none;">
+    <div class="modal-content" style="max-width: 800px;">
+      <div class="modal-header">
+        <h2 id="legal-modal-title"></h2>
+        <span class="close-btn" id="close-legal-modal">&times;</span>
+      </div>
+      <div class="modal-body" id="legal-modal-body" style="max-height: 70vh; overflow-y: auto;">
+        <!-- Content will be injected by JavaScript -->
+      </div>
+      <div class="modal-footer">
+        <p style="font-size: 0.8rem; color: var(--muted);">Last Updated: March 15, 2026</p>
+      </div>
+    </div>
+  </div>
+  <script src="data.js"></script>
+  <script>
+    // --- Legal Modal Logic ---
+    const legalModal = document.getElementById('legal-modal');
+    const closeLegalModalBtn = document.getElementById('close-legal-modal');
+    const legalModalTitle = document.getElementById('legal-modal-title');
+    const legalModalBody = document.getElementById('legal-modal-body');
+
+    const legalContent = {
+      terms: {
+        title: 'Terms and Conditions',
+        content: `
+          <h4 style="color: var(--primary); margin-top: 1rem; margin-bottom: 0.5rem;">1. Rental Agreement</h4>
+          <p>This agreement is between SmartDrive™ ('the Company') and the renter. By renting a vehicle, the renter agrees to all terms and conditions. The renter must be at least 21 years old and possess a valid driver's license recognized in the Philippines.</p>
+          <h4 style="color: var(--primary); margin-top: 1rem; margin-bottom: 0.5rem;">2. Vehicle Use</h4>
+          <p>The vehicle shall not be used for any illegal purpose, for racing, or outside the designated geographical limits without prior consent. The renter is responsible for all traffic violations and fines incurred during the rental period.</p>
+          <h4 style="color: var(--primary); margin-top: 1rem; margin-bottom: 0.5rem;">3. Payment and Charges</h4>
+          <p>All rental charges are to be paid in Philippine Peso (PHP). A security deposit is required upon vehicle pick-up. The final rental cost will include the daily rate, insurance, and any additional services availed. Late returns will be charged at 1.5x the daily rate.</p>
+          <h4 style="color: var(--primary); margin-top: 1rem; margin-bottom: 0.5rem;">4. Insurance and Liability</h4>
+          <p>All vehicles are covered by Comprehensive Insurance as mandated by Philippine law. In case of an accident, the renter is liable for a participation fee. The renter is responsible for any damage not covered by the insurance.</p>
+          <h4 style="color: var(--primary); margin-top: 1rem; margin-bottom: 0.5rem;">5. Governing Law</h4>
+          <p>This agreement shall be governed by the laws of the Republic of the Philippines. Any disputes shall be settled in the courts of Quezon City, Philippines.</p>
+        `
+      },
+      privacy: {
+        title: 'Privacy Policy',
+        content: `
+          <p>This Privacy Policy is in compliance with the Republic Act No. 10173, also known as the Data Privacy Act of 2012 of the Philippines.</p>
+          <h4 style="color: var(--primary); margin-top: 1rem; margin-bottom: 0.5rem;">1. Information We Collect</h4>
+          <p>We collect personal information such as your name, email address, contact number, birthday, address, and driver's license details upon registration and booking. We also collect non-personal data like browsing behavior to improve our services.</p>
+          <h4 style="color: var(--primary); margin-top: 1rem; margin-bottom: 0.5rem;">2. Use of Information</h4>
+          <p>Your data is used to process bookings, facilitate payments, communicate with you, and improve our platform. We may use your information for marketing purposes, from which you can opt-out at any time.</p>
+          <h4 style="color: var(--primary); margin-top: 1rem; margin-bottom: 0.5rem;">3. Data Sharing and Security</h4>
+          <p>We do not sell your personal data. We may share your information with trusted third-party partners (e.g., payment gateways) only for the purpose of providing our services. We implement robust security measures to protect your data from unauthorized access.</p>
+          <h4 style="color: var(--primary); margin-top: 1rem; margin-bottom: 0.5rem;">4. Your Rights as a Data Subject</h4>
+          <p>Under the Data Privacy Act of 2012, you have the right to access, correct, and erase your personal data. For any inquiries or to exercise your rights, please contact our Data Protection Officer at <a href="mailto:dpo@smartdrive.com" style="color: var(--primary);">dpo@smartdrive.com</a>.</p>
+          <h4 style="color: var(--primary); margin-top: 1rem; margin-bottom: 0.5rem;">5. Contact Information</h4>
+          <p>For any privacy-related concerns, you may contact us at our office located near the Technological Institute of the Philippines, Quezon City, or via email.</p>
+        `
+      }
+    };
+
+    function openLegalModal(type) {
+      if (legalContent[type]) {
+        legalModalTitle.textContent = legalContent[type].title;
+        legalModalBody.innerHTML = legalContent[type].content;
+        legalModal.style.display = 'flex';
+      }
+    }
+
+    document.querySelectorAll('.legal-link').forEach(link => {
+      link.addEventListener('click', function(e) { e.preventDefault(); openLegalModal(this.getAttribute('data-content')); });
+    });
+
+    closeLegalModalBtn.addEventListener('click', () => { legalModal.style.display = 'none'; });
+    window.addEventListener('click', (event) => { if (event.target === legalModal) { legalModal.style.display = 'none'; } });
+
+    function updateAuthButtons() {
+      const user = JSON.parse(sessionStorage.getItem('user') || 'null');
+      const authButtons = document.getElementById('auth-buttons');
+
+      if (user) {
+        authButtons.innerHTML = `
+          <div class="flex items-center gap-4">
+            <span class="text-sm text-muted-foreground">${user.email}</span>
+            <button onclick="logout()" style="padding:0.625rem 1.25rem;border-radius:0.5rem;background:none;color:var(--primary);border:2px solid var(--primary);font-weight:600;cursor:pointer;">Logout</button>
+          </div>
+        `;
+      } else {
+        authButtons.innerHTML = `
+          <a href="login.html" class="btn-login">Login</a>
+          <a href="signup.html" class="btn-signup">Sign Up</a>
+        `;
+      }
+    }
+
+    function logout() {
+      sessionStorage.removeItem('user');
+      window.location.href = 'index.html';
+    }
+
+    function showMessage(text, success=true) {
+      const msg = document.getElementById('settings-message');
+      msg.style.display = 'block';
+      msg.style.background = success ? 'rgba(74, 222, 128, 0.1)' : 'rgba(239, 68, 68, 0.1)';
+      msg.style.border = success ? '1px solid rgba(74, 222, 128, 0.3)' : '1px solid rgba(239, 68, 68, 0.3)';
+      msg.style.color = success ? '#4ade80' : '#ef4444';
+      msg.textContent = text;
+      
+      // Scroll to message so user sees it
+      msg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+      setTimeout(() => { 
+        msg.style.display='none'; 
+      }, 4000);
+    }
+
+    // --- Initialization ---
+    window.addEventListener('load', function() {
+      updateAuthButtons();
+      
+      // Load current user from session
+      const user = JSON.parse(sessionStorage.getItem('user') || 'null');
+      
+      if (!user) {
+        window.location.href = 'login.html';
+        return;
+      }
+
+      // Populate form with existing data
+      document.getElementById('settings-name').value = user.fullName || '';
+      document.getElementById('settings-email').value = user.email || '';
+      document.getElementById('settings-birthday').value = user.birthday || '';
+      document.getElementById('settings-address').value = user.address || '';
+      document.getElementById('settings-gender').value = user.gender || '';
+
+      // Handle form submission
+      document.getElementById('settings-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const name = document.getElementById('settings-name').value.trim();
+        const email = document.getElementById('settings-email').value.trim();
+        const birthday = document.getElementById('settings-birthday').value;
+        const address = document.getElementById('settings-address').value.trim();
+        const gender = document.getElementById('settings-gender').value;
+        const pwd = document.getElementById('settings-password').value;
+        const confirm = document.getElementById('settings-confirm').value;
+
+        // Validation
+        if (!name || !email) {
+          showMessage('Name and email cannot be blank', false);
+          return;
+        }
+        
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+          showMessage('Please enter a valid email address', false);
+          return;
+        }
+        
+        if (pwd && pwd.length < 6) {
+          showMessage('Password must be at least 6 characters', false);
+          return;
+        }
+        
+        if (pwd && pwd !== confirm) {
+          showMessage('Passwords do not match', false);
+          return;
+        }
+
+        // Update Permanent Storage (localStorage)
+        const users = JSON.parse(localStorage.getItem('users') || '[]');
+        // Find user by their original email (stored in the session)
+        const existingIndex = users.findIndex(u => u.email === user.email);
+        
+        if (existingIndex !== -1) {
+          users[existingIndex].name = name;
+          users[existingIndex].email = email;
+          users[existingIndex].birthday = birthday;
+          users[existingIndex].address = address;
+          users[existingIndex].gender = gender;
+          if (pwd) users[existingIndex].password = pwd;
+          
+          localStorage.setItem('users', JSON.stringify(users));
+        }
+
+        // Update Current Session (sessionStorage)
+        const updatedUser = {
+          ...user,
+          fullName: name,
+          email: email,
+          birthday: birthday,
+          address: address,
+          gender: gender
+        };
+        sessionStorage.setItem('user', JSON.stringify(updatedUser));
+
+        showMessage('Settings saved successfully!');
+        
+        // Optional: Refresh auth buttons to show new email if it changed
+        updateAuthButtons();
+      });
+    });
+  </script>
+</body>
+</html>

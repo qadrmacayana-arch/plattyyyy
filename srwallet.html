@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SmartDrive™ SR Wallet - Manage your wallet balance and top up for future bookings.">
+  <meta name="theme-color" content="#4ade80">
+  <title>SR Wallet - SmartDrive™</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preload" href="data.js" as="script">
+  <style>
+    /* Custom Scrollbar Styling */
+    :root {
+      scrollbar-color: #444 #1c1c1e; /* thumb and track color for Firefox */
+      scrollbar-width: thin;
+    }
+
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background-color: rgba(28, 28, 30, 0.5);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background-color: #444;
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background-color: #4ade80; /* Primary green on hover */
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg>
+        </div>
+        <span>SmartDrive<span style="font-size: 10px; margin-left: 2px; opacity: 0.7;">TM</span></span>
+      </a>
+      <nav class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="rent-a-car.html" class="nav-link">Rent a Car</a>
+        <a href="aboutpage.html" class="nav-link">About</a>
+        <a href="dashboard.html" class="nav-link">Dashboard</a>
+      </nav>
+      <div class="nav-actions" id="auth-buttons"></div>
+    </div>
+  </header>
+
+  <main class="container py-10 wallet-page-container">
+    <div class="wallet-page-header">
+      <a href="dashboard.html" class="back-link">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+        Back to Dashboard
+      </a>
+      <h1 class="page-title">Your SR Wallet</h1>
+      <p class="page-description">Manage your available balance and top up for seamless payments.</p>
+    </div>
+
+    <div class="wallet-grid-layout">
+      <!-- Left Column: Balance and Top-Up -->
+      <div class="wallet-main-content">
+        <div class="wallet-details-card">
+          <div class="wallet-header">
+            <h3>Current Balance</h3>
+          </div>
+          <p class="wallet-balance" id="wallet-balance">₱0.00</p>
+          <p class="wallet-description">
+            Your SR Wallet balance can be used to pay for car rentals and services.
+          </p>
+        </div>
+
+        <div class="top-up-section">
+          <h2 class="section-title-small">Top Up Your Wallet</h2>
+          <form id="top-up-form" class="glass-panel">
+            <div class="form-group">
+              <label class="form-label">Amount (PHP)</label>
+              <input type="number" id="top-up-amount" class="form-input" placeholder="Enter amount (e.g., 1000)" required min="100">
+              <div class="quick-amounts">
+                <button type="button" class="btn-small" data-amount="500">₱500</button>
+                <button type="button" class="btn-small" data-amount="1000">₱1000</button>
+                <button type="button" class="btn-small" data-amount="2000">₱2000</button>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Payment Method</label>
+              <div class="payment-options-grid" id="top-up-payment-methods">
+                <!-- Credit Card Option -->
+                <div class="payment-method-option">
+                  <input type="radio" name="topup_method" value="Credit Card" id="topup-credit-card" checked style="display: none;">
+                  <label for="topup-credit-card" class="wallet-payment-label active">
+                    <div class="wallet-payment-icon-holder">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+                    </div>
+                    <span>Credit Card</span>
+                  </label>
+                </div>
+                <!-- GCash Option -->
+                <div class="payment-method-option">
+                  <input type="radio" name="topup_method" value="GCash" id="topup-gcash" style="display: none;">
+                  <label for="topup-gcash" class="wallet-payment-label">
+                    <div class="wallet-payment-icon-holder">
+                      <img src="https://brandlogos.net/wp-content/uploads/2024/01/gcash-logo_brandlogos.net_kiaqh-512x427.png" alt="GCash" style="height: 24px; object-fit: contain;">
+                    </div>
+                    <span>GCash</span>
+                  </label>
+                </div>
+                <!-- Maya Option -->
+                <div class="payment-method-option">
+                  <input type="radio" name="topup_method" value="Maya" id="topup-maya" style="display: none;">
+                  <label for="topup-maya" class="wallet-payment-label">
+                    <div class="wallet-payment-icon-holder">
+                      <img src="https://play-lh.googleusercontent.com/fdQjxsIO8BTLaw796rQPZtLEnGEV8OJZJBJvl8dFfZLZcGf613W93z7y9dFAdDhvfqw" alt="Maya" style="height: 24px; object-fit: contain; border-radius: 4px;">
+                    </div>
+                    <span>Maya</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Credit Card Details -->
+            <div id="topup-credit-card-details">
+              <div class="form-group">
+                <label class="form-label">Card Holder Name</label>
+                <input type="text" id="topup-card-holder" class="form-input" placeholder="John Doe">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Card Number</label>
+                <input type="text" id="topup-card-number" class="form-input" placeholder="1234 5678 9012 3456" maxlength="19">
+              </div>
+              <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                  <label class="form-label">Expiry Date</label>
+                  <input type="text" id="topup-expiry-date" class="form-input" placeholder="MM/YY" maxlength="5">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">CVV</label>
+                  <input type="password" id="topup-cvv" class="form-input" placeholder="***" maxlength="4">
+                </div>
+              </div>
+            </div>
+
+            <!-- GCash Details -->
+            <div id="topup-gcash-details" style="display: none;">
+              <div class="e-wallet-instructions">
+                <div class="qr-placeholder">
+                  <p>QR Under Development</p>
+                </div>
+                <div>
+                  <p class="e-wallet-title">GCash Payment Instructions</p>
+                  <p class="e-wallet-desc">Send payment to the following GCash number.</p>
+                  <div class="e-wallet-number">0917 123 4567</div>
+                </div>
+              </div>
+              <div class="form-group" style="margin-top: 1.5rem;">
+                <label class="form-label">Reference Number</label>
+                <input type="text" id="topup-gcash-ref" class="form-input" placeholder="Enter GCash reference number">
+              </div>
+            </div>
+
+            <!-- Maya Details -->
+            <div id="topup-maya-details" style="display: none;">
+              <div class="e-wallet-instructions">
+                <div class="qr-placeholder"><p>QR Under Development</p></div>
+                <div>
+                  <p class="e-wallet-title">Maya Payment Instructions</p>
+                  <p class="e-wallet-desc">Send payment to the following Maya number.</p>
+                  <div class="e-wallet-number">0917 987 6543</div>
+                </div>
+              </div>
+              <div class="form-group" style="margin-top: 1.5rem;">
+                <label class="form-label">Transaction ID</label>
+                <input type="text" id="topup-maya-ref" class="form-input" placeholder="Enter Maya transaction ID">
+              </div>
+            </div>
+            <button type="submit" class="btn-submit">Confirm Top-Up</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Right Column Container -->
+      <div class="wallet-right-column">
+        <!-- New: Recent Top-Up Details -->
+        <div class="recent-top-up-card" id="recent-top-up-card" style="display: none;">
+          <div class="section-header-row">
+            <h2 class="section-title-small">Last Top-Up</h2>
+            <button id="download-receipt-btn" class="btn-small" style="display: none;">Download Receipt</button>
+          </div>
+          <div id="last-top-up-content">
+            <div class="recent-top-up-details">
+              <p><strong>Amount:</strong> <span id="last-top-up-amount"></span></p>
+              <p><strong>Date:</strong> <span id="last-top-up-date"></span></p>
+              <p><strong>Method:</strong> <span id="last-top-up-method"></span></p>
+            </div>
+          </div>
+          <div id="no-top-up-message" style="display: none; color: var(--muted-foreground); text-align: center; padding: 1rem 0;">No top-up transactions yet.</div>
+        </div>
+
+        <!-- Existing: Transaction History -->
+        <div class="transaction-history-card">
+          <h2 class="section-title-small">Transaction History</h2>
+          <div class="bookings-table-wrapper">
+            <table class="bookings-table">
+              <thead>
+                <tr><th>Date</th><th>Description</th><th>Amount</th></tr>
+              </thead>
+              <tbody id="transaction-history-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3 class="footer-title">About SmartDrive™</h3>
+        <p class="footer-text">Premium car rental service providing luxury vehicles for your journey. Experience the future of mobility with our electric and premium fleet.</p>
+      </div>
+
+      <div class="footer-section">
+        <h3 class="footer-title">Quick Links</h3>
+        <div class="footer-links">
+          <a href="index.html">Home</a>
+          <a href="rent-a-car.html">Rent a Car</a>
+          <a href="aboutpage.html">About Us</a>
+          <a href="dashboard.html">Dashboard</a>
+        </div>
+      </div>
+
+      <div class="footer-section">
+        <h3 class="footer-title">Support</h3>
+        <div class="footer-links">
+          <a href="aboutpage.html#contact-us">Contact Us</a>
+          <a href="#" class="legal-link" data-content="terms">Terms & Conditions</a>
+          <a href="#" class="legal-link" data-content="privacy">Privacy Policy</a>
+        </div>
+      </div>
+
+      <div class="footer-section">
+        <h3 class="footer-title">Company</h3>
+        <div class="footer-links">
+          <a href="#">Careers</a>
+          <a href="#">Blog</a>
+          <a href="#">Partners</a>
+          <a href="#">Fleet</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2026 SmartDrive™. All rights reserved. | Revolutionizing Premium Car Rentals</p>
+    </div>
+  </footer>
+
+  <!-- Legal Modal -->
+  <div id="legal-modal" class="modal" style="display: none;">
+    <div class="modal-content" style="max-width: 800px;">
+      <div class="modal-header">
+        <h2 id="legal-modal-title"></h2>
+        <span class="close-btn" id="close-legal-modal">&times;</span>
+      </div>
+      <div class="modal-body" id="legal-modal-body" style="max-height: 70vh; overflow-y: auto;">
+        <!-- Content will be injected by JavaScript -->
+      </div>
+      <div class="modal-footer">
+        <p style="font-size: 0.8rem; color: var(--muted);">Last Updated: March 15, 2026</p>
+      </div>
+    </div>
+  </div>
+
+  <script defer src="data.js"></script>
+  <script defer src="shared.js"></script>
+  <script defer>
+    // --- Download Receipt Logic ---
+    document.getElementById('download-receipt-btn').addEventListener('click', () => {
+      const user = JSON.parse(sessionStorage.getItem('user') || 'null');
+      if (!user) return;
+
+      const lastTopUp = JSON.parse(localStorage.getItem(`lastTopUp_${user.email}`) || 'null');
+      if (!lastTopUp) {
+        alert('No top-up transaction found to generate a receipt.');
+        return;
+      }
+
+      const receiptContent = `
+========================================
+SMARTDRIVE™ WALLET TOP-UP RECEIPT
+========================================
+
+Transaction Date: ${new Date(lastTopUp.date).toLocaleString()}
+
+----------------------------------------
+CUSTOMER DETAILS
+----------------------------------------
+Name:    ${user.fullName}
+Email:   ${user.email}
+
+----------------------------------------
+TOP-UP DETAILS
+----------------------------------------
+Amount:      PHP ${lastTopUp.amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+Method:      ${lastTopUp.method}
+
+========================================
+
+Thank you for using SR Wallet!
+      `;
+
+      const blob = new Blob([receiptContent.trim()], { type: 'text/plain' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `SR_Wallet_TopUp_Receipt_${new Date(lastTopUp.date).getTime()}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    });
+  </script>
+  <script>
+    "use strict";
+
+    // --- UTILITY FUNCTIONS ---
+    const formatCurrency = (amount) => `₱${amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+    // --- UI RENDERING FUNCTIONS ---
+    function updateWalletDisplay(user) {
+        const balance = parseFloat(localStorage.getItem(`wallet_${user.email}`) || '0');
+        const walletBalanceEl = document.getElementById('wallet-balance');
+        if (walletBalanceEl) {
+            walletBalanceEl.textContent = formatCurrency(balance);
+            walletBalanceEl.classList.toggle('empty-wallet', balance === 0);
+        }
+    }
+
+    function renderTransactionHistory(user) {
+        const history = getTransactionHistory(user.email); // from shared.js
+        const tbody = document.getElementById('transaction-history-body');
+        tbody.innerHTML = '';
+
+        if (history.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 2rem; color: var(--muted-foreground);">No transactions yet.</td></tr>';
+            return;
+        }
+
+        history.forEach(tx => {
+            const row = document.createElement('tr');
+            const amountClass = tx.amount > 0 ? 'text-primary' : 'text-destructive';
+            const amountSign = tx.amount > 0 ? '+' : '';
+            row.innerHTML = `
+              <td>${new Date(tx.date).toLocaleDateString()}</td>
+              <td>${tx.description}</td>
+              <td class="${amountClass}" style="font-weight: 600;">${amountSign}₱${tx.amount.toLocaleString()}</td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+
+    function renderRecentTopUp(user) {
+        const lastTopUp = JSON.parse(localStorage.getItem(`lastTopUp_${user.email}`) || 'null');
+        const recentTopUpCard = document.getElementById('recent-top-up-card');
+        const lastTopUpContent = document.getElementById('last-top-up-content');
+        const noTopUpMessage = document.getElementById('no-top-up-message');
+        const downloadBtn = document.getElementById('download-receipt-btn');
+
+        recentTopUpCard.style.display = 'block';
+
+        if (lastTopUp) {
+            document.getElementById('last-top-up-amount').textContent = formatCurrency(lastTopUp.amount);
+            document.getElementById('last-top-up-date').textContent = new Date(lastTopUp.date).toLocaleDateString();
+            document.getElementById('last-top-up-method').textContent = lastTopUp.method;
+            lastTopUpContent.style.display = 'block';
+            noTopUpMessage.style.display = 'none';
+            downloadBtn.style.display = 'inline-block';
+        } else {
+            lastTopUpContent.style.display = 'none';
+            noTopUpMessage.style.display = 'block';
+            downloadBtn.style.display = 'none';
+        }
+    }
+
+    // --- EVENT HANDLERS & INITIALIZATION ---
+    function handleTopUpForm(user) {
+        const form = document.getElementById('top-up-form');
+        const amountInput = document.getElementById('top-up-amount');
+        const paymentDetails = {
+            'Credit Card': document.getElementById('topup-credit-card-details'),
+            'GCash': document.getElementById('topup-gcash-details'),
+            'Maya': document.getElementById('topup-maya-details')
+        };
+
+        // Quick amount buttons
+        document.querySelectorAll('.quick-amounts button').forEach(btn => {
+            btn.addEventListener('click', () => amountInput.value = btn.dataset.amount);
+        });
+
+        // Payment method selection
+        document.querySelectorAll('input[name="topup_method"]').forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                document.querySelectorAll('.wallet-payment-label').forEach(label => label.classList.remove('active'));
+                document.querySelector(`label[for="${e.target.id}"]`).classList.add('active');
+                Object.values(paymentDetails).forEach(el => el.style.display = 'none');
+                if (paymentDetails[e.target.value]) {
+                    paymentDetails[e.target.value].style.display = 'block';
+                }
+            });
+        });
+
+        // Form submission
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const amount = parseFloat(amountInput.value);
+            const paymentMethod = document.querySelector('input[name="topup_method"]:checked').value;
+
+            if (isNaN(amount) || amount < 100) {
+                showToast('Please enter a valid amount (minimum ₱100).', 'error');
+                return;
+            }
+
+            // Basic validation for payment details
+            if (paymentMethod === 'Credit Card' && document.getElementById('topup-card-number').value.length < 19) {
+                showToast('Please enter a valid credit card number.', 'error'); return;
+            }
+            if (paymentMethod === 'GCash' && !document.getElementById('topup-gcash-ref').value.trim()) {
+                showToast('Please enter the GCash reference number.', 'error'); return;
+            }
+            if (paymentMethod === 'Maya' && !document.getElementById('topup-maya-ref').value.trim()) {
+                showToast('Please enter the Maya transaction ID.', 'error'); return;
+            }
+
+            // Simulate API call
+            showToast('Processing your top-up...', 'info');
+            setTimeout(() => {
+                const currentBalance = parseFloat(localStorage.getItem(`wallet_${user.email}`) || '0');
+                const newBalance = currentBalance + amount;
+                localStorage.setItem(`wallet_${user.email}`, newBalance);
+
+                addTransaction(user.email, `Top-up via ${paymentMethod}`, amount);
+                localStorage.setItem(`lastTopUp_${user.email}`, JSON.stringify({ amount, date: new Date().toISOString(), method: paymentMethod }));
+
+                // Update UI
+                updateWalletDisplay(user);
+                renderTransactionHistory(user);
+                renderRecentTopUp(user);
+                form.reset();
+                document.querySelectorAll('.wallet-payment-label').forEach(l => l.classList.remove('active')); document.querySelector('label[for="topup-credit-card"]').classList.add('active');
+                showToast('Top-up successful!', 'success');
+            }, 1500);
+        });
+    }
+
+    function initWalletPage() {
+        const user = JSON.parse(sessionStorage.getItem('user') || 'null');
+        if (!user) {
+            window.location.href = 'login.html?reason=wallet_unauthorized';
+            return;
+        }
+
+        updateAuthButtons();
+        updateWalletDisplay(user);
+        renderTransactionHistory(user);
+        renderRecentTopUp(user);
+        handleTopUpForm(user);
+
+        document.querySelectorAll('.wallet-payment-label').forEach(l => l.classList.remove('active'));
+        document.querySelector('label[for="topup-credit-card"]').classList.add('active');
+    }
+
+    window.addEventListener('load', initWalletPage);
+  </script>
+</body>
+</html>
